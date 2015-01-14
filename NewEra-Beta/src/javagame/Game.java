@@ -21,6 +21,8 @@ public class Game extends BasicGameState {
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
+        g.drawString("Did this work??", 320, 320);
+
     }
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
