@@ -27,6 +27,12 @@ public class Map {
         collisionsLayer = map.getLayerIndex( "collision" );
         doorLayer = map.getLayerIndex( "doorway" );
 
+        setMapCoordX( 1 );
+        setMapCoordY( 1 );
+
+        setMapSkewX( 0 );
+        setMapCoordY( 0 );
+
         setMapHeight( map.getHeight() );
         setMapWidth( map.getWidth() );
 
@@ -58,52 +64,53 @@ public class Map {
     public int getMapWidth() { return mapWidth; }
 
     public void updateMapSkewAndCoords( ) {
-        if( mapCoordX < 0 ) {
+       if( mapCoordX < 0 ) {
             mapCoordX = 1;
-            mapSkewX++;
+            mapSkewX+=2;
         }
         if( mapCoordX > 1 ) {
             mapCoordX = 0;
-            mapSkewX--;
+            mapSkewX-=2;
         }
         if( mapCoordY < 0 ) {
             mapCoordY = 1;
-            mapSkewY++;
+            mapSkewY+=2;
         }
         if( mapCoordY > 1 ) {
             mapCoordY = 0;
-            mapSkewY--;
+            mapSkewY-=2;
         }
+
     }
 
     public void drawMap( ) {
         map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
+        //map.render( mapCoordX*32, mapCoordY*32 );
     }
 
     private void fillMapObjects() {
-        for( int x = 0; x < mapWidth; x++ ) {
-            for( int y = 0; y < mapHeight; y++ ) {
+        for( int x = 0; x < mapHeight; x++ ) {
+            for( int y = 0; y < mapWidth; y++ ) {
                 if( map.getTileId( x, y, collisionsLayer) != 0 ) {
-                    mapObjects[ y ][ x ] = 1;
+                    mapObjects[ x ][ y ] = 1;
                 }
-               // else if( map.getTileId( x, y, doorLayer) != 0 ) {
-                //    mapObjects[ x ][ y ] = 2;
-               // }
+                else if( map.getTileId( x, y, doorLayer) != 0 ) {
+                    mapObjects[ x ][ y ] = 2;
+                }
                 else {
-                    mapObjects[ y ][ x ] = 0;
+                    mapObjects[ x ][ y ] = 0;
                 }
             }
         }
 
         for( int x = 0; x < mapWidth; x++ ) {
             for( int y = 0; y < mapHeight; y++ ) {
-                if(  mapObjects[ x ][ y ] != 0 ) {
-                    System.out.print("1");
+                if(map.getTileId( y, x, collisionsLayer  ) == 0 ) {
+                    System.out.print( "-" );
                 }
                 else {
-                    System.out.print(" ");
+                    System.out.print( "1" );
                 }
-
             }
             System.out.print("\n");
         }
