@@ -4,8 +4,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import java.util.Vector;
 
 
 // 94, 96
@@ -19,6 +22,9 @@ public class Game extends BasicGameState {
     private Map map;
 
     private boolean attacking = false;
+
+    boolean showInfo = false;
+    boolean shot = false;
 
     int halfScreenWidth, halfScreenHeight;
 
@@ -47,8 +53,13 @@ public class Game extends BasicGameState {
         else {
             hunterTom.drawPlayer( halfScreenWidth, halfScreenHeight );
         }
-        g.drawString("X: " + hunterTom.getPlayerX() + ", Y: " + hunterTom.getPlayerY(), 500, 100);
 
+        hunterTom.renderProjectile( gc, g );
+
+        if( showInfo ) {
+            g.drawString("X: " + hunterTom.getPlayerX() + ", Y: " + hunterTom.getPlayerY(), 500, 10);
+        }
+        gc.setShowFPS( showInfo );
     }
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
@@ -110,9 +121,18 @@ public class Game extends BasicGameState {
 
         }
 
-        if( hunterTom.isStopped() ) {
+        if( hunterTom.isStopped() && attacking ) {
             attacking = false;
+            shot = true;
         }
+
+        if( input.isKeyPressed(Input.KEY_ESCAPE) ) {
+            showInfo = !showInfo;
+        }
+
+        hunterTom.updateProjectile( delta, shot );
+        shot = false;
+
 
     }
 

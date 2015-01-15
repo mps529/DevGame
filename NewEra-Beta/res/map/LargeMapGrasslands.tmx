@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="110" height="110" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
-  <image source="../tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
  </tileset>
  <tileset firstgid="901" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
-  <image source="../tilesets/hyptosis_tile-art-batch-1.png" trans="ff00ff" width="960" height="960"/>
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="ff00ff" width="960" height="960"/>
  </tileset>
  <layer name="ground" width="110" height="110">
   <data encoding="base64" compression="gzip">

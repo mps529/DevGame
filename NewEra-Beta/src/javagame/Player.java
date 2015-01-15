@@ -1,9 +1,8 @@
 package javagame;
 
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Vector2f;
+
 
 public class Player {
         // This will be the name of the sprite sheet the user choose
@@ -21,9 +20,15 @@ public class Player {
         // Fighting animations
     private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
 
-    private int playerSpeed = 100;
+    private int playerSpeed = 0;
 
     private int playerX, playerY;
+
+        // For Projectiles
+    private Projectile[] projectiles;
+    private static int FIRE_RATE = 250;
+    private int currentIndex = 0;
+    private int lastShot = 0;
 
 
     public Player( String sheetName, String name ) {
@@ -69,6 +74,11 @@ public class Player {
             // Setting player coords;
         setPlayerX( 0 );
         setPlayerY( 0 );
+
+        projectiles = new Projectile[ 8 ];
+        for( int x = 0; x < projectiles.length; x++ ){
+            projectiles[ x ] = new Projectile();
+        }
     }
 
     public Animation getMovingPlayer(){
@@ -170,6 +180,43 @@ public class Player {
 
     public boolean isStopped() {
         return attackingPlayer.isStopped();
+    }
+
+    public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
+
+            for( Projectile p : projectiles ) {
+                p.render( gc, g );
+            }
+    }
+    public void updateProjectile( int delta, boolean shot  )  {
+
+        lastShot += delta;
+        if( lastShot > FIRE_RATE && shot) {
+
+            if( attackingPlayer == attackingUp ) {
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, -500), 0 );
+            }
+            else if( attackingPlayer == attackingRight ) {
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 0), 1 );
+            }
+            else if( attackingPlayer == attackingDown ) {
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 1), 2 );
+            }
+            else if( attackingPlayer == attackingLeft ) {
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 5000), 3 );
+            }
+
+            if( currentIndex >= projectiles.length ) {
+                currentIndex = 0;
+            }
+            lastShot = 0;
+        }
+
+
+        for (Projectile p : projectiles) {
+            p.update( delta );
+        }
+
     }
 
 }
