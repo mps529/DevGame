@@ -19,6 +19,8 @@ public class Player {
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
         // Fighting animations
 
+    private int playerSpeed = 200;
+
     private int playerX, playerY;
 
 
@@ -49,11 +51,16 @@ public class Player {
             // Setting walking animation
         setPlayerDirection( 2 );
 
+            // Setting player coords;
+        setPlayerX( 0 );
+        setPlayerY( 0 );
     }
 
     public Animation getMovingPlayer(){
         return movingPlayer;
     }
+
+    public void drawPlayer( int x, int y ) { movingPlayer.draw( x, y );  }
 
         // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
@@ -83,9 +90,53 @@ public class Player {
         playerX = x;
     }
 
+    public void incrementPlayerX() {
+        try {
+            Thread.sleep( playerSpeed );
+            playerX++;
+        }
+        catch ( InterruptedException e ) {
+            System.out.println("Failed to sleep in incrementPlayerX");
+            e.printStackTrace();
+        }
+    }
+
+    public void decrementPlayerX() {
+        try {
+            Thread.sleep( playerSpeed );
+            playerX--;
+        }
+        catch ( InterruptedException e ) {
+            System.out.println("Failed to sleep in decrementPlayerX");
+            e.printStackTrace();
+        }
+    }
+
     public int getPlayerY() { return playerY; }
 
     public void setPlayerY( int y ) { playerY = y; }
+
+    public void incrementPlayerY() {
+        try {
+            Thread.sleep( playerSpeed );
+            playerY++;
+        }
+        catch ( InterruptedException e ) {
+            System.out.println("Failed to sleep in incrementPlayerY");
+            e.printStackTrace();
+        }
+    }
+
+    public void decrementPlayerY() {
+        try {
+            Thread.sleep( playerSpeed );
+            playerY--;
+        }
+        catch ( InterruptedException e ) {
+            System.out.println("Failed to sleep in decrementPlayerY");
+            e.printStackTrace();
+        }
+    }
 
     public void startAnimation() { movingPlayer.start(); }
 
