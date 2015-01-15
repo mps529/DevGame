@@ -15,9 +15,11 @@ public class Player {
     private SpriteSheet playerSpriteSheet;
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
+    private int[] durationSpeedAttack = { 80,80,80,80,80,80,80,80,80,80,80,80,80 };
         // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
         // Fighting animations
+    private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
 
     private int playerSpeed = 100;
 
@@ -48,6 +50,19 @@ public class Player {
         movingRight = new Animation( right, durationSpeed, true );
         movingDown = new Animation( down, durationSpeed, true );
         movingLeft = new Animation( left, durationSpeed, true );
+
+            // Sets images for attacking animations
+        Image[] upAttack = { playerSpriteSheet.getSubImage(0,16), playerSpriteSheet.getSubImage(1,16), playerSpriteSheet.getSubImage(2,16) , playerSpriteSheet.getSubImage(3,16), playerSpriteSheet.getSubImage(4,16), playerSpriteSheet.getSubImage(5,16), playerSpriteSheet.getSubImage(6,16), playerSpriteSheet.getSubImage(7,16), playerSpriteSheet.getSubImage(8,16), playerSpriteSheet.getSubImage(9,16), playerSpriteSheet.getSubImage(10,16), playerSpriteSheet.getSubImage(11,16) , playerSpriteSheet.getSubImage(12,16) };
+        Image[] leftAttack = { playerSpriteSheet.getSubImage(0,17), playerSpriteSheet.getSubImage(1,17), playerSpriteSheet.getSubImage(2,17) , playerSpriteSheet.getSubImage(3,17), playerSpriteSheet.getSubImage(4,17), playerSpriteSheet.getSubImage(5,17), playerSpriteSheet.getSubImage(6,17), playerSpriteSheet.getSubImage(7,17), playerSpriteSheet.getSubImage(8,17), playerSpriteSheet.getSubImage(9,17), playerSpriteSheet.getSubImage(10,17), playerSpriteSheet.getSubImage(11,17) , playerSpriteSheet.getSubImage(12,17) };
+        Image[] downAttack = { playerSpriteSheet.getSubImage(0,18), playerSpriteSheet.getSubImage(1,18), playerSpriteSheet.getSubImage(2,18) , playerSpriteSheet.getSubImage(3,18), playerSpriteSheet.getSubImage(4,18), playerSpriteSheet.getSubImage(5,18), playerSpriteSheet.getSubImage(6,18), playerSpriteSheet.getSubImage(7,18), playerSpriteSheet.getSubImage(8,18), playerSpriteSheet.getSubImage(9,18), playerSpriteSheet.getSubImage(10,18), playerSpriteSheet.getSubImage(11,18) , playerSpriteSheet.getSubImage(12,18) };
+        Image[] rightAttack = { playerSpriteSheet.getSubImage(0,19), playerSpriteSheet.getSubImage(1,19), playerSpriteSheet.getSubImage(2,19) , playerSpriteSheet.getSubImage(3,19), playerSpriteSheet.getSubImage(4,19), playerSpriteSheet.getSubImage(5,19), playerSpriteSheet.getSubImage(6,19), playerSpriteSheet.getSubImage(7,19), playerSpriteSheet.getSubImage(8,19), playerSpriteSheet.getSubImage(9,19), playerSpriteSheet.getSubImage(10,19), playerSpriteSheet.getSubImage(11,19) , playerSpriteSheet.getSubImage(12,19) };
+        // Assigning the Images to the animations
+        attackingUp = new Animation( upAttack, durationSpeedAttack, true );
+        attackingRight = new Animation( rightAttack, durationSpeedAttack, true );
+        attackingDown = new Animation( downAttack, durationSpeedAttack, true );
+        attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
+
+
             // Setting walking animation
         setPlayerDirection( 2 );
 
@@ -61,24 +76,30 @@ public class Player {
     }
 
     public void drawPlayer( int x, int y ) { movingPlayer.draw( x, y );  }
+    public void drawPlayerAttacking( int x, int y ) { attackingPlayer.draw( x, y );  }
 
         // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
         switch ( newDirection ) {
             case 0:
                 movingPlayer = movingUp;
+                attackingPlayer = attackingUp;
                 break;
             case 1:
                 movingPlayer = movingRight;
+                attackingPlayer = attackingRight;
                 break;
             case 2:
                 movingPlayer = movingDown;
+                attackingPlayer = attackingDown;
                 break;
             case 3:
                 movingPlayer = movingLeft;
+                attackingPlayer = attackingLeft;
                 break;
             default:
                 movingPlayer = movingDown;
+                attackingPlayer = attackingDown;
         }
     }
 
@@ -138,7 +159,17 @@ public class Player {
         }
     }
 
-    public void startAnimation() { movingPlayer.start(); }
+    public void startAnimationWalking() { movingPlayer.start(); }
+    public void stopAnimationWalking() { movingPlayer.stop(); }
 
-    public void stopAnimation() { movingPlayer.stop(); }
+    public void startAnimationAttacking() {
+        attackingPlayer.restart();
+        attackingPlayer.start();
+    }
+    public void stopAnimationAttacking() { attackingPlayer.stopAt(12); }
+
+    public boolean isStopped() {
+        return attackingPlayer.isStopped();
+    }
+
 }
