@@ -26,7 +26,7 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
         hunterTom = new Player( "HunterTom.png", "Tom" );
-        hunterTom.setPlayerY(10);
+        hunterTom.setPlayerY(11);
         hunterTom.setPlayerX(10);
 
         map = new Map( "LargeMapGrasslands.tmx" );
@@ -39,6 +39,7 @@ public class Game extends BasicGameState {
 
         map.drawMap();
         hunterTom.drawPlayer( halfScreenWidth, halfScreenHeight );
+        g.drawString("X: " + hunterTom.getPlayerX() + ", Y: " + hunterTom.getPlayerY(), 500, 100);
 
     }
 
@@ -49,36 +50,36 @@ public class Game extends BasicGameState {
         if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection(0);
-            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 0 ) {
-                hunterTom.incrementPlayerY();
+            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 0 ) {
+                hunterTom.decrementPlayerY();
                 map.incrementMapCoordY();
                 map.updateMapSkewAndCoords();
             }
-            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 2 ) {
+            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 2 ) {
                 System.out.println( "New Map Time!!" );
             }
         }
         else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection(1);
-            if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 0 ) {
+            if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 0 ) {
                 hunterTom.incrementPlayerX();
                 map.decrementMapCoordX();
                 map.updateMapSkewAndCoords();
             }
-            else if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 2 ) {
+            else if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 2 ) {
                 System.out.println( "New Map Time!!" );
             }
         }
         else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection( 2 );
-            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 0 ) {
-                hunterTom.decrementPlayerY();
+            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 0 ) {
+                hunterTom.incrementPlayerY();
                 map.decrementMapCoordY();
                 map.updateMapSkewAndCoords();
             }
-            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 2 ) {
+            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 2 ) {
                 System.out.println( "New Map Time!!" );
             }
 
@@ -86,12 +87,12 @@ public class Game extends BasicGameState {
         else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection( 3 );
-            if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 0 ) {
+            if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 0 ) {
                 hunterTom.decrementPlayerX();
                 map.incrementMapCoordX();
                 map.updateMapSkewAndCoords();
             }
-            else if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 2 ) {
+            else if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 2 ) {
                 System.out.println( "New Map Time!!" );
             }
         }
