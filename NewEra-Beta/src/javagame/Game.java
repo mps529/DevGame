@@ -29,7 +29,7 @@ public class Game extends BasicGameState {
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
         hunterTom = new Player( "HunterTom.png", "Tom" );
 
-        map = new TiledMap("NewEra-Beta/res/map/LargeMapGrasslands.tmx");
+       // LargeMapGrasslands.tmx
 
         halfScreenHeight = gc.getHeight()/2;
         halfScreenWidth = gc.getWidth()/2;
