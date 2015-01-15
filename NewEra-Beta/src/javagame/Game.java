@@ -6,7 +6,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tiled.TiledMap;
+
 
 // 94, 96
 
@@ -16,9 +16,7 @@ public class Game extends BasicGameState {
         // Player Class\
     private Player hunterTom;
 
-    private TiledMap map;
-    int mapCoordX = 0, mapCoordY = 0;
-    int mapSkewX = 0, mapSkewY = 0;
+    private Map map;
 
     int halfScreenWidth, halfScreenHeight;
 
@@ -28,8 +26,10 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
         hunterTom = new Player( "HunterTom.png", "Tom" );
+        hunterTom.setPlayerY(10);
+        hunterTom.setPlayerX(10);
 
-       // LargeMapGrasslands.tmx
+        map = new Map( "LargeMapGrasslands.tmx" );
 
         halfScreenHeight = gc.getHeight()/2;
         halfScreenWidth = gc.getWidth()/2;
@@ -37,8 +37,7 @@ public class Game extends BasicGameState {
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
-        map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
-
+        map.drawMap();
         hunterTom.drawPlayer( halfScreenWidth, halfScreenHeight );
 
     }
@@ -49,50 +48,56 @@ public class Game extends BasicGameState {
 
         if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
             hunterTom.startAnimation();
-            hunterTom.setPlayerDirection( 0 );
-            hunterTom.incrementPlayerY();
-            mapCoordY++;
+            hunterTom.setPlayerDirection(0);
+            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 0 ) {
+                hunterTom.incrementPlayerY();
+                map.incrementMapCoordY();
+                map.updateMapSkewAndCoords();
+            }
+            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()+1 ) == 2 ) {
+                System.out.println( "New Map Time!!" );
+            }
         }
         else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
             hunterTom.startAnimation();
-            hunterTom.setPlayerDirection( 1 );
-            hunterTom.incrementPlayerX();
-            mapCoordX--;
+            hunterTom.setPlayerDirection(1);
+            if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 0 ) {
+                hunterTom.incrementPlayerX();
+                map.decrementMapCoordX();
+                map.updateMapSkewAndCoords();
+            }
+            else if( map.isSpaceTaken( hunterTom.getPlayerX()-1, hunterTom.getPlayerY() ) == 2 ) {
+                System.out.println( "New Map Time!!" );
+            }
         }
         else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection( 2 );
-            hunterTom.decrementPlayerY();
-            mapCoordY--;
+            if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 0 ) {
+                hunterTom.decrementPlayerY();
+                map.decrementMapCoordY();
+                map.updateMapSkewAndCoords();
+            }
+            else if( map.isSpaceTaken( hunterTom.getPlayerX(), hunterTom.getPlayerY()-1 ) == 2 ) {
+                System.out.println( "New Map Time!!" );
+            }
+
         }
         else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
             hunterTom.startAnimation();
             hunterTom.setPlayerDirection( 3 );
-            hunterTom.decrementPlayerX();
-            mapCoordX++;
+            if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 0 ) {
+                hunterTom.decrementPlayerX();
+                map.incrementMapCoordX();
+                map.updateMapSkewAndCoords();
+            }
+            else if( map.isSpaceTaken( hunterTom.getPlayerX()+1, hunterTom.getPlayerY() ) == 2 ) {
+                System.out.println( "New Map Time!!" );
+            }
         }
         else {
             hunterTom.stopAnimation();
         }
-
-        if( mapCoordX < 0 ) {
-            mapCoordX = 1;
-            mapSkewX++;
-        }
-        if( mapCoordX > 1 ) {
-            mapCoordX = 0;
-            mapSkewX--;
-        }
-        if( mapCoordY < 0 ) {
-            mapCoordY = 1;
-            mapSkewY++;
-        }
-        if( mapCoordY > 1 ) {
-            mapCoordY = 0;
-            mapSkewY--;
-        }
-
-
     }
 
     public int getID( ) {

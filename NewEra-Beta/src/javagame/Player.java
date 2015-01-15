@@ -19,7 +19,7 @@ public class Player {
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
         // Fighting animations
 
-    private int playerSpeed = 200;
+    private int playerSpeed = 100;
 
     private int playerX, playerY;
 
