@@ -3,40 +3,45 @@ package javagame;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
+/**
+ * Created by Tyler on 1/15/2015.
+ */
+public class Player2 {
 
-public class Player {
-        // This will be the name of the sprite sheet the user choose
+    // This will be the name of the sprite sheet the user choose
     private String spriteSheetName;
-        // Player Name
+    // Player Name
     private String playerName;
 
-        // This is the sheet that holds all the characters sprites
+    // This is the sheet that holds all the characters sprites
     private SpriteSheet playerSpriteSheet;
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationSpeedAttack = { 80,80,80,80,80,80,80,80,80,80,80,80,80 };
-        // Walking animations
+    // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
-        // Fighting animations
+    // Fighting animations
     private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
 
-    private int playerSpeed = 0;
+    private int playerSpeed = 2;
 
-    private int playerX, playerY;
+    private float playerX, playerY;
 
-        // For Projectiles
+    public float fakePlayerX=0, fakePlayerY=0;
+
+    // For Projectiles
     private Projectile[] projectiles;
     private static int FIRE_RATE = 250;
     private int currentIndex = 0;
     private int lastShot = 0;
 
 
-    public Player( String sheetName, String name ) {
-            // Sets name and spriteSheet
+    public Player2( String sheetName, String name ) {
+        // Sets name and spriteSheet
         spriteSheetName = sheetName;
         playerName = name;
 
-            // Creates new sprite sheet
+        // Creates new sprite sheet
         try {
             playerSpriteSheet = new SpriteSheet( "NewEra-Beta/res/players/"+spriteSheetName, 32, 32 );
         }
@@ -45,18 +50,18 @@ public class Player {
             e.printStackTrace();
         }
 
-            // Sets images for walking animations
+        // Sets images for walking animations
         Image[] up = { playerSpriteSheet.getSubImage(1,8), playerSpriteSheet.getSubImage(2,8) , playerSpriteSheet.getSubImage(3,8), playerSpriteSheet.getSubImage(4,8), playerSpriteSheet.getSubImage(5,8), playerSpriteSheet.getSubImage(6,8), playerSpriteSheet.getSubImage(7,8), playerSpriteSheet.getSubImage(8,8) };
         Image[] left = { playerSpriteSheet.getSubImage(1,9), playerSpriteSheet.getSubImage(2,9) , playerSpriteSheet.getSubImage(3,9), playerSpriteSheet.getSubImage(4,9), playerSpriteSheet.getSubImage(5,9), playerSpriteSheet.getSubImage(6,9), playerSpriteSheet.getSubImage(7,9), playerSpriteSheet.getSubImage(8,9) };
         Image[] down = { playerSpriteSheet.getSubImage(1,10), playerSpriteSheet.getSubImage(2,10) , playerSpriteSheet.getSubImage(3,10), playerSpriteSheet.getSubImage(4,10), playerSpriteSheet.getSubImage(5,10), playerSpriteSheet.getSubImage(6,10), playerSpriteSheet.getSubImage(7,10), playerSpriteSheet.getSubImage(8,10) };
         Image[] right = { playerSpriteSheet.getSubImage(1,11), playerSpriteSheet.getSubImage(2,11) , playerSpriteSheet.getSubImage(3,11), playerSpriteSheet.getSubImage(4,11), playerSpriteSheet.getSubImage(5,11), playerSpriteSheet.getSubImage(6,11), playerSpriteSheet.getSubImage(7,11), playerSpriteSheet.getSubImage(8,11) };
-            // Assigning the Images to the animations
+        // Assigning the Images to the animations
         movingUp = new Animation( up, durationSpeed, true );
         movingRight = new Animation( right, durationSpeed, true );
         movingDown = new Animation( down, durationSpeed, true );
         movingLeft = new Animation( left, durationSpeed, true );
 
-            // Sets images for attacking animations
+        // Sets images for attacking animations
         Image[] upAttack = { playerSpriteSheet.getSubImage(0,16), playerSpriteSheet.getSubImage(1,16), playerSpriteSheet.getSubImage(2,16) , playerSpriteSheet.getSubImage(3,16), playerSpriteSheet.getSubImage(4,16), playerSpriteSheet.getSubImage(5,16), playerSpriteSheet.getSubImage(6,16), playerSpriteSheet.getSubImage(7,16), playerSpriteSheet.getSubImage(8,16), playerSpriteSheet.getSubImage(9,16), playerSpriteSheet.getSubImage(10,16), playerSpriteSheet.getSubImage(11,16) , playerSpriteSheet.getSubImage(12,16) };
         Image[] leftAttack = { playerSpriteSheet.getSubImage(0,17), playerSpriteSheet.getSubImage(1,17), playerSpriteSheet.getSubImage(2,17) , playerSpriteSheet.getSubImage(3,17), playerSpriteSheet.getSubImage(4,17), playerSpriteSheet.getSubImage(5,17), playerSpriteSheet.getSubImage(6,17), playerSpriteSheet.getSubImage(7,17), playerSpriteSheet.getSubImage(8,17), playerSpriteSheet.getSubImage(9,17), playerSpriteSheet.getSubImage(10,17), playerSpriteSheet.getSubImage(11,17) , playerSpriteSheet.getSubImage(12,17) };
         Image[] downAttack = { playerSpriteSheet.getSubImage(0,18), playerSpriteSheet.getSubImage(1,18), playerSpriteSheet.getSubImage(2,18) , playerSpriteSheet.getSubImage(3,18), playerSpriteSheet.getSubImage(4,18), playerSpriteSheet.getSubImage(5,18), playerSpriteSheet.getSubImage(6,18), playerSpriteSheet.getSubImage(7,18), playerSpriteSheet.getSubImage(8,18), playerSpriteSheet.getSubImage(9,18), playerSpriteSheet.getSubImage(10,18), playerSpriteSheet.getSubImage(11,18) , playerSpriteSheet.getSubImage(12,18) };
@@ -68,10 +73,10 @@ public class Player {
         attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
 
 
-            // Setting walking animation
+        // Setting walking animation
         setPlayerDirection( 2 );
 
-            // Setting player coords;
+        // Setting player coords;
         setPlayerX( 0 );
         setPlayerY( 0 );
 
@@ -85,10 +90,10 @@ public class Player {
         return movingPlayer;
     }
 
-    public void drawPlayer( int x, int y ) { movingPlayer.draw( x, y );  }
-    public void drawPlayerAttacking( int x, int y ) { attackingPlayer.draw( x, y );  }
+    public void drawPlayer( float x, float y ) { movingPlayer.draw( x, y );  }
+    public void drawPlayerAttacking( float x, float y ) { attackingPlayer.draw( x, y );  }
 
-        // 0-Up, 1-Right, 2-Down, 3-Left
+    // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
         switch ( newDirection ) {
             case 0:
@@ -113,60 +118,44 @@ public class Player {
         }
     }
 
-    public int getPlayerX() {
+    public float getPlayerX() {
         return playerX;
     }
 
-    public void setPlayerX( int x ) {
+    public void setPlayerX( float x ) {
         playerX = x;
     }
 
-    public void incrementPlayerX() {
-        try {
-            Thread.sleep( playerSpeed );
-            playerX++;
-        }
-        catch ( InterruptedException e ) {
-            System.out.println("Failed to sleep in incrementPlayerX");
-            e.printStackTrace();
-        }
+    public void incrementPlayerX( int delta ) {
+
+            playerX += playerSpeed;
+
+
     }
 
-    public void decrementPlayerX() {
-        try {
-            Thread.sleep( playerSpeed );
-            playerX--;
-        }
-        catch ( InterruptedException e ) {
-            System.out.println("Failed to sleep in decrementPlayerX");
-            e.printStackTrace();
-        }
+    public void decrementPlayerX( int delta ) {
+
+            playerX -= playerSpeed;
+
+
     }
 
-    public int getPlayerY() { return playerY; }
+    public float getPlayerY() { return playerY; }
 
-    public void setPlayerY( int y ) { playerY = y; }
+    public void setPlayerY( float y ) { playerY = y; }
 
-    public void incrementPlayerY() {
-        try {
-            Thread.sleep( playerSpeed );
-            playerY++;
-        }
-        catch ( InterruptedException e ) {
-            System.out.println("Failed to sleep in incrementPlayerY");
-            e.printStackTrace();
-        }
+    public void incrementPlayerY( int delta ) {
+
+
+            playerY += playerSpeed;
+
+
     }
 
-    public void decrementPlayerY() {
-        try {
-            Thread.sleep( playerSpeed );
-            playerY--;
-        }
-        catch ( InterruptedException e ) {
-            System.out.println("Failed to sleep in decrementPlayerY");
-            e.printStackTrace();
-        }
+    public void decrementPlayerY( int delta ) {
+
+            playerY -= playerSpeed;
+
     }
 
     public void startAnimationWalking() { movingPlayer.start(); }
@@ -184,9 +173,9 @@ public class Player {
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
 
-            for( Projectile p : projectiles ) {
-                p.render( gc, g );
-            }
+        for( Projectile p : projectiles ) {
+            p.render( gc, g );
+        }
     }
     public void updateProjectile( int delta, boolean shot, Map2 map  )  {
 
@@ -194,16 +183,16 @@ public class Player {
         if( lastShot > FIRE_RATE && shot) {
 
             if( attackingPlayer == attackingUp ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, -500), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 332 ,315 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
             }
             else if( attackingPlayer == attackingRight ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 0), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 340, 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
             }
             else if( attackingPlayer == attackingDown ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 1), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 335 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
             }
             else if( attackingPlayer == attackingLeft ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( getPlayerX() ,getPlayerY() ), new Vector2f(100, 5000), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
             }
 
             if( currentIndex >= projectiles.length ) {
@@ -214,7 +203,7 @@ public class Player {
 
 
         for (Projectile p : projectiles) {
-            //p.update( delta, getPlayerX(), getPlayerY(), map );
+            p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
         }
 
     }
