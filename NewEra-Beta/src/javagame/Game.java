@@ -13,17 +13,17 @@ import java.util.Vector;
 public class Game extends BasicGameState {
         // Game State
     private static int gameState;
-        // Player Class\
+        // Player Class
     private Player2 hunterTom;
-
+        // Map Class
     private Map2 map;
-
+        // Is Attacking animation playing
     private boolean attacking = false;
-
+        // Diasplay fps and coords
     boolean showInfo = false;
+        // Did player shoot
     boolean shot = false;
 
-    float x=10, y=11;
 
     int halfScreenWidth, halfScreenHeight;
 
@@ -33,11 +33,16 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
         hunterTom = new Player2( "HunterTom.png", "Tom" );
-        hunterTom.setPlayerY(10*32);
-        hunterTom.setPlayerX(10*32);
 
-        map = new Map2( "LargeMapGrasslands.tmx" );
+            // Starting tile
+        hunterTom.setPlayerX( 94 );
+        hunterTom.setPlayerY( 96 );
 
+            // Map **Starting tiles for map are 10 under
+            // PlayerX and PlayerY then negative
+        map = new Map2( "LargeMapGrasslands.tmx", -84, -86 );
+
+            // Getting the screen Sizes
         halfScreenHeight = gc.getHeight()/2;
         halfScreenWidth = gc.getWidth()/2;
     }
@@ -58,7 +63,7 @@ public class Game extends BasicGameState {
         if( showInfo ) {
             g.setColor( Color.white );
             g.drawString("X: " + hunterTom.getPlayerX()/32 + ", Y: " + hunterTom.getPlayerY()/32, 300, 10);
-            g.drawString("X: " + map.getMapCoordX() + ", Y: " +  map.getMapCoordY() , 300, 30);
+            g.drawString("X: " + map.getMapCoordX()/32 + ", Y: " +  map.getMapCoordY()/32 , 300, 30);
         }
         gc.setShowFPS( showInfo );
     }
@@ -71,48 +76,33 @@ public class Game extends BasicGameState {
             if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
                 hunterTom.startAnimationWalking();
                 hunterTom.setPlayerDirection(0);
-
                 if (map.isSpaceTaken((int) hunterTom.getPlayerX(), (int) hunterTom.getPlayerY() - 12) == 0) {
-
                     hunterTom.decrementPlayerY(delta);
-                    map.incrementMapCoordY(delta);
-                    // map.updateMapSkewAndCoords();
-
+                    map.incrementMapCoordY();
                 }
-
             } else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
                 hunterTom.startAnimationWalking();
                 hunterTom.setPlayerDirection(1);
-
                 if (map.isSpaceTaken(hunterTom.getPlayerX() + 12, hunterTom.getPlayerY()) == 0) {
-
                     hunterTom.incrementPlayerX(delta);
-                    map.decrementMapCoordX(delta);
-                    //  map.updateMapSkewAndCoords();
+                    map.decrementMapCoordX();
                 }
 
             } else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
                 hunterTom.startAnimationWalking();
                 hunterTom.setPlayerDirection(2);
-
                 if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() + 24) == 0) {
-
                     hunterTom.incrementPlayerY(delta);
-                    map.decrementMapCoordY(delta);
-                    //map.updateMapSkewAndCoords();
+                    map.decrementMapCoordY();
                 }
 
             } else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
                 hunterTom.startAnimationWalking();
                 hunterTom.setPlayerDirection(3);
-
                 if (map.isSpaceTaken(hunterTom.getPlayerX() - 12, hunterTom.getPlayerY()) == 0) {
-
                     hunterTom.decrementPlayerX(delta);
-                    map.incrementMapCoordX(delta);
-                    // map.updateMapSkewAndCoords();
+                    map.incrementMapCoordX();
                 }
-
             } else {
                 hunterTom.stopAnimationWalking();
             }
