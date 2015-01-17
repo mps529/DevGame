@@ -5,95 +5,88 @@ import org.newdawn.slick.tiled.TiledMap;
 
 public class Map2 {
 
-    // This is the map
+        // This is the map
     private TiledMap map;
 
-    private int totalMapSizeX = 0, getTotalMapSizeY = 0;
+    private String mapName;
+
+        // Size of map in pixels
+    private int totalMapSizeX, getTotalMapSizeY;
 
     // Coords of the map  and the skew
     // These are for rendering the area around the player
     private float mapCoordX, mapCoordY;
-    private float mapSkewX, mapSkewY;
 
+        // This is the collision layer
     private int collisionsLayer;
-
+        // This is the layer that will store passages to new maps
     private int doorLayer;
 
+        // Map size in tiles
     private int mapHeight, mapWidth;
 
-    int speed = 2;
+        // how many pixels to move
+    private static int speed = 2;
 
-    // 0-walkable area, 1-collisions, 2-doors
+        // 0-walkable area, 1-collisions, 2-doors
     private int[][] mapObjects;
 
-    public Map2( String mapName ) throws SlickException {
-        map = new TiledMap( "NewEra-Beta/res/map/"+mapName );
+    public Map2( String mapName, int x, int y ) throws SlickException {
+            // Setting mapName
+        this.mapName = mapName;
+            // Defining Map
+        this.map = new TiledMap( "NewEra-Beta/res/map/"+mapName );
 
-        totalMapSizeX = map.getWidth() *32;
-        totalMapSizeX = map.getHeight() *32;
-
-        collisionsLayer = map.getLayerIndex( "collision" );
-        doorLayer = map.getLayerIndex( "doorway" );
-
-        setMapCoordX( 1 );
-        setMapCoordY( 1 );
-
-        setMapSkewX( 0 );
-        setMapCoordY( 0 );
-
-        setMapHeight( map.getHeight() );
+            // Settign map size in pixels
+        this.totalMapSizeX = map.getWidth() *32;
+        this.totalMapSizeX = map.getHeight() *32;
+            // Setting map size by tiles
         setMapWidth( map.getWidth() );
+        setMapHeight( map.getHeight() );
 
-        mapObjects = new int[ map.getWidth() ][ map.getHeight() ];
+            // Getting the different layers id's
+        this.collisionsLayer = map.getLayerIndex( "collision" );
+        this.doorLayer = map.getLayerIndex( "doorway" );
 
+            // Setting 2D array for collisions
+        this.mapObjects = new int[ getMapWidth() ][ getMapHeight() ];
+
+            // This will be where the map will start rendering
+        setMapCoordX( x * 32 );
+        setMapCoordY( y * 32 );
+
+            // Fills the 2D array with collisions
         fillMapObjects();
     }
 
-    public void setMapCoordX( int x ) { mapCoordX = x; }
+    public void setMapName( String name ) {
+        this.mapName = name;
+    }
+
+    public String getMapName() {
+        return this.mapName;
+    }
+
+    public void setMapCoordX( float x ) { mapCoordX = x; }
     public float getMapCoordX() { return mapCoordX; }
 
-    public void incrementMapCoordX( int delta ) {
-        mapCoordX+= speed;
+    public void incrementMapCoordX( ) {
+        mapCoordX += speed;
     }
-    public void decrementMapCoordX( int delta ) { mapCoordX-= speed; }
+    public void decrementMapCoordX( ) { mapCoordX -= speed; }
 
-    public void setMapCoordY( int y ) { mapCoordY = y; }
+    public void setMapCoordY( float y ) { mapCoordY = y; }
     public float getMapCoordY( ) { return mapCoordY; }
 
-    public void incrementMapCoordY( int delta ) { mapCoordY+=speed; }
-    public void decrementMapCoordY( int delta ) { mapCoordY-= speed; }
-
-    public float getMapSkewX() { return mapSkewX; }
-    public void setMapSkewX( int x ) { mapSkewX = x; }
-
-    public float getMapSkewY() { return mapSkewY; }
-    public void setMapSkewY( int y ) { mapSkewY = y; }
+    public void incrementMapCoordY( ) { mapCoordY += speed; }
+    public void decrementMapCoordY( ) { mapCoordY -= speed; }
 
     public void setMapHeight( int height ) { mapHeight = height; }
-    public float getMapHeight() { return mapHeight; }
+    public int getMapHeight() { return mapHeight; }
 
     public void setMapWidth( int width ) { mapWidth = width; }
-    public float getMapWidth() { return mapWidth; }
+    public int getMapWidth() { return mapWidth; }
 
-    public void updateMapSkewAndCoords( ) {
-        if( mapCoordX < 32 ) {
-            mapCoordX = 32;
-            mapSkewX+=2;
-        }
-        if( mapCoordX > 32 ) {
-            mapCoordX = 0;
-            mapSkewX-=2;
-        }
-        if( mapCoordY < 32 ) {
-            mapCoordY = 32;
-            mapSkewY+=2;
-        }
-        if( mapCoordY > 32 ) {
-            mapCoordY = 0;
-            mapSkewY-=2;
-        }
-
-    }
 
     public void drawMap( ) {
         //map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
@@ -101,8 +94,8 @@ public class Map2 {
     }
 
     private void fillMapObjects() {
-        for( int x = 0; x < mapHeight; x++ ) {
-            for( int y = 0; y < mapWidth; y++ ) {
+        for( int x = 0; x < getMapHeight(); x++ ) {
+            for( int y = 0; y < getMapWidth(); y++ ) {
                 if( map.getTileId( x, y, collisionsLayer) != 0 ) {
                     mapObjects[ x ][ y ] = 1;
                 }

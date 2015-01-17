@@ -3,9 +3,7 @@ package javagame;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
-/**
- * Created by Tyler on 1/15/2015.
- */
+
 public class Player2 {
 
     // This will be the name of the sprite sheet the user choose
@@ -18,26 +16,30 @@ public class Player2 {
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationSpeedAttack = { 80,80,80,80,80,80,80,80,80,80,80,80,80 };
+
     // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
     // Fighting animations
     private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
 
+        // Pixels to move
     private int playerSpeed = 2;
 
+        // Players position in pixels of map
     private float playerX, playerY;
 
-    public float fakePlayerX=0, fakePlayerY=0;
-
-    // For Projectiles
+        // For Projectiles
     private Projectile[] projectiles;
+        // How long arrow will live for.
     private static int FIRE_RATE = 250;
+        // Index of the projectile array
     private int currentIndex = 0;
+        // Time since last shot
     private int lastShot = 0;
 
 
     public Player2( String sheetName, String name ) {
-        // Sets name and spriteSheet
+            // Sets name and spriteSheet
         spriteSheetName = sheetName;
         playerName = name;
 
@@ -80,6 +82,7 @@ public class Player2 {
         setPlayerX( 0 );
         setPlayerY( 0 );
 
+            // Should not be able to shoot more then 8 projectiles at once
         projectiles = new Projectile[ 8 ];
         for( int x = 0; x < projectiles.length; x++ ){
             projectiles[ x ] = new Projectile();
@@ -121,41 +124,25 @@ public class Player2 {
     public float getPlayerX() {
         return playerX;
     }
-
     public void setPlayerX( float x ) {
-        playerX = x;
+        playerX = x*32;
     }
 
     public void incrementPlayerX( int delta ) {
-
             playerX += playerSpeed;
-
-
     }
-
     public void decrementPlayerX( int delta ) {
-
             playerX -= playerSpeed;
-
-
     }
 
     public float getPlayerY() { return playerY; }
-
-    public void setPlayerY( float y ) { playerY = y; }
+    public void setPlayerY( float y ) { playerY = y*32; }
 
     public void incrementPlayerY( int delta ) {
-
-
             playerY += playerSpeed;
-
-
     }
-
     public void decrementPlayerY( int delta ) {
-
             playerY -= playerSpeed;
-
     }
 
     public void startAnimationWalking() { movingPlayer.start(); }
@@ -172,15 +159,24 @@ public class Player2 {
     }
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
-
         for( Projectile p : projectiles ) {
             p.render( gc, g );
         }
     }
     public void updateProjectile( int delta, boolean shot, Map2 map  )  {
 
+            // Increases time since last shot
         lastShot += delta;
+            // Checks if the time is good to shoot again and if the player shot an projectile
         if( lastShot > FIRE_RATE && shot) {
+
+            /*
+                This section checks which direction the player is looking then creates a new projectile in that direcetion.
+                  The first vector is where the projectile will be drawn on the screen
+                  The second vector is for holding the position of the player, so if they move the project will move to look like it is in the sam position
+                  The third vector is for the projectiles position.  This will allow it to crash on collisions and detect people *( Future update to hurt others )
+                  There needs to be two vectors passed in for the players position because of how the Vector2f works
+            */
 
             if( attackingPlayer == attackingUp ) {
                 projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 332 ,315 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
@@ -200,7 +196,6 @@ public class Player2 {
             }
             lastShot = 0;
         }
-
 
         for (Projectile p : projectiles) {
             p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
