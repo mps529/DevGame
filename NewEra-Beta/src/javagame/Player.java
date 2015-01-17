@@ -185,7 +185,7 @@ public class Player {
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
 
             for( Projectile p : projectiles ) {
-                p.render( gc, g );
+               //p.render( gc, g );
             }
     }
     public void updateProjectile( int delta, boolean shot, Map2 map  )  {

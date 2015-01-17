@@ -1,10 +1,7 @@
 package javagame;
 
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Projectile {
@@ -27,7 +24,7 @@ public class Projectile {
     Color brown;
 
         // Lifespan of projectile
-    private static int MAX_LIFETIME = 1700;
+    private static int MAX_LIFETIME = 1500;
 
     public Projectile( Vector2f pos, Vector2f playerPos, Vector2f projectilePos, int direction ) {
             // Setting Screen position
@@ -99,18 +96,9 @@ public class Projectile {
     }
 
 
-    public void render( GameContainer gc, Graphics g ) throws SlickException {
+    public void render( GameContainer gc, Graphics g, Image[] projectile ) throws SlickException {
         if( active ) {
-
-            g.setColor( brown );
-
-            if( direction == 1 || direction == 3 ) {
-                g.drawRoundRect(pos.getX(), pos.getY(), 16, 1, 10);
-            }
-            else {
-                g.drawRoundRect(pos.getX(), pos.getY(), 1, 16, 10);
-            }
-
+            projectile[ direction ].draw( pos.getX(), pos.getY() );
         }
     }
 

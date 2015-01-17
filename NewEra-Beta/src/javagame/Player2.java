@@ -37,20 +37,29 @@ public class Player2 {
         // Time since last shot
     private int lastShot = 0;
 
+    private Image[] arrows;
 
     public Player2( String sheetName, String name ) {
             // Sets name and spriteSheet
         spriteSheetName = sheetName;
         playerName = name;
 
+        arrows = new Image[4];
+
         // Creates new sprite sheet
         try {
-            playerSpriteSheet = new SpriteSheet( "NewEra-Beta/res/players/"+spriteSheetName, 32, 32 );
+            playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + spriteSheetName, 32, 32);
+            arrows[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
+            arrows[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
+            arrows[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
+            arrows[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
         }
         catch ( SlickException e ){
             System.out.println( "Spritesheet load fail." );
             e.printStackTrace();
         }
+
+
 
         // Sets images for walking animations
         Image[] up = { playerSpriteSheet.getSubImage(1,8), playerSpriteSheet.getSubImage(2,8) , playerSpriteSheet.getSubImage(3,8), playerSpriteSheet.getSubImage(4,8), playerSpriteSheet.getSubImage(5,8), playerSpriteSheet.getSubImage(6,8), playerSpriteSheet.getSubImage(7,8), playerSpriteSheet.getSubImage(8,8) };
@@ -160,7 +169,7 @@ public class Player2 {
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
         for( Projectile p : projectiles ) {
-            p.render( gc, g );
+            p.render( gc, g, arrows );
         }
     }
     public void updateProjectile( int delta, boolean shot, Map2 map  )  {
@@ -179,16 +188,16 @@ public class Player2 {
             */
 
             if( attackingPlayer == attackingUp ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 332 ,315 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
             }
             else if( attackingPlayer == attackingRight ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 340, 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
             }
             else if( attackingPlayer == attackingDown ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 335 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
             }
             else if( attackingPlayer == attackingLeft ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
+                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
             }
 
             if( currentIndex >= projectiles.length ) {
