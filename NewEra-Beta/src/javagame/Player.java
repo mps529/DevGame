@@ -37,29 +37,23 @@ public class Player {
         // Time since last shot
     private int lastShot = 0;
 
-    private Image[] arrows;
+    // projectile Animations
+    private Image[] projectileImage;
 
-    public Player(String sheetName, String name) {
+    public Player(String sheetName, String name ) {
             // Sets name and spriteSheet
         spriteSheetName = sheetName;
         playerName = name;
 
-        arrows = new Image[4];
-
-        // Creates new sprite sheet
+             // Creates new sprite sheet
         try {
             playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + spriteSheetName, 32, 32);
-            arrows[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
-            arrows[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
-            arrows[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
-            arrows[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+
         }
         catch ( SlickException e ){
             System.out.println( "Spritesheet load fail." );
             e.printStackTrace();
         }
-
-
 
         // Sets images for walking animations
         Image[] up = { playerSpriteSheet.getSubImage(1,8), playerSpriteSheet.getSubImage(2,8) , playerSpriteSheet.getSubImage(3,8), playerSpriteSheet.getSubImage(4,8), playerSpriteSheet.getSubImage(5,8), playerSpriteSheet.getSubImage(6,8), playerSpriteSheet.getSubImage(7,8), playerSpriteSheet.getSubImage(8,8) };
@@ -83,7 +77,6 @@ public class Player {
         attackingDown = new Animation( downAttack, durationSpeedAttack, true );
         attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
 
-
         // Setting walking animation
         setPlayerDirection( 2 );
 
@@ -91,11 +84,16 @@ public class Player {
         setPlayerX( 0 );
         setPlayerY( 0 );
 
-            // Should not be able to shoot more then 8 projectiles at once
+        // Should not be able to shoot more then 8 projectiles at once
         projectiles = new Projectile[ 8 ];
         for( int x = 0; x < projectiles.length; x++ ){
             projectiles[ x ] = new Projectile();
         }
+
+    }
+
+    public void setProjectileImage( Image[] projectileImage ) {
+        this.projectileImage = projectileImage;
     }
 
     public Animation getMovingPlayer(){
@@ -169,10 +167,10 @@ public class Player {
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
         for( Projectile p : projectiles ) {
-            p.render( gc, g, arrows );
+            p.render( gc, g, this.projectileImage );
         }
     }
-    public void updateProjectile( int delta, boolean shot, Map2 map  )  {
+    public void updateProjectile( int delta, boolean shot, Map map  )  {
 
             // Increases time since last shot
         lastShot += delta;
@@ -210,6 +208,14 @@ public class Player {
             p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
         }
 
+    }
+
+    public void isRunning() {
+        this.playerSpeed = 3;
+    }
+
+    public void isNotRunning() {
+        this.playerSpeed = 2;
     }
 
 }

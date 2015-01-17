@@ -43,7 +43,7 @@ public class Projectile {
         active = false;
     }
 
-    public void update( int t, int x, int y, Map2 map ) {
+    public void update( int t, int x, int y, Map map ) {
 
             // Checks for the change in position
         int changeX = 0;

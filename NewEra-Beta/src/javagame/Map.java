@@ -132,4 +132,12 @@ public class Map {
 
     }
 
+
+    public void isRunning() {
+        this.speed = 3;
+    }
+
+    public void isNotRunning() {
+        this.speed = 2;
+    }
 }
