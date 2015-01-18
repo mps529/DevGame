@@ -6,10 +6,13 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 public class InventoryScreen extends BasicGameState{
 
     Inventory playerInventory;
+
+    private TiledMap inventoryMap;
 
     private static int gameState;
 
@@ -21,11 +24,12 @@ public class InventoryScreen extends BasicGameState{
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
         playerInventory = playerInventory.getPlayerInvintory();
+        inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory.tmx" );
 
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
-
+        inventoryMap.render( 0,0 );
 
 
     }

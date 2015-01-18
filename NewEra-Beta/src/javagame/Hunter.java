@@ -61,7 +61,7 @@ public class Hunter extends Player {
 
         inventory = inventory.getPlayerInvintory();
 
-        inventory.name = "Tyler";
+
 
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
