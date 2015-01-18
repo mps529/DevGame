@@ -39,6 +39,8 @@ public class Hunter extends Player {
 
     private Image currentAttack;
 
+    private Inventory inventory;
+
 
     private boolean inCombat;
 
@@ -56,6 +58,10 @@ public class Hunter extends Player {
         setProjectileImage( arrows );
 
         currentAttack = arrows[1];
+
+        inventory = inventory.getPlayerInvintory();
+
+        inventory.name = "Tyler";
 
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );

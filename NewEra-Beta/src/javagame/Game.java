@@ -34,7 +34,6 @@ public class Game extends BasicGameState {
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
-        //hunterTom = new Player( "HunterTom.png", "Tom" );
 
         healthFrame = new Image("NewEra-Beta/res/health/BottomBar.png");
 
@@ -149,6 +148,10 @@ public class Game extends BasicGameState {
                 hunterTom.increaseStamina(delta * .003f);
             }
 
+        }
+
+        if( input.isKeyPressed( Input.KEY_F ) ) {
+            sbg.enterState( 2 );
         }
 
         if( input.isKeyPressed( Input.KEY_LSHIFT ) && hunterTom.getStamina() > 10 ) {
