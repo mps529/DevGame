@@ -49,31 +49,37 @@ public class InventoryScreen extends BasicGameState{
         inventoryMap.render( 0,0 );
         playerInventory.renderInventory( g, equippedItems, inventoryItems );
 
+        g.setColor( Color.black );
+        g.drawString( playerInventory.getPlayerName(), 360, 80 );
+        g.drawString( "Attack:  "+ playerInventory.getPlayerOverallAttack(), 360, 100 );
+        g.drawString( "Defence: " + playerInventory.getPlayerOverallDefence(), 360, 120 );
+        g.drawString( "Money: " + playerInventory.getMoney(), 360, 140 );
+
         if( displayItem != null ) {
                 // Name
             g.setColor( displayItem.getItemRarityColorNoAlpha() );
-            g.drawString( displayItem.getName() , 370, 125);
+            g.drawString( displayItem.getName() , 360, 180);
             g.setColor(Color.black );
                 // Class
             int classID = displayItem.getClassID();
             if( classID == 0 ) {
-                g.drawString("Class: Hunter", 370, 145);
+                g.drawString("Class: Hunter", 360, 200);
             }
             else if( classID == 1 ) {
-                g.drawString("Class: Warrior", 370, 145);
+                g.drawString("Class: Warrior", 360, 200);
             }
             else if( classID == 2 ) {
-                g.drawString("Class: Mage", 370, 145);
+                g.drawString("Class: Mage", 360, 200);
             }
             else if( classID == 3 ) {
-                g.drawString("Class: Rouge", 370, 145);
+                g.drawString("Class: Rouge", 360, 200);
             }
             else if( classID == 4 ) {
-                g.drawString("Class: Any", 370, 145);
+                g.drawString("Class: Any", 360, 200);
             }
 
-            g.drawString( "Attack Bonus:  " + displayItem.getAttackPower() , 370, 165);
-            g.drawString( "Defence Bonus: " + displayItem.getDefencePower() , 370, 185);
+            g.drawString( "Attack Bonus:  " + displayItem.getAttackPower() , 360, 220);
+            g.drawString( "Defence Bonus: " + displayItem.getDefencePower() , 360, 240);
 
         }
 
@@ -138,6 +144,11 @@ public class InventoryScreen extends BasicGameState{
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
                 displayItem = playerInventory.getItemByID( equippedItems[7] );
             }
+        }
+
+        int xPos, yPos;
+        for( int x = 0; x < inventoryItems.length; x++ ) {
+
         }
 
 
