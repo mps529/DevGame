@@ -41,7 +41,6 @@ public class Hunter extends Player {
 
     private Inventory inventory;
 
-
     private boolean inCombat;
 
     public Hunter( String sheetName, String name ) throws SlickException {
@@ -60,8 +59,10 @@ public class Hunter extends Player {
         currentAttack = arrows[1];
 
         inventory = inventory.getPlayerInvintory();
+        inventory.setClassID( 0 );
 
-
+        //inventory.printInventory();
+        //inventory.printEquippedItems();
 
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
@@ -71,8 +72,8 @@ public class Hunter extends Player {
 
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( 20 );
-        setStamina( 20 );
+        setHealth( 100 );
+        setStamina( 100 );
         setExp( 0 );
     }
 

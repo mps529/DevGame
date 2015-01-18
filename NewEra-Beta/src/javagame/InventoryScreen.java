@@ -1,19 +1,25 @@
 package javagame;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class InventoryScreen extends BasicGameState{
 
-    Inventory playerInventory;
-
+        // singelton for Inventory
+    private Inventory playerInventory;
+        // Background
     private TiledMap inventoryMap;
+        // Where the mouse is at
+    private int mouseX, mouseY;
+        // ID of locations
+    private int[] equippedItems;
+    private int[] inventoryItems;
+        // This will hold the item that the user is displaying
+    private Items displayItem;
 
+        // This game state
     private static int gameState;
 
     public InventoryScreen( int gameState ) {
@@ -24,13 +30,54 @@ public class InventoryScreen extends BasicGameState{
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
         playerInventory = playerInventory.getPlayerInvintory();
-        inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory.tmx" );
+
+        inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory2.tmx" );
+
+            /*
+                This holds all the equiped items,
+                ORDER: head, body, legs, feet, gloves, weapon, rings, necklace
+            */
+        equippedItems = new int[ 8 ];
+            // This holds the order of what is in your inventory.
+        inventoryItems = new int[ 21 ];
+
 
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
-        inventoryMap.render( 0,0 );
 
+        inventoryMap.render( 0,0 );
+        playerInventory.renderInventory( g, equippedItems, inventoryItems );
+
+        if( displayItem != null ) {
+                // Name
+            g.setColor( displayItem.getItemRarityColorNoAlpha() );
+            g.drawString( displayItem.getName() , 370, 125);
+            g.setColor(Color.black );
+                // Class
+            int classID = displayItem.getClassID();
+            if( classID == 0 ) {
+                g.drawString("Class: Hunter", 370, 145);
+            }
+            else if( classID == 1 ) {
+                g.drawString("Class: Warrior", 370, 145);
+            }
+            else if( classID == 2 ) {
+                g.drawString("Class: Mage", 370, 145);
+            }
+            else if( classID == 3 ) {
+                g.drawString("Class: Rouge", 370, 145);
+            }
+            else if( classID == 4 ) {
+                g.drawString("Class: Any", 370, 145);
+            }
+
+            g.drawString( "Attack Bonus:  " + displayItem.getAttackPower() , 370, 165);
+            g.drawString( "Defence Bonus: " + displayItem.getDefencePower() , 370, 185);
+
+        }
+
+        g.drawString("X: " + mouseX + ", Y: " + mouseY, 410, 50);
 
     }
 
@@ -38,9 +85,61 @@ public class InventoryScreen extends BasicGameState{
 
         Input input = gc.getInput();
 
-        if( input.isKeyPressed( Input.KEY_ESCAPE ) ) {
+        mouseX = input.getMouseX();
+        mouseY = input.getMouseY();
+
+        if( input.isKeyPressed( Input.KEY_F ) ) {
             sbg.enterState( 1 );
         }
+            // HEAD
+        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 80 && mouseY <= 112 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[0] );
+            }
+        }
+            // BODY
+        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[1] );
+            }
+        }
+            // LEGS
+        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 208 && mouseY <= 240 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[2] );
+            }
+        }
+            // BOOTIES
+        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 272 && mouseY <= 304 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[3] );
+            }
+        }
+            // GLOVES
+        if( (mouseX >= 48 && mouseX <= 80) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[4] );
+            }
+        }
+            // WEAPON
+        if( (mouseX >= 176 && mouseX <= 208) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[5] );
+            }
+        }
+            // RING
+        if( (mouseX >= 208 && mouseX <= 240) && ( mouseY >= 48 && mouseY <= 80 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[6] );
+            }
+        }
+            // NECKLACE
+        if( (mouseX >= 272 && mouseX <= 304) && ( mouseY >= 48 && mouseY <= 80 ) ) {
+            if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                displayItem = playerInventory.getItemByID( equippedItems[7] );
+            }
+        }
+
 
     }
 
