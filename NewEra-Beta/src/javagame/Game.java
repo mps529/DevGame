@@ -24,8 +24,6 @@ public class Game extends BasicGameState {
 
     private boolean running = false;
 
-    Image healthFrame;
-
 
     int halfScreenWidth, halfScreenHeight;
 
@@ -34,8 +32,6 @@ public class Game extends BasicGameState {
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
-
-        healthFrame = new Image("NewEra-Beta/res/health/BottomBar.png");
 
         hunterTom = new Hunter( "HunterTom.png", "Tom" );
 
