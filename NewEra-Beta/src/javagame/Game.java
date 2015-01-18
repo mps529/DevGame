@@ -1,11 +1,9 @@
 package javagame;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.Vector;
 
 
 // 94, 96
@@ -14,15 +12,19 @@ public class Game extends BasicGameState {
         // Game State
     private static int gameState;
         // Player Class
-    private Player2 hunterTom;
+    private Hunter hunterTom;
         // Map Class
-    private Map2 map;
+    private Map map;
         // Is Attacking animation playing
     private boolean attacking = false;
         // Diasplay fps and coords
-    boolean showInfo = false;
+    private boolean showInfo = false;
         // Did player shoot
-    boolean shot = false;
+    private boolean shot = false;
+
+    private boolean running = false;
+
+    Image healthFrame;
 
 
     int halfScreenWidth, halfScreenHeight;
@@ -32,7 +34,10 @@ public class Game extends BasicGameState {
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
-        hunterTom = new Player2( "HunterTom.png", "Tom" );
+
+        healthFrame = new Image("NewEra-Beta/res/health/BottomBar.png");
+
+        hunterTom = new Hunter( "HunterTom.png", "Tom" );
 
             // Starting tile
         hunterTom.setPlayerX( 94 );
@@ -40,7 +45,7 @@ public class Game extends BasicGameState {
 
             // Map **Starting tiles for map are 10 under
             // PlayerX and PlayerY then negative
-        map = new Map2( "LargeMapGrasslands.tmx", -84, -86 );
+        map = new Map( "LargeMapGrasslands.tmx", -84, -86 );
 
             // Getting the screen Sizes
         halfScreenHeight = gc.getHeight()/2;
@@ -60,10 +65,15 @@ public class Game extends BasicGameState {
 
         hunterTom.renderProjectile( gc, g );
 
+
+        hunterTom.drawPlayerInfo( g );
+
+
         if( showInfo ) {
             g.setColor( Color.white );
             g.drawString("X: " + hunterTom.getPlayerX()/32 + ", Y: " + hunterTom.getPlayerY()/32, 300, 10);
             g.drawString("X: " + map.getMapCoordX()/32 + ", Y: " +  map.getMapCoordY()/32 , 300, 30);
+            g.drawString("Running: " + running , 300, 50);
         }
         gc.setShowFPS( showInfo );
     }
@@ -72,6 +82,8 @@ public class Game extends BasicGameState {
 
         Input input = gc.getInput();
 
+        boolean moved = false;
+
         if( !attacking ) {
             if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
                 hunterTom.startAnimationWalking();
@@ -79,6 +91,10 @@ public class Game extends BasicGameState {
                 if (map.isSpaceTaken((int) hunterTom.getPlayerX(), (int) hunterTom.getPlayerY() - 12) == 0) {
                     hunterTom.decrementPlayerY(delta);
                     map.incrementMapCoordY();
+                    if( running) {
+                        hunterTom.decreaseStamina( delta*.003f );
+                        moved = true;
+                    }
                 }
             } else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
                 hunterTom.startAnimationWalking();
@@ -86,6 +102,10 @@ public class Game extends BasicGameState {
                 if (map.isSpaceTaken(hunterTom.getPlayerX() + 12, hunterTom.getPlayerY()) == 0) {
                     hunterTom.incrementPlayerX(delta);
                     map.decrementMapCoordX();
+                    if( running ) {
+                        hunterTom.decreaseStamina( delta*.003f );
+                        moved = true;
+                    }
                 }
 
             } else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
@@ -94,6 +114,10 @@ public class Game extends BasicGameState {
                 if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() + 24) == 0) {
                     hunterTom.incrementPlayerY(delta);
                     map.decrementMapCoordY();
+                    if( running) {
+                        hunterTom.decreaseStamina( delta*.003f );
+                        moved = true;
+                    }
                 }
 
             } else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
@@ -102,18 +126,49 @@ public class Game extends BasicGameState {
                 if (map.isSpaceTaken(hunterTom.getPlayerX() - 12, hunterTom.getPlayerY()) == 0) {
                     hunterTom.decrementPlayerX(delta);
                     map.incrementMapCoordX();
+                    if( running) {
+                        hunterTom.decreaseStamina( delta*.003f );
+                        moved = true;
+                    }
                 }
             } else {
                 hunterTom.stopAnimationWalking();
+
             }
 
-            if ((input.isKeyDown(Input.KEY_SPACE))) {
+            if ( input.isKeyDown(Input.KEY_SPACE) && hunterTom.getStamina() > 10 ) {
                 hunterTom.startAnimationAttacking();
                 attacking = true;
+                hunterTom.decreaseStamina();
             } else {
                 hunterTom.stopAnimationAttacking();
             }
 
+            if( !moved ) {
+                hunterTom.increaseStamina(delta * .003f);
+            }
+
+        }
+
+        if( input.isKeyPressed( Input.KEY_F ) ) {
+            sbg.enterState( 2 );
+        }
+
+        if( input.isKeyPressed( Input.KEY_LSHIFT ) && hunterTom.getStamina() > 10 ) {
+            running = !running;
+        }
+
+        if(  hunterTom.getStamina() <= 10 ) {
+            running = false;
+        }
+
+        if( running ) {
+            hunterTom.isRunning();
+            map.isRunning();
+        }
+        else {
+            hunterTom.isNotRunning();
+            map.isNotRunning();
         }
 
         if( hunterTom.isStopped() && attacking ) {
@@ -123,6 +178,10 @@ public class Game extends BasicGameState {
 
         if( input.isKeyPressed(Input.KEY_ESCAPE) ) {
             showInfo = !showInfo;
+        }
+
+        if( !hunterTom.getInCombat() ) {
+            hunterTom.increaseHealth( delta*.003f );
         }
 
         hunterTom.updateProjectile( delta, shot, map );
@@ -134,102 +193,3 @@ public class Game extends BasicGameState {
         return gameState;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-if( !attacking ) {
-            if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(0);
-                if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() - 1) == 0) {
-                    y -= delta*.009f;
-                    if( y < -1 )  {
-                        hunterTom.decrementPlayerY();
-                        map.incrementMapCoordY();
-                        map.updateMapSkewAndCoords();
-                        y=0;
-                    }
-
-                } else if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() - 1) == 2) {
-                    System.out.println("New Map Time!!");
-                }
-            } else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(1);
-                if (map.isSpaceTaken(hunterTom.getPlayerX() + 1, hunterTom.getPlayerY()) == 0) {
-                    x += delta*.009f;
-                    if( x > 1 )  {
-                        hunterTom.incrementPlayerX();
-                        map.decrementMapCoordX();
-                        map.updateMapSkewAndCoords();
-                        x=0;
-                    }
-                } else if (map.isSpaceTaken(hunterTom.getPlayerX() + 1, hunterTom.getPlayerY()) == 2) {
-                    System.out.println("New Map Time!!");
-                }
-            } else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(2);
-                if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() + 1) == 0) {
-                    y += delta*.009f;
-                    if( y > 1 )  {
-                        hunterTom.incrementPlayerY();
-                        map.decrementMapCoordY();
-                        map.updateMapSkewAndCoords();
-                        y=0;
-                    }
-                } else if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() + 1) == 2) {
-                    System.out.println("New Map Time!!");
-                }
-
-            } else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(3);
-                if (map.isSpaceTaken(hunterTom.getPlayerX() - 1, hunterTom.getPlayerY()) == 0) {
-                    x -= delta*.009f;
-                    if( x < -1 )  {
-                        hunterTom.decrementPlayerX();
-                        map.incrementMapCoordX();
-                        map.updateMapSkewAndCoords();
-                        x=0;
-                    }
-                } else if (map.isSpaceTaken(hunterTom.getPlayerX() - 1, hunterTom.getPlayerY()) == 2) {
-                    System.out.println("New Map Time!!");
-                }
-            } else {
-                hunterTom.stopAnimationWalking();
-            }
-
-            if ((input.isKeyDown(Input.KEY_SPACE))) {
-                hunterTom.startAnimationAttacking();
-                attacking = true;
-            } else {
-                hunterTom.stopAnimationAttacking();
-            }
-
-        }
-
-        if( hunterTom.isStopped() && attacking ) {
-            attacking = false;
-            shot = true;
-        }
-
-        if( input.isKeyPressed(Input.KEY_ESCAPE) ) {
-            showInfo = !showInfo;
-        }
-
-        hunterTom.updateProjectile( delta, shot );
-        shot = false;
-
- */
