@@ -22,6 +22,16 @@ public class Inventory {
         // Currency for game
     private int money;
 
+        /*
+            This is cheat way of getting some information into the Inventory Screen
+        */
+    private String playerName;
+    private int baseAttack;
+    private int baseDefence;
+
+    private int playerOverallAttack;
+    private int playerOverallDefence;
+
         // Equiped items **( assigned -1 if he is not wearing anything )
     private int playerHelmet;
     private int playerBody;
@@ -68,6 +78,59 @@ public class Inventory {
             playerInvintory = new Inventory( );
         }
         return playerInvintory;
+    }
+
+    public void setPlayerName( String name ) {
+        this.playerName = name;
+    }
+    public String getPlayerName() { return this.playerName; }
+
+    public void setBaseAttack( int attack ) { this.baseAttack = attack; }
+    public int getPlayerOverallAttack() { return this.playerOverallAttack; }
+
+    public void setBaseDefence( int defence ) { this.baseDefence = defence; }
+    public int getPlayerOverallDefence() { return this.playerOverallDefence; }
+
+    private void calculateAttackAndDefence() {
+            // Setting to base
+        this.playerOverallAttack = this.baseAttack;
+        this.playerOverallDefence = this.baseDefence;
+
+        for( Items item : this.itemList ) {
+
+            if (item.getID() == this.playerHelmet) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerBody) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerPants) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerGloves) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerWeapon) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerBoots) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerRing) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+            else if (item.getID() == this.playerNecklaces) {
+                this.playerOverallAttack += item.getAttackPower();
+                this.playerOverallDefence += item.getDefencePower();
+            }
+        }
     }
 
     public void setClassID( int classID ) {
@@ -165,60 +228,70 @@ public class Inventory {
                     case 2:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerHelmet = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 3:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerBody = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 4:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerPants = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 5:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerGloves = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 6:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerBoots = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 7:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerRing = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 8:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerNecklaces = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 9:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerWeapon = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 10:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerWeapon = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
                     case 11:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerWeapon = ID;
+                            calculateAttackAndDefence();
                             return true;
 
                         }
@@ -226,6 +299,7 @@ public class Inventory {
                     case 12:
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerWeapon = ID;
+                            calculateAttackAndDefence();
                             return true;
                         }
                         break;
@@ -261,6 +335,11 @@ public class Inventory {
         else if( this.playerNecklaces == ID ) {
             this.playerNecklaces = -1;
         }
+        else {
+            return;
+        }
+
+        calculateAttackAndDefence();
     }
 
         // Returns null if not found

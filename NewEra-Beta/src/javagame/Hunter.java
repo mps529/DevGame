@@ -60,9 +60,9 @@ public class Hunter extends Player {
 
         inventory = inventory.getPlayerInvintory();
         inventory.setClassID( 0 );
-
-        //inventory.printInventory();
-        //inventory.printEquippedItems();
+        inventory.setBaseAttack( this.BASE_ATTACK );
+        inventory.setBaseAttack( this.BASE_DEFENCE );
+        inventory.setPlayerName( name );
 
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
