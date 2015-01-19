@@ -40,7 +40,7 @@ public class Items {
         // 0 - Common, 1 - Uncommon, 2 - Rare, 3 - Legendary, 4 - God
     private int rarity;
 
-        // Grey - Common, Orange - Uncommon, Blue - Rare, Purple - Legendary, Yellow - God
+        // Grey - Common, Green - Uncommon, Blue - Rare, Purple - Legendary, Yellow - God
     Color itemRarityColor;
     Color itemRarityColorNoAlpha;
 
@@ -157,8 +157,8 @@ public class Items {
                 break;
                 // Uncommon
             case 1:
-                this.itemRarityColor = new Color( 255,165,0, .5f );
-                this.itemRarityColorNoAlpha = new Color( 255,165,0);
+                this.itemRarityColor = new Color( 0, 255 ,0, .5f );
+                this.itemRarityColorNoAlpha = new Color( 0, 255 ,0);
                 break;
                 // Rare
             case 2:

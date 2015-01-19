@@ -26,6 +26,7 @@ public class Inventory {
             This is cheat way of getting some information into the Inventory Screen
         */
     private String playerName;
+
     private int baseAttack;
     private int baseDefence;
 
@@ -170,6 +171,16 @@ public class Inventory {
         else {
             return false;
         }
+    }
+
+    public boolean dropItem( int ID ) {
+        for( int x = 0; x < getItemCount(); x++ ) {
+            if( this.itemList.elementAt( x ).getID() == ID ) {
+                this.itemList.removeElementAt( x );
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addStartingItems( ) {
@@ -420,8 +431,8 @@ public class Inventory {
                 inventory[inventoryCounter++] = item.getID();
 
                 x += 64;
-                if( x >= 496 ) {
-                    x -= 384;
+                if( x > 496 ) {
+                    x = 112;
                     y+= 64;
                 }
             }

@@ -61,7 +61,7 @@ public class Hunter extends Player {
         inventory = inventory.getPlayerInvintory();
         inventory.setClassID( 0 );
         inventory.setBaseAttack( this.BASE_ATTACK );
-        inventory.setBaseAttack( this.BASE_DEFENCE );
+        inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setPlayerName( name );
 
         red = new Color( 225, 0, 0, .7f );
