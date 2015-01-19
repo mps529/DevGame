@@ -21,18 +21,20 @@ public class Inventory {
 
         // Currency for game
     private int money;
-
         /*
             This is cheat way of getting some information into the Inventory Screen
         */
     private String playerName;
+
     private int baseAttack;
     private int baseDefence;
+
+    private int playerLevel;
 
     private int playerOverallAttack;
     private int playerOverallDefence;
 
-        // Equiped items **( assigned -1 if he is not wearing anything )
+        // Equipped items **( assigned -1 if he is not wearing anything )
     private int playerHelmet;
     private int playerBody;
     private int playerGloves;
@@ -170,6 +172,16 @@ public class Inventory {
         else {
             return false;
         }
+    }
+
+    public boolean dropItem( int ID ) {
+        for( int x = 0; x < getItemCount(); x++ ) {
+            if( this.itemList.elementAt( x ).getID() == ID ) {
+                this.itemList.removeElementAt( x );
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addStartingItems( ) {
@@ -420,8 +432,8 @@ public class Inventory {
                 inventory[inventoryCounter++] = item.getID();
 
                 x += 64;
-                if( x >= 496 ) {
-                    x -= 384;
+                if( x > 496 ) {
+                    x = 112;
                     y+= 64;
                 }
             }
