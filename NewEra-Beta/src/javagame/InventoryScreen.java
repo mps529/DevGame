@@ -25,10 +25,14 @@ public class InventoryScreen extends BasicGameState{
         // What is selected
     private boolean equipedItemSelected;
     private boolean inventoryItemSelected;
+    private boolean drop;
 
     private Image dropItem;
     private Image equipItem;
     private Image unEquipItem;
+    private Image confirm;
+
+    private double timeOut;
 
         // This game state
     private static int gameState;
@@ -46,10 +50,14 @@ public class InventoryScreen extends BasicGameState{
 
         equipedItemSelected = false;
         inventoryItemSelected = false;
+        drop = false;
+        timeOut = 0;
 
+            // Buttons
         dropItem = new Image( "NewEra-Beta/res/buttons/DropItem.png" );
         equipItem = new Image( "NewEra-Beta/res/buttons/EquipItem.png" );
         unEquipItem = new Image( "NewEra-Beta/res/buttons/unEquipItem.png" );
+        confirm = new Image( "NewEra-Beta/res/buttons/confirm.png" );
 
             /*
                 This holds all the equiped items,
@@ -106,14 +114,24 @@ public class InventoryScreen extends BasicGameState{
 
         if( equipedItemSelected ){
             unEquipItem.draw( 352, 256 );
-            dropItem.draw( 512, 256 );
+            if( !drop ){
+                dropItem.draw( 512, 256 );
+            }
+            else {
+                confirm.draw( 512, 256 );
+            }
         }
         else if( inventoryItemSelected ) {
             equipItem.draw( 352, 256 );
-            dropItem.draw( 512, 256 );
+            if( !drop ){
+                dropItem.draw( 512, 256 );
+            }
+            else {
+                confirm.draw( 512, 256 );
+            }
         }
 
-        g.drawString("X: " + mouseX + ", Y: " + mouseY, 410, 50);
+        //g.drawString("X: " + mouseX + ", Y: " + mouseY, 410, 50);
 
     }
 
@@ -237,9 +255,7 @@ public class InventoryScreen extends BasicGameState{
             }
             if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
                 if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    playerInventory.dropItem( displayItem.getID() );
-                    equipedItemSelected = false;
-                    displayItem = null;
+                    drop = true;
                 }
             }
         }
@@ -253,14 +269,27 @@ public class InventoryScreen extends BasicGameState{
             }
             if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
                 if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    playerInventory.dropItem( displayItem.getID() );
-                    inventoryItemSelected = false;
-                    displayItem = null;
+                    drop = true;
                 }
             }
         }
 
+        if( timeOut > 500 ) {
+            drop = false;
+        }
 
+        if( drop ) {
+            timeOut += delta*.1f;
+            if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
+                if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+                    playerInventory.dropItem( displayItem.getID() );
+                    equipedItemSelected = false;
+                    displayItem = null;
+                    timeOut = 0;
+                    drop = false;
+                }
+            }
+        }
     }
 
     public int getID( ) {

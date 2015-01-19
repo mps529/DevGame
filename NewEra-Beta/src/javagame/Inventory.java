@@ -21,7 +21,6 @@ public class Inventory {
 
         // Currency for game
     private int money;
-
         /*
             This is cheat way of getting some information into the Inventory Screen
         */
@@ -30,10 +29,12 @@ public class Inventory {
     private int baseAttack;
     private int baseDefence;
 
+    private int playerLevel;
+
     private int playerOverallAttack;
     private int playerOverallDefence;
 
-        // Equiped items **( assigned -1 if he is not wearing anything )
+        // Equipped items **( assigned -1 if he is not wearing anything )
     private int playerHelmet;
     private int playerBody;
     private int playerGloves;

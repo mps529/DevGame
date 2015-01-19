@@ -25,6 +25,7 @@ public class Game extends BasicGameState {
     private boolean running = false;
 
 
+
     int halfScreenWidth, halfScreenHeight;
 
     public Game( int state ) {
