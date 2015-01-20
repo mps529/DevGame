@@ -15,14 +15,17 @@ public class Items {
             9 - Sword, 10 - Bow, 11 - Dagger, 12 - Wand
         */
     private int itemID;
-
+        // Current amount of items in Bag
     private static int ItemsCount = 0;
-
+        // ID of current Item
     private int ID;
 
         // This specifies which class can use it
         // 0 - Hunter, 1 - Warrior, 2 - Mage, 3 - Rouge, 4 - Any
     private int classID;
+
+        // Gold worth of Item
+    private int worth;
 
         // Buffs
     private int attackPower;
@@ -30,7 +33,6 @@ public class Items {
 
         // Sprite image
     private Image imageItem;
-
 
         // Name of item
     private String name;
@@ -48,18 +50,17 @@ public class Items {
 
         Random randomNumber = new Random();
 
-
-
         if( itemId == -1 ) {
             this.itemID = randomNumber.nextInt( 13 );
         }
         else {
             this.itemID = itemId;
         }
+            // If not a potion
         if( this.itemID != 0 && this.itemID != 1 ) {
-
+                // Set for which class it is for **( Applies for weapons only, default is all others )
             if (classID == -1) {
-                switch (this.itemID) {
+                switch ( this.itemID ) {
                     case 9:
                         this.classID = 1;
                         break;
@@ -78,7 +79,6 @@ public class Items {
             } else {
                 this.classID = classID;
             }
-
             if (rarity == -1) {
                 assignRarity(randomNumber);
                 assignColor();
@@ -92,6 +92,16 @@ public class Items {
         if( getClassID() == 0 ) {
             assignStatsForHunter(level);
         }
+        else if( getClassID() == 1 ) {
+            assignStatsForWarrior(level);
+        }
+        if( getClassID() == 2 ) {
+            assignStatsForMage(level);
+        }
+        if( getClassID() == 0 ) {
+            assignStatsForRouge(level);
+        }
+        setWorth();
         increaseAndAssignID();
     }
 
@@ -135,7 +145,7 @@ public class Items {
         else if(getClassID() == 3 ) {
             assignStatsForRouge( level );
         }
-
+        setWorth();
         increaseAndAssignID();
     }
 
@@ -288,6 +298,19 @@ public class Items {
         this.ID = ItemsCount;
         ItemsCount++;
     }
+
+    public void setWorth() {
+        Random random = new Random();
+
+        this.worth = 0;
+
+        this.worth += getAttackPower() * random.nextInt( 8 ) + 2;
+        this.worth += getDefencePower() * random.nextInt( 8 ) + 2;
+
+        this.worth += getRarity() * random.nextInt( 8 ) + 3;
+    }
+    public void setWorth( int worth ) { this.worth = worth; }
+    public int getWorth() { return this.worth; }
 
     public int getID() {
         return this.ID;
@@ -861,17 +884,12 @@ public class Items {
     }
     private void setImage()  {
         Random randomPicture = new Random();
+            // Holds Class armor specifics in sprite sheet
         int[] classID = { 3, 5, 0, 9 };
-        int random;
-        int randomClass;
-        SpriteSheet armor;
-
-        this.imageItem = null;
-
-        Image temp;
-
+            
         try {
-            armor = new SpriteSheet("NewEra-Beta/res/items/armorSprite.png", 32, 32);
+            SpriteSheet armor = new SpriteSheet("NewEra-Beta/res/items/armorSprite.png", 32, 32);
+            SpriteSheet ringAndNecklace = new SpriteSheet("NewEra-Beta/res/items/RingAndNeck.png", 32, 32);
 
             switch ( getItemID() ) {
                 case 0:
@@ -882,47 +900,34 @@ public class Items {
                     break;
                     // Helmet
                 case 2:
-                    random = randomPicture.nextInt(8);
-                    System.out.println( "Helmet: " + random );
-                    this.imageItem = armor.getSubImage(random, 1).copy();
+                    this.imageItem = armor.getSubImage( randomPicture.nextInt(10) , 1).copy();
 
                     break;
                     // Body
                 case 3:
                     if( this.classID == 0 ) {
-                        random = randomPicture.nextInt(9);
-                        System.out.println( "Hunter Body: " + random );
                         armor.startUse();
-                        this.imageItem = armor.getSubImage(random, 3).copy();
+                        this.imageItem = armor.getSubImage( randomPicture.nextInt(10), 3).copy();
                         armor.endUse();
                     }
                     else if( this.classID == 1 ) {
-                        random = randomPicture.nextInt(9);
-                        System.out.println( "Warrior Body: " + random );
                         armor.startUse();
-                        this.imageItem = armor.getSubImage(randomPicture.nextInt(8), 5).copy();
+                        this.imageItem = armor.getSubImage(randomPicture.nextInt(10), 5).copy();
                         armor.endUse();
                     }
                     else if( this.classID == 2 ) {
-                        random = randomPicture.nextInt(8);
-                        System.out.println( "Mage Body: " + random );
                         armor.startUse();
-                        this.imageItem = armor.getSubImage(randomPicture.nextInt(7), 0).copy();
+                        this.imageItem = armor.getSubImage(randomPicture.nextInt(9), 0).copy();
                         armor.endUse();
                     }
                     else if( this.classID == 3 ) {
-                        random = randomPicture.nextInt(8);
-                        System.out.println( "Rouge Body: " + random );
                         armor.startUse();
-                        this.imageItem = armor.getSubImage(random, 4).copy();
+                        this.imageItem = armor.getSubImage( randomPicture.nextInt(9), 4).copy();
                         armor.endUse();
                     }
                     else if( this.classID == 4 ) {
-                        random = randomPicture.nextInt(8);
-                        randomClass = classID[randomPicture.nextInt(3)];
-                        System.out.println( "Any Body: " + random + ", class: " + randomClass );
                         armor.startUse();
-                        this.imageItem = armor.getSubImage(random, randomClass).copy();
+                        this.imageItem = armor.getSubImage( randomPicture.nextInt(9), classID[randomPicture.nextInt(3)] ).copy();
                         armor.endUse();
                     }
                     break;
@@ -930,24 +935,20 @@ public class Items {
                     this.imageItem = new Image("NewEra-Beta/res/items/template.png");
                     break;
                 case 5:
-                    random = randomPicture.nextInt(5);
-                    System.out.println( "Gloves: " + random );
                     armor.startUse();
-                    this.imageItem = armor.getSubImage(random, 6 ).copy();
+                    this.imageItem = armor.getSubImage( randomPicture.nextInt(6), 6 ).copy();
                     armor.endUse();
                     break;
                 case 6:
-                    random = randomPicture.nextInt(5);
-                    System.out.println("Boots: " + random);
                     armor.startUse();
                     this.imageItem = armor.getSubImage(randomPicture.nextInt(5), 2).copy();
                     armor.endUse();
                     break;
                 case 7:
-                    this.imageItem = new Image("NewEra-Beta/res/items/template.png");
+                    this.imageItem = ringAndNecklace.getSubImage( randomPicture.nextInt( 8 ), 0 ).copy();
                     break;
                 case 8:
-                    this.imageItem = new Image("NewEra-Beta/res/items/template.png");
+                    this.imageItem = ringAndNecklace.getSubImage( randomPicture.nextInt( 8 ), 1 ).copy();
                     break;
                 case 9:
                     this.imageItem = new Image("NewEra-Beta/res/items/sword.png");

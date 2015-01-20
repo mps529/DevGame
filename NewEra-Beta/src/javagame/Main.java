@@ -7,19 +7,19 @@ public class Main extends StateBasedGame {
 
     public static final String gameName = "New Era Beta";
     public static final int game = 1;
-    public static final int invintoryScreen = 2;
+    public static final int inventoryScreen = 2;
 
     public Main( String name ) {
         super( name );
 
         this.addState( new Game( game ) );
-        this.addState( new InventoryScreen( invintoryScreen ) );
+        this.addState( new InventoryScreen( inventoryScreen) );
     }
 
     public void initStatesList( GameContainer gc ) throws SlickException {
         // Inits the two screens
         this.getState( game ).init( gc, this );
-        this.getState( invintoryScreen ).init( gc, this );
+        this.getState(inventoryScreen).init( gc, this );
         // Sets menu as start screen
         this.enterState( game );
     }

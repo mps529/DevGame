@@ -1,8 +1,10 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.Transition;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class InventoryScreen extends BasicGameState{
@@ -44,51 +46,55 @@ public class InventoryScreen extends BasicGameState{
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        playerInventory = playerInventory.getPlayerInvintory();
+            // Inventory
+        this.playerInventory = this.playerInventory.getPlayerInvintory();
 
-        inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory2.tmx" );
+            // Inventory Background
+        this.inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory2.tmx" );
 
-        equipedItemSelected = false;
-        inventoryItemSelected = false;
-        drop = false;
-        timeOut = 0;
+            // Booleans for display
+        this.equipedItemSelected = false;
+        this.inventoryItemSelected = false;
+        this.drop = false;
+            // timeout for drop item
+        this.timeOut = 0;
 
             // Buttons
-        dropItem = new Image( "NewEra-Beta/res/buttons/DropItem.png" );
-        equipItem = new Image( "NewEra-Beta/res/buttons/EquipItem.png" );
-        unEquipItem = new Image( "NewEra-Beta/res/buttons/unEquipItem.png" );
-        confirm = new Image( "NewEra-Beta/res/buttons/confirm.png" );
+        this.dropItem = new Image( "NewEra-Beta/res/buttons/DropItem.png" );
+        this.equipItem = new Image( "NewEra-Beta/res/buttons/EquipItem.png" );
+        this.unEquipItem = new Image( "NewEra-Beta/res/buttons/unEquipItem.png" );
+        this.confirm = new Image( "NewEra-Beta/res/buttons/confirm.png" );
 
             /*
                 This holds all the equiped items,
                 ORDER: head, body, legs, feet, gloves, weapon, rings, necklace
             */
-        equippedItems = new int[ 8 ];
+        this.equippedItems = new int[ 8 ];
             // This holds the order of what is in your inventory.
-        inventoryItems = new int[ 21 ];
-
-
+        this.inventoryItems = new int[ 21 ];
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
-        inventoryMap.render( 0,0 );
+        this.inventoryMap.render( 0,0 );
 
-        playerInventory.renderInventory( g, equippedItems, inventoryItems );
+        this.playerInventory.renderInventory( g, this.equippedItems, this.inventoryItems );
 
+         /***************************** Need to Remove  **************************/
         g.setColor( Color.black );
-        g.drawString( playerInventory.getPlayerName(), 360, 80 );
-        g.drawString( "Attack:  "+ playerInventory.getPlayerOverallAttack(), 360, 100 );
-        g.drawString( "Defence: " + playerInventory.getPlayerOverallDefence(), 360, 120 );
-        g.drawString( "Money: " + playerInventory.getMoney(), 360, 140 );
+        g.drawString( this.playerInventory.getPlayerName(), 360, 80 );
+        g.drawString( "Attack:  "+ this.playerInventory.getPlayerOverallAttack(), 360, 100 );
+        g.drawString( "Defence: " + this.playerInventory.getPlayerOverallDefence(), 360, 120 );
+        g.drawString( "Money: " + this.playerInventory.getMoney(), 360, 140 );
 
-        if( displayItem != null ) {
+            // If item is selected
+        if( this.displayItem != null ) {
                 // Name
-            g.setColor( displayItem.getItemRarityColorNoAlpha() );
-            g.drawString( displayItem.getName() , 360, 180);
+            g.setColor( this.displayItem.getItemRarityColorNoAlpha() );
+            g.drawString( this.displayItem.getName() , 360, 180);
             g.setColor(Color.black );
                 // Class
-            int classID = displayItem.getClassID();
+            int classID = this.displayItem.getClassID();
             if( classID == 0 ) {
                 g.drawString("Class: Hunter", 360, 200);
             }
@@ -105,137 +111,141 @@ public class InventoryScreen extends BasicGameState{
                 g.drawString("Class: Any", 360, 200);
             }
 
-            g.drawString( "Attack Bonus:  " + displayItem.getAttackPower() , 360, 220);
-            g.drawString( "Defence Bonus: " + displayItem.getDefencePower() , 360, 240);
+            g.drawString( "Attack Bonus:  " + this.displayItem.getAttackPower() , 360, 220);
+            g.drawString( "Defence Bonus: " + this.displayItem.getDefencePower() , 360, 240);
+
+            // Add worth
 
             g.setColor( Color.white );
-            g.drawRect( selectedX, selectedY, 32, 32 );
+            g.drawRect( this.selectedX, this.selectedY, 32, 32 );
         }
 
-        if( equipedItemSelected ){
-            unEquipItem.draw( 352, 256 );
-            if( !drop ){
-                dropItem.draw( 512, 256 );
+        if( this.equipedItemSelected ){
+            this.unEquipItem.draw( 352, 256 );
+            if( !this.drop ){
+                this.dropItem.draw( 512, 256 );
             }
             else {
-                confirm.draw( 512, 256 );
+                this.confirm.draw( 512, 256 );
             }
         }
-        else if( inventoryItemSelected ) {
-            equipItem.draw( 352, 256 );
-            if( !drop ){
-                dropItem.draw( 512, 256 );
+        else if( this.inventoryItemSelected ) {
+            this.equipItem.draw( 352, 256 );
+            if( !this.drop ){
+                this.dropItem.draw( 512, 256 );
             }
             else {
-                confirm.draw( 512, 256 );
+                this.confirm.draw( 512, 256 );
             }
         }
 
-        //g.drawString("X: " + mouseX + ", Y: " + mouseY, 410, 50);
-
+        //g.drawString( "X: " + this.mouseX + ", Y: " + this.mouseY, 500, 100 );
     }
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
 
         Input input = gc.getInput();
 
-        mouseX = input.getMouseX();
-        mouseY = input.getMouseY();
+            // Mouse X & Y
+        this.mouseX = input.getMouseX();
+        this.mouseY = input.getMouseY();
 
+            // F will return to game
         if( input.isKeyPressed( Input.KEY_F ) ) {
             sbg.enterState( 1 );
         }
             // HEAD
-        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 80 && mouseY <= 112 ) ) {
+        if( (this.mouseX >= 112 && this.mouseX <= 144) && ( this.mouseY >= 80 && this.mouseY <= 112 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[0] );
-                selectedX = 112;
-                selectedY = 80;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = playerInventory.getItemByID( this.equippedItems[0] );
+                this.selectedX = 112;
+                this.selectedY = 80;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // BODY
-        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+        if( (this.mouseX >= 112 && this.mouseX <= 144) && ( this.mouseY >= 144 && this.mouseY <= 176 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[1] );
-                selectedX = 112;
-                selectedY = 144;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = this.playerInventory.getItemByID( this.equippedItems[1] );
+                this.selectedX = 112;
+                this.selectedY = 144;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // LEGS
-        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 208 && mouseY <= 240 ) ) {
+        if( ( this.mouseX >= 112 && this.mouseX <= 144) && ( this.mouseY >= 208 && this.mouseY <= 240 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[2] );
-                selectedX = 112;
-                selectedY = 208;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = this.playerInventory.getItemByID( this.equippedItems[2] );
+                this.selectedX = 112;
+                this.selectedY = 208;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // BOOTIES
-        if( (mouseX >= 112 && mouseX <= 144) && ( mouseY >= 272 && mouseY <= 304 ) ) {
+        else if( (this.mouseX >= 112 && this.mouseX <= 144) && ( this.mouseY >= 272 && this.mouseY <= 304 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[3] );
-                selectedX = 112;
-                selectedY = 272;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = this.playerInventory.getItemByID( this.equippedItems[3] );
+                this.selectedX = 112;
+                this.selectedY = 272;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // GLOVES
-        if( (mouseX >= 48 && mouseX <= 80) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+        else if( ( this.mouseX >= 48 && this.mouseX <= 80) && ( this.mouseY >= 144 && this.mouseY <= 176 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[4] );
-                selectedX = 48;
-                selectedY = 144;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = playerInventory.getItemByID( this.equippedItems[4] );
+                this.selectedX = 48;
+                this.selectedY = 144;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // WEAPON
-        if( (mouseX >= 176 && mouseX <= 208) && ( mouseY >= 144 && mouseY <= 176 ) ) {
+        else if( (this.mouseX >= 176 && this.mouseX <= 208) && ( this.mouseY >= 144 && this.mouseY <= 176 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[5] );
-                selectedX = 176;
-                selectedY = 144;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = this.playerInventory.getItemByID( this.equippedItems[5] );
+                this.selectedX = 176;
+                this.selectedY = 144;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // RING
-        if( (mouseX >= 208 && mouseX <= 240) && ( mouseY >= 48 && mouseY <= 80 ) ) {
+        else if( (this.mouseX >= 208 && this.mouseX <= 240) && ( this.mouseY >= 48 && this.mouseY <= 80 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[6] );
-                selectedX = 208;
-                selectedY = 48;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = this.playerInventory.getItemByID( this.equippedItems[6] );
+                this.selectedX = 208;
+                this.selectedY = 48;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
             // NECKLACE
-        if( (mouseX >= 272 && mouseX <= 304) && ( mouseY >= 48 && mouseY <= 80 ) ) {
+        else if( (this.mouseX >= 272 && this.mouseX <= 304) && ( this.mouseY >= 48 && this.mouseY <= 80 ) ) {
             if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                displayItem = playerInventory.getItemByID( equippedItems[7] );
-                selectedX = 272;
-                selectedY = 48;
-                equipedItemSelected = true;
-                inventoryItemSelected = false;
+                this.displayItem = playerInventory.getItemByID( this.equippedItems[7] );
+                this.selectedX = 272;
+                this.selectedY = 48;
+                this.equipedItemSelected = true;
+                this.inventoryItemSelected = false;
             }
         }
+
             // Checks what is in the inventory
         int xPos = 112, yPos = 464;
-        for( int x = 0; x < inventoryItems.length; x++ ) {
-            if( (mouseX >= xPos && mouseX <= xPos+32) && ( mouseY >= yPos && mouseY <= yPos+32 ) ) {
+        for( int x = 0; x < this.playerInventory.getInventoryCount(); x++ ) {
+            if( (this.mouseX >= xPos && this.mouseX <= xPos+32) && ( this.mouseY >= yPos && this.mouseY <= yPos+32 ) ) {
                 if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    displayItem = playerInventory.getItemByID( inventoryItems[x] );
-                    x = inventoryItems.length;
-                    selectedX = xPos;
-                    selectedY = yPos;
-                    equipedItemSelected = false;
-                    inventoryItemSelected = true;
+                    this.displayItem = this.playerInventory.getItemByID( this.inventoryItems[x] );
+                    x = this.inventoryItems.length;
+                    this.selectedX = xPos;
+                    this.selectedY = yPos;
+                    this.equipedItemSelected = false;
+                    this.inventoryItemSelected = true;
                 }
             }
             xPos += 64;
@@ -245,55 +255,60 @@ public class InventoryScreen extends BasicGameState{
             }
         }
 
-        if( equipedItemSelected ){
-            if( (mouseX >= 352 && mouseX <= 448) && ( mouseY >= 256 && mouseY <= 320 ) ) {
+            // If Item was selected
+        if( this.equipedItemSelected ){
+            if( ( this.mouseX >= 352 && this.mouseX <= 448) && ( this.mouseY >= 256 && this.mouseY <= 320 ) ) {
                 if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    playerInventory.unEquipItem( displayItem.getID() );
-                    equipedItemSelected = false;
-                    displayItem = null;
+                    this.playerInventory.unEquipItem( this.displayItem.getID() );
+                    this.equipedItemSelected = false;
+                    this.displayItem = null;
                 }
             }
-            if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
+            if( ( this.mouseX >= 512 && this.mouseX <= 608) && ( this.mouseY >= 256 && this.mouseY <= 320 ) ) {
                 if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    drop = true;
-                }
-            }
-        }
-        else if( inventoryItemSelected ) {
-            if( (mouseX >= 352 && mouseX <= 448) && ( mouseY >= 256 && mouseY <= 320 ) ) {
-                if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    playerInventory.equipItem( displayItem.getID() );
-                    inventoryItemSelected = false;
-                    displayItem = null;
-                }
-            }
-            if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
-                if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
-                    drop = true;
+                    this.drop = true;
                 }
             }
         }
-
-        if( timeOut > 500 ) {
-            drop = false;
+        else if( this.inventoryItemSelected ) {
+            if( ( this.mouseX >= 352 && this.mouseX <= 448) && ( this.mouseY >= 256 && this.mouseY <= 320 ) ) {
+                if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                    this.playerInventory.equipItem( displayItem.getID() );
+                    this.inventoryItemSelected = false;
+                    this.displayItem = null;
+                }
+            }
+            if( ( ( this.mouseX >= 512 && this.mouseX <= 608) && ( this.mouseY >= 256 && this.mouseY <= 320 ) ) && !drop ) {
+                if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                    this.drop = true;
+                }
+            }
         }
 
-        if( drop ) {
-            timeOut += delta*.1f;
-            if( (mouseX >= 512 && mouseX <= 608) && ( mouseY >= 256 && mouseY <= 320 ) ) {
-                if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                    playerInventory.dropItem( displayItem.getID() );
-                    equipedItemSelected = false;
-                    displayItem = null;
-                    timeOut = 0;
-                    drop = false;
+            // Drop Time out
+        if( this.timeOut > 500 ) {
+            this.drop = false;
+            this.timeOut = 0;
+        }
+
+        if( this.drop ) {
+            if( ( this.mouseX >= 512 && this.mouseX <= 608) && ( this.mouseY >= 256 && this.mouseY <= 320 ) ) {
+                if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) ) {
+                    System.out.println( "And Click" );
+                    this.playerInventory.dropItem( this.displayItem.getID() );
+                    this.equipedItemSelected = false;
+                    this.inventoryItemSelected = false;
+                    this.displayItem = null;
+                    this.timeOut = 0;
+                    this.drop = false;
                 }
             }
+            this.timeOut += delta*.1f;
         }
     }
 
     public int getID( ) {
-        return gameState;
+        return this.gameState;
     }
 
 }

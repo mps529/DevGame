@@ -1,10 +1,14 @@
 package javagame;
 
 
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Projectile {
+
         // Position of projectile
     private Vector2f pos;
         // Speed of projectile
@@ -13,18 +17,14 @@ public class Projectile {
     private Vector2f projectilePos;
         // How long the projectile has been alive for
     private int lived = 0;
-
         // 0-Up, 1-Right, 2-Down, 3-Left
     private int direction;
-
         // If the projectile is still active
     private boolean active = true;
-
-        // This is for the arrow color
-    Color brown;
-
         // Lifespan of projectile
-    private static int MAX_LIFETIME = 1500;
+    private static int MAX_LIFETIME = 890;
+
+    private int speed = 5 ;
 
     public Projectile( Vector2f pos, Vector2f playerPos, Vector2f projectilePos, int direction ) {
             // Setting Screen position
@@ -35,75 +35,73 @@ public class Projectile {
         this.projectilePos = projectilePos;
             // Direction
         this.direction = direction;
-            // Setting the rgb of the color brown
-        brown = new Color( 139, 89, 46 );
     }
 
     public Projectile( ) {
-        active = false;
+        this.active = false;
     }
 
-    public void update( int t, int x, int y, Map map ) {
+    public void update( int delta, int x, int y, Map map ) {
 
             // Checks for the change in position
         int changeX = 0;
         int changeY = 0;
 
-        if( active ) {
+        if( this.active ) {
                 // Checking if projectile hit something
-            if(  map.isSpaceTaken( projectilePos.getX(), projectilePos.getY() ) != 0 ) {
-                active = false;
+            if(  map.isSpaceTaken( this.projectilePos.getX(), this.projectilePos.getY() ) != 0 ) {
+                this.active = false;
             }
                 // Calculation if player changed position since projectile shot
-            changeX = (int)playerPos.getX() - x;
-            changeY = (int)playerPos.getY() - y;
+            changeX = (int)this.playerPos.getX() - x;
+            changeY = (int)this.playerPos.getY() - y;
                 // If there is a change adjust
             if( changeX != 0 ) {
-                pos.set( pos.getX() + changeX, pos.getY() );
-                playerPos.set( x, y );
+                this.pos.set( this.pos.getX() + changeX, this.pos.getY() );
+                this.playerPos.set( x, y );
             }
             if( changeY != 0 ) {
-                pos.set( pos.getX(), pos.getY() + changeY );
-                playerPos.set( x, y );
+                this.pos.set( this.pos.getX(), this.pos.getY() + changeY );
+                this.playerPos.set( x, y );
             }
 
                 // Increasing projectile position and position on screen
-            switch(direction) {
+            switch(this.direction) {
                 case 0:
-                    pos.set( pos.getX(), pos.getY() - 3 );
-                    projectilePos.set( projectilePos.getX(), projectilePos.getY() - 3 );
+                    this.pos.set( pos.getX(), this.pos.getY() - this.speed );
+                    this.projectilePos.set( this.projectilePos.getX(), this.projectilePos.getY() - this.speed );
                     break;
                 case 1:
-                    pos.set(pos.getX() + 3, pos.getY() );
-                    projectilePos.set( projectilePos.getX()+3, projectilePos.getY() );
+                    this.pos.set(pos.getX() + this.speed, this.pos.getY() );
+                    this.projectilePos.set(this.projectilePos.getX()+ this.speed, this.projectilePos.getY() );
                     break;
                 case 2:
-                    pos.set( pos.getX(), pos.getY() + 3);
-                    projectilePos.set( projectilePos.getX(), projectilePos.getY() + 3 );
+                    this.pos.set( this.pos.getX(), this.pos.getY() + this.speed);
+                    this.projectilePos.set( this.projectilePos.getX(), this.projectilePos.getY() + this.speed );
                     break;
                 case 3:
-                    pos.set(pos.getX() - 3, pos.getY());
-                    projectilePos.set( projectilePos.getX() - 3, projectilePos.getY() );
+                    this.pos.set(pos.getX() - this.speed, this.pos.getY());
+                    this.projectilePos.set( this.projectilePos.getX() - this.speed, this.projectilePos.getY() );
                     break;
             }
                 // Increase time alive
-            lived += t;
+            this.lived += delta;
                 // Check if proectile has live past its time
-            if( lived > MAX_LIFETIME ) {
-                active = false;
+            if( this.lived > this.MAX_LIFETIME ) {
+                this.active = false;
             }
         }
     }
 
 
     public void render( GameContainer gc, Graphics g, Image[] projectile ) throws SlickException {
-        if( active ) {
-            projectile[ direction ].draw( pos.getX(), pos.getY() );
+        if( this.active ) {
+            projectile[ this.direction ].draw( this.pos.getX(), this.pos.getY() );
         }
     }
 
     public boolean isActive() {
-        return active;
+        return this.active;
     }
 
 }

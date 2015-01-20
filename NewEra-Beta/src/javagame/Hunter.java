@@ -5,75 +5,99 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.Random;
+
 public class Hunter extends Player {
 
         // Max Health for hunter
-    private static final double MAX_HEALTH = 100.0;
+    private static double MAX_HEALTH = 100.0;
         // Max Stamina
-    private static final double MAX_STAMINA = 100.0;
+    private static double MAX_STAMINA = 100.0;
         // Max level
     private static final int MAX_LEVEL = 20;
+
         // Base Attack and Defend
     private static final int BASE_ATTACK = 8;
     private static final int BASE_DEFENCE = 3;
 
-    private int attackStamina  =10;
+    private int minRunningStamina = 10;
+
+        // The amount of stamina it takes to attack
+    private int basicAttackStamina  = 10;
+    private int powerAttackStamina  = 30;
+    private int otherStamina  = 40;
+    private int killMoveAttackStamina  =  (int)MAX_STAMINA-20;
+
+    /********************     Move Names are not final, this is just place holder     ********************/
+    /*
+        0 - Basic
+        1- Power
+        2- Other
+        3 - Kill
+    */
+    private int moveSelected;
 
         // Status Bar colors
     private Color red, blue, green, black, grey;
 
         // Experence needed to level up
     private double expToLevelUp;
-        // Amount of experience
+        // Amount of experience player has
     private double exp;
 
-        // 0-100 scale
+        // Player Health
     private double health;
-        // 0-100 scale
+        // Player Stamina
     private double stamina;
         // Player level
     private int level;
 
-    // Arrow Animations
+        // Arrow Animations
     private Image[] arrows;
 
+        // Currently Selected Attack
     private Image currentAttack;
-
+        // Players Inventory
     private Inventory inventory;
 
+        // If the player is in combat
     private boolean inCombat;
 
     public Hunter( String sheetName, String name ) throws SlickException {
-
+            // Call Player constructor
         super(  sheetName, name  );
 
+            // Settign arrow animations
         arrows = new Image[4];
-
         arrows[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
         arrows[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
         arrows[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
         arrows[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
-
+            // sets the projectile
         setProjectileImage( arrows );
 
+            // This sets the display image for which attack is chosen
         currentAttack = arrows[1];
 
+            // Set up player Inventory/ give default items
         inventory = inventory.getPlayerInvintory();
         inventory.setClassID( 0 );
         inventory.setBaseAttack( this.BASE_ATTACK );
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setPlayerName( name );
 
+            // Set the color
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
         blue = new Color( 0,206,209, .7f );
         black = new Color( 0,0,0, .5f );
         grey = new Color( 0, 0, 0, .3f );
 
+            // Set Player starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( 100 );
-        setStamina( 100 );
+        setHealth( MAX_HEALTH );
+        setStamina( MAX_STAMINA );
         setExp( 0 );
     }
 
@@ -96,6 +120,13 @@ public class Hunter extends Player {
         }
 
     }
+    public void increaseMaxHealth( ) {
+        Random random = new Random();
+        MAX_HEALTH += random.nextInt( 20 ) + 5;
+    }
+
+    public void setMoveSelected( int move ) { this.moveSelected = move; }
+    public int getMoveSelected( ) { return this.moveSelected; }
 
     public void setStamina( double stamina ) {
         this.stamina = stamina;
@@ -103,8 +134,26 @@ public class Hunter extends Player {
     public double getStamina() {
         return this.stamina;
     }
+    public int getAttackStamina() {
+        if( this.getMoveSelected() == 0 ) {
+            return this.basicAttackStamina;
+        }
+        else if( this.getMoveSelected() == 1 ) {
+            return  this.powerAttackStamina;
+        }
+        else if( this.getMoveSelected() == 2 ) {
+            return this.otherStamina;
+        }
+        else if( this.getMoveSelected() == 3 ) {
+            return this.killMoveAttackStamina;
+        }
+        else {
+            return (int)this.MAX_STAMINA;
+        }
+    }
     public void decreaseStamina( double energy ) { this.stamina -= energy;  }
-    public void decreaseStamina( ) { this.stamina -= this.attackStamina;
+    public void decreaseStamina( ) {
+        this.stamina -= getAttackStamina();
     }
     public void increaseStamina( double energy ) {
         this.stamina += energy;
@@ -112,11 +161,21 @@ public class Hunter extends Player {
             this.stamina = MAX_STAMINA;
         }
     }
+    public void increaseMaxStamina( ) {
+        Random random = new Random();
+        MAX_STAMINA += random.nextInt( 20 ) + 5;
+    }
+    public void setMinRunningStamina( int newMin ) { this.minRunningStamina = newMin; }
+    public int getMinRunningStamina() { return this.minRunningStamina; }
+
 
     public void setExpToLevelUp( double exp ) { this.expToLevelUp = exp; }
     public double getExpToLevelUp() { return this.expToLevelUp; }
     public void calculateExpToLevelUp() {
-        this.expToLevelUp = getLevel() * 20;
+        Random random = new Random();
+            // Next level Experience
+        this.expToLevelUp = getLevel() * ( random.nextInt(40) + 20 );
+
     }
 
     public void setExp( double exp ) {
@@ -131,19 +190,32 @@ public class Hunter extends Player {
     }
     private void checkLevelUp() {
             // Check for level up
-        if( getExp() >= getExpToLevelUp() ) {
+        if( getExp() > getExpToLevelUp() ) {
                 // Collect exp to continue it to next level
             double overFlowExp = getExp() - getExpToLevelUp();
 
             setExp( overFlowExp );
-            calculateExpToLevelUp();
+            levelUp();
+        }
+        else if( getExp() == getExpToLevelUp() ) {
+            setExp( 0 );
             levelUp();
         }
     }
 
     public void setLevel( int level ) { this.level = level; }
     public int getLevel() { return this.level; }
-    public void levelUp() { this.level++; }
+    public void levelUp() {
+        this.level++;
+        calculateExpToLevelUp();
+        increaseMaxHealth();
+        increaseMaxStamina();
+    }
+
+    public void updateAttack( int delta, boolean attacked, Map map ) {
+            // Update projectiles position
+        updateProjectile( delta, attacked, map );
+    }
 
     public void drawPlayerInfo( Graphics g ) {
 
@@ -152,6 +224,9 @@ public class Hunter extends Player {
         double staminaPercent = getStamina() / MAX_STAMINA;
         double experiencePercent = getExp() / getExpToLevelUp();
 
+            /*
+                Shitty done Health System
+             */
         g.setColor( grey );
         g.fillRect( 30, 16, 32, 32 );
         currentAttack.draw( 32, 16 );
@@ -170,5 +245,4 @@ public class Hunter extends Player {
 
 
     }
-
 }
