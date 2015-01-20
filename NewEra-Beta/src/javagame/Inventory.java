@@ -55,7 +55,6 @@ public class Inventory {
 
     private static Vector<Items> itemList;
 
-
     public Inventory( ) {
 
         this.itemList = new Vector<Items>();
@@ -210,7 +209,6 @@ public class Inventory {
             if( this.itemList.elementAt( x ).getID() == ID ) {
                 this.itemList.removeElementAt( x );
                 this.currentInventoryCount--;
-                System.out.println( "Dropped" );
                 return true;
             }
         }

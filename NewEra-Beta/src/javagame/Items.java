@@ -95,11 +95,14 @@ public class Items {
         else if( getClassID() == 1 ) {
             assignStatsForWarrior(level);
         }
-        if( getClassID() == 2 ) {
+        else if( getClassID() == 2 ) {
             assignStatsForMage(level);
         }
-        if( getClassID() == 0 ) {
+        else if( getClassID() == 3 ) {
             assignStatsForRouge(level);
+        }
+        else {
+            assignStatsForAll( level );
         }
         setWorth();
         increaseAndAssignID();
@@ -145,6 +148,10 @@ public class Items {
         else if(getClassID() == 3 ) {
             assignStatsForRouge( level );
         }
+        else {
+            assignStatsForAll( level );
+        }
+
         setWorth();
         increaseAndAssignID();
     }
@@ -798,6 +805,144 @@ public class Items {
                 stat = randomNumber.nextInt( 30 ) + 20;
                 stat *= level;
                 this.defencePower = stat;
+            }
+        }
+        // Ring or necklace
+        else if( getItemID() == 7 || getItemID() == 8 ) {
+            int whatToBoost = randomNumber.nextInt(3);
+            if( getRarity() == 0 ) {
+                stat = randomNumber.nextInt(2);
+                stat *= level;
+                if( whatToBoost == 0 ) {
+                    this.attackPower = stat;
+                }
+                else if( whatToBoost == 1 ) {
+                    this.defencePower = stat;
+                }
+                else {
+                    this.attackPower = stat;
+                    this.defencePower = stat;
+                }
+            }
+            else  if( getRarity() == 1 ) {
+                stat = randomNumber.nextInt(4) + 2;
+                stat *= level;
+                if( whatToBoost == 0 ) {
+                    this.attackPower = stat;
+                }
+                else if( whatToBoost == 1 ) {
+                    this.defencePower = stat;
+                }
+                else {
+                    this.attackPower = stat;
+                    this.defencePower = stat;
+                }
+            }
+            else  if( getRarity() == 2 ) {
+                stat = randomNumber.nextInt(10) + 4;
+                stat *= level;
+                if( whatToBoost == 0 ) {
+                    this.attackPower = stat;
+                }
+                else if( whatToBoost == 1 ) {
+                    this.defencePower = stat;
+                }
+                else {
+                    this.attackPower = stat;
+                    this.defencePower = stat;
+                }
+            }
+            else if( getRarity() == 3 ) {
+                stat = randomNumber.nextInt(14) + 9;
+                stat *= level;
+                if( whatToBoost == 0 ) {
+                    this.attackPower = stat;
+                }
+                else if( whatToBoost == 1 ) {
+                    this.defencePower = stat;
+                }
+                else {
+                    this.attackPower = stat;
+                    this.defencePower = stat;
+                }
+            }
+            else if( getRarity() == 4 ) {
+                stat = randomNumber.nextInt( 20 ) + 12;
+                stat *= level;
+                if( whatToBoost == 0 ) {
+                    this.attackPower = stat;
+                }
+                else if( whatToBoost == 1 ) {
+                    this.defencePower = stat;
+                }
+                else {
+                    this.attackPower = stat;
+                    this.defencePower = stat;
+                }
+            }
+        }
+    }
+    public void assignStatsForAll( int level ) {
+        Random randomNumber = new Random();
+        int stat;
+
+        this.attackPower = 0;
+        this.defencePower = 0;
+
+        // This is weapon stat
+        if( getItemID() <= 12 && getItemID() >= 9 ) {
+            if( getRarity() == 0 ) {
+                stat = randomNumber.nextInt(3) + 1;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else  if( getRarity() == 1 ) {
+                stat = randomNumber.nextInt(6) + 2;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else  if( getRarity() == 2 ) {
+                stat = randomNumber.nextInt(12) + 6;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else if( getRarity() == 3 ) {
+                stat = randomNumber.nextInt(18) + 10;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else if( getRarity() == 4 ) {
+                stat = randomNumber.nextInt( 24 ) + 20;
+                stat *= level;
+                this.attackPower = stat;
+            }
+        }
+        // This is armor stat
+        else if ( getItemID() <= 12 && getItemID() >= 9 ) {
+            if( getRarity() == 0 ) {
+                stat = randomNumber.nextInt(3) + 1;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else  if( getRarity() == 1 ) {
+                stat = randomNumber.nextInt(6) + 2;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else  if( getRarity() == 2 ) {
+                stat = randomNumber.nextInt(12) + 6;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else if( getRarity() == 3 ) {
+                stat = randomNumber.nextInt(18) + 10;
+                stat *= level;
+                this.attackPower = stat;
+            }
+            else if( getRarity() == 4 ) {
+                stat = randomNumber.nextInt( 24 ) + 20;
+                stat *= level;
+                this.attackPower = stat;
             }
         }
         // Ring or necklace
