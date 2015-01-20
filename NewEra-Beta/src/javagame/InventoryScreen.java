@@ -295,6 +295,7 @@ public class InventoryScreen extends BasicGameState{
                 } else if ((this.mouseX >= 448 && this.mouseX <= 512) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.settingName = true;
+                        this.newName.setText( displayItem.getName() );
                     }
                 }
 
@@ -313,6 +314,7 @@ public class InventoryScreen extends BasicGameState{
                 } else if ((this.mouseX >= 448 && this.mouseX <= 512) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.settingName = true;
+                        this.newName.setText( displayItem.getName() );
                     }
                 }
             }
