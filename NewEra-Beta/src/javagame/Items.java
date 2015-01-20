@@ -86,26 +86,27 @@ public class Items {
                 this.rarity = rarity;
                 assignColor();
             }
+            setName();
+            setImage();
+            if( getClassID() == 0 ) {
+                assignStatsForHunter(level);
+            }
+            else if( getClassID() == 1 ) {
+                assignStatsForWarrior(level);
+            }
+            else if( getClassID() == 2 ) {
+                assignStatsForMage(level);
+            }
+            else if( getClassID() == 3 ) {
+                assignStatsForRouge(level);
+            }
+            else {
+                assignStatsForAll( level );
+            }
+            setWorth();
+            increaseAndAssignID();
         }
-        setName();
-        setImage();
-        if( getClassID() == 0 ) {
-            assignStatsForHunter(level);
-        }
-        else if( getClassID() == 1 ) {
-            assignStatsForWarrior(level);
-        }
-        else if( getClassID() == 2 ) {
-            assignStatsForMage(level);
-        }
-        else if( getClassID() == 3 ) {
-            assignStatsForRouge(level);
-        }
-        else {
-            assignStatsForAll( level );
-        }
-        setWorth();
-        increaseAndAssignID();
+
     }
 
     public Items( int level ) {
@@ -130,30 +131,31 @@ public class Items {
                 default:
                     this.classID = randomNumber.nextInt(5);
             }
-        }
-        assignRarity(randomNumber);
-        assignColor();
+            assignRarity(randomNumber);
+            assignColor();
 
-        setName();
-        setImage();
-        if( getClassID() == 0 ) {
-            assignStatsForHunter(level);
-        }
-        else if( getClassID() == 1 ) {
-            assignStatsForWarrior( level );
-        }
-        else if( getClassID() == 2 ) {
-            assignStatsForMage(level);
-        }
-        else if(getClassID() == 3 ) {
-            assignStatsForRouge( level );
-        }
-        else {
-            assignStatsForAll( level );
+            setName();
+            setImage();
+            if( getClassID() == 0 ) {
+                assignStatsForHunter(level);
+            }
+            else if( getClassID() == 1 ) {
+                assignStatsForWarrior( level );
+            }
+            else if( getClassID() == 2 ) {
+                assignStatsForMage(level);
+            }
+            else if(getClassID() == 3 ) {
+                assignStatsForRouge( level );
+            }
+            else {
+                assignStatsForAll( level );
+            }
+
+            setWorth();
+            increaseAndAssignID();
         }
 
-        setWorth();
-        increaseAndAssignID();
     }
 
     public int getAttackPower() { return  this.attackPower; }
@@ -918,7 +920,7 @@ public class Items {
             }
         }
         // This is armor stat
-        else if ( getItemID() <= 12 && getItemID() >= 9 ) {
+        else if ( getItemID() <= 6 && getItemID() >= 2 ) {
             if( getRarity() == 0 ) {
                 stat = randomNumber.nextInt(3) + 1;
                 stat *= level;

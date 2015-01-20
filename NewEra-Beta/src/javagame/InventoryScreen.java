@@ -37,7 +37,14 @@ public class InventoryScreen extends BasicGameState{
     private Image confirm;
     private Image rename;
 
+        // This holds the time the player has until the drop
+        // option disappears
     private double timeOut;
+    private double messageTimeOut;
+
+        // These are the returns for equipped and unequipped
+    private int unEquipSuccess;
+    private int equipSuccess;
 
         // Text Field for new Name
     private TextField newName;
@@ -74,8 +81,13 @@ public class InventoryScreen extends BasicGameState{
         this.equipedItemSelected = false;
         this.inventoryItemSelected = false;
         this.drop = false;
+
+        this.unEquipSuccess = 0;
+        this.equipSuccess = 0;
+
             // timeout for drop item
         this.timeOut = 0;
+        this.messageTimeOut = 0;
 
             // Buttons
         this.dropItem = new Image( "NewEra-Beta/res/buttons/DropItem.png" );
@@ -134,6 +146,25 @@ public class InventoryScreen extends BasicGameState{
 
             g.setColor( Color.white );
             g.drawRect( this.selectedX, this.selectedY, 32, 32 );
+            this.unEquipSuccess = 0;
+            this.equipSuccess = 0;
+            this.messageTimeOut = 0;
+        }
+        else if ( unEquipSuccess == 1 ) {
+            g.setColor(Color.black);
+            g.drawString("Item Unequipped.", 355, 75);
+        }
+        else if( unEquipSuccess == 2 ) {
+            g.setColor(Color.black );
+            g.drawString( "Inventory is full, please remove item before unequipped", 355, 75);
+        }
+        else if( this.equipSuccess == 1 ) {
+            g.setColor(Color.black);
+            g.drawString("Item Equipped.", 355, 75);
+        }
+        else if( this.equipSuccess == 2 ) {
+            g.setColor(Color.black );
+            g.drawString( "Unable to equip item.", 355, 75);
         }
 
         if( this.equipedItemSelected ){
@@ -169,14 +200,16 @@ public class InventoryScreen extends BasicGameState{
 
         Input input = gc.getInput();
 
+        boolean spotSelected =false;
+
             // Mouse X & Y
         this.mouseX = input.getMouseX();
         this.mouseY = input.getMouseY();
 
         if( !this.settingName ) {
 
-            // F will return to game
-            if (input.isKeyPressed(Input.KEY_F)) {
+            // I will return to game
+            if (input.isKeyPressed(Input.KEY_I)) {
                 sbg.enterState(1);
             }
             // HEAD
@@ -187,6 +220,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 80;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // BODY
@@ -197,6 +231,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 144;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // LEGS
@@ -207,6 +242,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 208;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // BOOTIES
@@ -217,6 +253,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 272;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // GLOVES
@@ -227,6 +264,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 144;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // WEAPON
@@ -237,6 +275,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 144;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // RING
@@ -247,6 +286,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 48;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
             // NECKLACE
@@ -257,6 +297,7 @@ public class InventoryScreen extends BasicGameState{
                     this.selectedY = 48;
                     this.equipedItemSelected = true;
                     this.inventoryItemSelected = false;
+                    spotSelected = true;
                 }
             }
 
@@ -271,6 +312,7 @@ public class InventoryScreen extends BasicGameState{
                         this.selectedY = yPos;
                         this.equipedItemSelected = false;
                         this.inventoryItemSelected = true;
+                        spotSelected = true;
                     }
                 }
                 xPos += 64;
@@ -284,37 +326,43 @@ public class InventoryScreen extends BasicGameState{
             if (this.equipedItemSelected) {
                 if ((this.mouseX >= 352 && this.mouseX <= 416) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                        this.playerInventory.unEquipItem(this.displayItem.getID());
+                        unEquipSuccess = this.playerInventory.unEquipItem(this.displayItem.getID());
                         this.equipedItemSelected = false;
                         this.displayItem = null;
+                        spotSelected = true;
                     }
                 } else if ((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.drop = true;
+                        spotSelected = true;
                     }
                 } else if ((this.mouseX >= 448 && this.mouseX <= 512) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.settingName = true;
                         this.newName.setText( displayItem.getName() );
+                        spotSelected = true;
                     }
                 }
 
             } else if (this.inventoryItemSelected) {
                 if ((this.mouseX >= 352 && this.mouseX <= 416) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                        this.playerInventory.equipItem(displayItem.getID());
+                        this.equipSuccess = this.playerInventory.equipItem(displayItem.getID());
                         this.inventoryItemSelected = false;
                         this.displayItem = null;
+                        spotSelected = true;
                     }
                 }
                 if (((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320)) && !drop) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.drop = true;
+                        spotSelected = true;
                     }
                 } else if ((this.mouseX >= 448 && this.mouseX <= 512) && (this.mouseY >= 256 && this.mouseY <= 320)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.settingName = true;
                         this.newName.setText( displayItem.getName() );
+                        spotSelected = true;
                     }
                 }
             }
@@ -323,6 +371,14 @@ public class InventoryScreen extends BasicGameState{
             if (this.timeOut > 500) {
                 this.drop = false;
                 this.timeOut = 0;
+            }
+            if( this.unEquipSuccess != 0 ||  this.equipSuccess != 0 ) {
+                this.messageTimeOut += delta*.1f;
+            }
+            if( this.messageTimeOut > 500 ) {
+                this.messageTimeOut = 0;
+                this.unEquipSuccess = 0;
+                this.equipSuccess = 0;
             }
 
             if (this.drop) {
@@ -334,6 +390,7 @@ public class InventoryScreen extends BasicGameState{
                         this.displayItem = null;
                         this.timeOut = 0;
                         this.drop = false;
+                        spotSelected = true;
                     }
                 }
                 this.timeOut += delta * .1f;
@@ -344,7 +401,16 @@ public class InventoryScreen extends BasicGameState{
                 this.settingName = false;
                 this.newName.setText("");
                 this.newName.deactivate();
+                spotSelected = true;
             }
+        }
+
+        if( input.isMousePressed( Input.MOUSE_LEFT_BUTTON ) && !spotSelected ) {
+            this.equipedItemSelected = false;
+            this.inventoryItemSelected = false;
+            this.displayItem = null;
+            this.timeOut = 0;
+            this.drop = false;
         }
 
     }

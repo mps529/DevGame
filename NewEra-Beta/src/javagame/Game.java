@@ -160,7 +160,7 @@ public class Game extends BasicGameState {
         } // End of not attacking
 
             // Enter Inventory
-        if( input.isKeyPressed( Input.KEY_F ) ) {
+        if( input.isKeyPressed( Input.KEY_I ) ) {
             sbg.enterState( 2 );
         }
 

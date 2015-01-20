@@ -30,7 +30,7 @@ public class Main extends StateBasedGame {
             appgc = new AppGameContainer( new Main( gameName ) );
             appgc.setDisplayMode( 640, 640, false );
             appgc.setVSync( true );
-            appgc.setTargetFrameRate( 60 );
+           // appgc.setTargetFrameRate( 60 );
             appgc.setSmoothDeltas( true );
             appgc.start();
         }
