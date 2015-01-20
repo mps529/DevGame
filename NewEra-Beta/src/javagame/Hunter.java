@@ -79,13 +79,6 @@ public class Hunter extends Player {
             // This sets the display image for which attack is chosen
         currentAttack = arrows[1];
 
-            // Set up player Inventory/ give default items
-        inventory = inventory.getPlayerInvintory();
-        inventory.setClassID( 0 );
-        inventory.setBaseAttack( this.BASE_ATTACK );
-        inventory.setBaseDefence( this.BASE_DEFENCE );
-        inventory.setPlayerName( name );
-
             // Set the color
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
@@ -99,6 +92,13 @@ public class Hunter extends Player {
         setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
         setExp( 0 );
+
+             // Set up player Inventory/ give default items
+        inventory = inventory.getPlayerInvintory();
+        inventory.setClassID( 0 );
+        inventory.setBaseAttack( this.BASE_ATTACK );
+        inventory.setBaseDefence( this.BASE_DEFENCE );
+        inventory.setPlayerName( name );
     }
 
     public boolean getInCombat() { return this.inCombat; }
