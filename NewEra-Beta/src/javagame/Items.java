@@ -924,27 +924,27 @@ public class Items {
             if( getRarity() == 0 ) {
                 stat = randomNumber.nextInt(3) + 1;
                 stat *= level;
-                this.attackPower = stat;
+                this.defencePower = stat;
             }
             else  if( getRarity() == 1 ) {
                 stat = randomNumber.nextInt(6) + 2;
                 stat *= level;
-                this.attackPower = stat;
+                this.defencePower = stat;
             }
             else  if( getRarity() == 2 ) {
                 stat = randomNumber.nextInt(12) + 6;
                 stat *= level;
-                this.attackPower = stat;
+                this.defencePower = stat;
             }
             else if( getRarity() == 3 ) {
                 stat = randomNumber.nextInt(18) + 10;
                 stat *= level;
-                this.attackPower = stat;
+                this.defencePower = stat;
             }
             else if( getRarity() == 4 ) {
                 stat = randomNumber.nextInt( 24 ) + 20;
                 stat *= level;
-                this.attackPower = stat;
+                this.defencePower = stat;
             }
         }
         // Ring or necklace
@@ -1021,6 +1021,7 @@ public class Items {
                 }
             }
         }
+
     }
 
     public Color getItemRarityColorNoAlpha() {

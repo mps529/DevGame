@@ -393,7 +393,6 @@ public class Inventory {
             return 2;
         }
     }
-
         // Returns null if not found
     public Items getItemByID( int ID ) {
         for ( Items item : this.itemList ) {
@@ -402,6 +401,13 @@ public class Inventory {
             }
         }
         return null;
+    }
+
+    public boolean isWeaponEquipped() {
+        if( this.playerWeapon == -1 ) {
+            return false;
+        }
+        return true;
     }
 
     public void renderInventory( Graphics g, int[] equipped, int[] inventory ) {

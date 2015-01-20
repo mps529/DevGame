@@ -46,7 +46,7 @@ public class Game extends BasicGameState {
             // Getting the screen Sizes
         this.halfScreenHeight = gc.getHeight()/2;
         this.halfScreenWidth = gc.getWidth()/2;
-    }
+     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
@@ -145,7 +145,7 @@ public class Game extends BasicGameState {
             }
 
                 // If player attacks and the player has stamina to attack
-            if ( input.isKeyDown(Input.KEY_SPACE) && this.hunterTom.getStamina() > this.hunterTom.getMoveSelected() ) {
+            if ( input.isKeyDown(Input.KEY_SPACE) && this.hunterTom.getStamina() >= this.hunterTom.getAttackStamina() && hunterTom.isWeaponEqiupped() ) {
                 this.hunterTom.startAnimationAttacking();
                 this.attacking = true;
                 this.hunterTom.decreaseStamina();
