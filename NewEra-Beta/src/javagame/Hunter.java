@@ -26,7 +26,7 @@ public class Hunter extends Player {
     private int basicAttackStamina  = 10;
     private int powerAttackStamina  = 30;
     private int otherStamina  = 40;
-    private int killMoveAttackStamina  =  (int)MAX_STAMINA-20;
+    private int killMoveAttackStamina  = (int)MAX_STAMINA-20;
 
     /********************     Move Names are not final, this is just place holder     ********************/
     /*
@@ -92,6 +92,8 @@ public class Hunter extends Player {
         setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
         setExp( 0 );
+
+        this.moveSelected = 0;
 
              // Set up player Inventory/ give default items
         inventory = inventory.getPlayerInvintory();
@@ -168,7 +170,6 @@ public class Hunter extends Player {
     public void setMinRunningStamina( int newMin ) { this.minRunningStamina = newMin; }
     public int getMinRunningStamina() { return this.minRunningStamina; }
 
-
     public void setExpToLevelUp( double exp ) { this.expToLevelUp = exp; }
     public double getExpToLevelUp() { return this.expToLevelUp; }
     public void calculateExpToLevelUp() {
@@ -210,6 +211,10 @@ public class Hunter extends Player {
         calculateExpToLevelUp();
         increaseMaxHealth();
         increaseMaxStamina();
+    }
+
+    public boolean isWeaponEqiupped () {
+        return this.inventory.isWeaponEquipped();
     }
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
