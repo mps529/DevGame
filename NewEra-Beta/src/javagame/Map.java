@@ -7,11 +7,8 @@ public class Map {
 
         // This is the map
     private TiledMap map;
-
+        // Name of this map
     private String mapName;
-
-        // Size of map in pixels
-    private int totalMapSizeX, getTotalMapSizeY;
 
     // Coords of the map  and the skew
     // These are for rendering the area around the player
@@ -25,7 +22,7 @@ public class Map {
         // Map size in tiles
     private int mapHeight, mapWidth;
 
-        // how many pixels to move
+        // How many pixels to move
     private static int speed = 2;
 
         // 0-walkable area, 1-collisions, 2-doors
@@ -33,13 +30,10 @@ public class Map {
 
     public Map(String mapName, int x, int y) throws SlickException {
             // Setting mapName
-        this.mapName = mapName;
+        setMapName( mapName );
             // Defining Map
         this.map = new TiledMap( "NewEra-Beta/res/map/"+mapName );
 
-            // Settign map size in pixels
-        this.totalMapSizeX = map.getWidth() *32;
-        this.totalMapSizeX = map.getHeight() *32;
             // Setting map size by tiles
         setMapWidth( map.getWidth() );
         setMapHeight( map.getHeight() );
@@ -52,8 +46,8 @@ public class Map {
         this.mapObjects = new int[ getMapWidth() ][ getMapHeight() ];
 
             // This will be where the map will start rendering
-        setMapCoordX( x * 32 );
-        setMapCoordY( y * 32 );
+        setMapCoordX( x );
+        setMapCoordY( y );
 
             // Fills the 2D array with collisions
         fillMapObjects();
@@ -62,22 +56,21 @@ public class Map {
     public void setMapName( String name ) {
         this.mapName = name;
     }
-
     public String getMapName() {
         return this.mapName;
     }
 
-    public void setMapCoordX( float x ) { mapCoordX = x; }
+        // Send in TileX
+    public void setMapCoordX( float x ) { mapCoordX = x*32; }
     public float getMapCoordX() { return mapCoordX; }
-
     public void incrementMapCoordX( ) {
         mapCoordX += speed;
     }
     public void decrementMapCoordX( ) { mapCoordX -= speed; }
 
-    public void setMapCoordY( float y ) { mapCoordY = y; }
+        // Send in TileY
+    public void setMapCoordY( float y ) { mapCoordY = y*32; }
     public float getMapCoordY( ) { return mapCoordY; }
-
     public void incrementMapCoordY( ) { mapCoordY += speed; }
     public void decrementMapCoordY( ) { mapCoordY -= speed; }
 
@@ -87,23 +80,24 @@ public class Map {
     public void setMapWidth( int width ) { mapWidth = width; }
     public int getMapWidth() { return mapWidth; }
 
-
     public void drawMap( ) {
+            // This is rendering portions but is glitchy, maybe will get to
         //map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
         map.render( (int)mapCoordX, (int)mapCoordY );
     }
 
     private void fillMapObjects() {
+            // Setting the bounds in a 2D array
         for( int x = 0; x < getMapHeight(); x++ ) {
             for( int y = 0; y < getMapWidth(); y++ ) {
-                if( map.getTileId( x, y, collisionsLayer) != 0 ) {
-                    mapObjects[ x ][ y ] = 1;
+                if( this.map.getTileId( x, y, this.collisionsLayer) != 0 ) {
+                    this.mapObjects[ x ][ y ] = 1;
                 }
-                else if( map.getTileId( x, y, doorLayer) != 0 ) {
-                    mapObjects[ x ][ y ] = 2;
+                else if( this.map.getTileId( x, y, this.doorLayer) != 0 ) {
+                    this.mapObjects[ x ][ y ] = 2;
                 }
                 else {
-                    mapObjects[ x ][ y ] = 0;
+                    this.mapObjects[ x ][ y ] = 0;
                 }
             }
         }
@@ -128,15 +122,16 @@ public class Map {
         if( decimalY >= 0.5 ) {
             tileY++;
         }
-        return mapObjects[ (int)tileX ][ (int)tileY ];
+        return this.mapObjects[ (int)tileX ][ (int)tileY ];
 
     }
 
+    public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
+    public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }
 
     public void isRunning() {
         this.speed = 3;
     }
-
     public void isNotRunning() {
         this.speed = 2;
     }

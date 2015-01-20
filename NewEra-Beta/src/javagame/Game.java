@@ -1,14 +1,16 @@
 package javagame;
 
-import org.newdawn.slick.*;
+
+import org.newdawn.slick.Input;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-
-
-// 94, 96
-
 public class Game extends BasicGameState {
+
         // Game State
     private static int gameState;
         // Player Class
@@ -17,173 +19,190 @@ public class Game extends BasicGameState {
     private Map map;
         // Is Attacking animation playing
     private boolean attacking = false;
-        // Diasplay fps and coords
+        // Display fps and coords
     private boolean showInfo = false;
-        // Did player shoot
-    private boolean shot = false;
 
+        // Is player Running
     private boolean running = false;
-
-
-
+        // Screen sizes cut in half for character rendering
     int halfScreenWidth, halfScreenHeight;
 
     public Game( int state ) {
-        gameState = state;
+        this.gameState = state;
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        hunterTom = new Hunter( "HunterTom.png", "Tom" );
+        this.hunterTom = new Hunter( "HunterTom.png", "Tom" );
 
             // Starting tile
-        hunterTom.setPlayerX( 94 );
-        hunterTom.setPlayerY( 96 );
+        this.hunterTom.setPlayerX( 94 );
+        this.hunterTom.setPlayerY( 96 );
 
             // Map **Starting tiles for map are 10 under
             // PlayerX and PlayerY then negative
-        map = new Map( "LargeMapGrasslands.tmx", -84, -86 );
+        this.map = new Map( "LargeMapGrasslands.tmx", -84, -86 );
 
             // Getting the screen Sizes
-        halfScreenHeight = gc.getHeight()/2;
-        halfScreenWidth = gc.getWidth()/2;
+        this.halfScreenHeight = gc.getHeight()/2;
+        this.halfScreenWidth = gc.getWidth()/2;
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
-        map.drawMap();
+        this.map.drawMap();
 
-        if( attacking ) {
-            hunterTom.drawPlayerAttacking( halfScreenWidth, halfScreenHeight );
+            // Switches to attack animation if true
+        if( this.attacking ) {
+            this.hunterTom.drawPlayerAttacking( this.halfScreenWidth, this.halfScreenHeight );
         }
         else {
-            hunterTom.drawPlayer( halfScreenWidth, halfScreenHeight );
+            this.hunterTom.drawPlayer( this.halfScreenWidth, this.halfScreenHeight );
         }
 
-        hunterTom.renderProjectile( gc, g );
+            // Drawing arrows if he has them
+        this.hunterTom.renderProjectile( gc, g );
+            // Drawing Health/Stamina etc.
+        this.hunterTom.drawPlayerInfo( g );
 
-
-        hunterTom.drawPlayerInfo( g );
-
-
-        if( showInfo ) {
+            // Debugging information
+        if( this.showInfo ) {
             g.setColor( Color.white );
-            g.drawString("X: " + hunterTom.getPlayerX()/32 + ", Y: " + hunterTom.getPlayerY()/32, 300, 10);
-            g.drawString("X: " + map.getMapCoordX()/32 + ", Y: " +  map.getMapCoordY()/32 , 300, 30);
-            g.drawString("Running: " + running , 300, 50);
+            g.drawString("X: " + this.hunterTom.getPlayerX() + ", Y: " + this.hunterTom.getPlayerY(), 300, 10);
+            g.drawString("X: " + this.map.getMapCoordX() + ", Y: " +  this.map.getMapCoordY() , 300, 30);
+            g.drawString("Running: " + this.running , 300, 50);
         }
-        gc.setShowFPS( showInfo );
+            // FPS show, also for debugging
+        gc.setShowFPS( this.showInfo );
     }
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
 
         Input input = gc.getInput();
 
-        boolean moved = false;
+        // Did player attack
+        boolean attacked = false;
 
+            // Checking if the player has moved with running, will change if the player does
+        boolean movedWhileRunning = false;
+            /*
+                This block of code does roughly the following for each key detection
+                  1) Starts the animation, and puts the player facing the correct direction
+                  2) Checks the next tile
+                  3) If space is not a collision move the hunter and the map
+                  4) If the player is running, decrease stamina.
+            */
         if( !attacking ) {
             if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(0);
-                if (map.isSpaceTaken((int) hunterTom.getPlayerX(), (int) hunterTom.getPlayerY() - 12) == 0) {
-                    hunterTom.decrementPlayerY(delta);
-                    map.incrementMapCoordY();
-                    if( running) {
-                        hunterTom.decreaseStamina( delta*.003f );
-                        moved = true;
+                this.hunterTom.startAnimationWalking();
+                this.hunterTom.setPlayerDirection(0);
+                if (this.map.isSpaceTaken((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY() - 12) == 0) {
+                    this.hunterTom.decrementPlayerY();
+                    this.map.incrementMapCoordY();
+                    if( this.running) {
+                        this.hunterTom.decreaseStamina( delta*.003f );
+                        movedWhileRunning = true;
                     }
                 }
             } else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(1);
-                if (map.isSpaceTaken(hunterTom.getPlayerX() + 12, hunterTom.getPlayerY()) == 0) {
-                    hunterTom.incrementPlayerX(delta);
-                    map.decrementMapCoordX();
-                    if( running ) {
-                        hunterTom.decreaseStamina( delta*.003f );
-                        moved = true;
+                this.hunterTom.startAnimationWalking();
+                this.hunterTom.setPlayerDirection(1);
+                if (this.map.isSpaceTaken(this.hunterTom.getPlayerX() + 12, this.hunterTom.getPlayerY()) == 0) {
+                    this.hunterTom.incrementPlayerX();
+                    this.map.decrementMapCoordX();
+                    if( this.running ) {
+                        this.hunterTom.decreaseStamina( delta*.003f );
+                        movedWhileRunning = true;
                     }
                 }
 
             } else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(2);
-                if (map.isSpaceTaken(hunterTom.getPlayerX(), hunterTom.getPlayerY() + 24) == 0) {
-                    hunterTom.incrementPlayerY(delta);
-                    map.decrementMapCoordY();
-                    if( running) {
-                        hunterTom.decreaseStamina( delta*.003f );
-                        moved = true;
+                this.hunterTom.startAnimationWalking();
+                this.hunterTom.setPlayerDirection(2);
+                if (this.map.isSpaceTaken(this.hunterTom.getPlayerX(), this.hunterTom.getPlayerY() + 24) == 0) {
+                    this.hunterTom.incrementPlayerY();
+                    this.map.decrementMapCoordY();
+                    if( this.running) {
+                        this.hunterTom.decreaseStamina( delta*.003f );
+                        movedWhileRunning = true;
                     }
                 }
-
             } else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
-                hunterTom.startAnimationWalking();
-                hunterTom.setPlayerDirection(3);
-                if (map.isSpaceTaken(hunterTom.getPlayerX() - 12, hunterTom.getPlayerY()) == 0) {
-                    hunterTom.decrementPlayerX(delta);
-                    map.incrementMapCoordX();
+                this.hunterTom.startAnimationWalking();
+                this.hunterTom.setPlayerDirection(3);
+                if (this.map.isSpaceTaken(this.hunterTom.getPlayerX() - 12,this.hunterTom.getPlayerY()) == 0) {
+                    this.hunterTom.decrementPlayerX();
+                    this.map.incrementMapCoordX();
                     if( running) {
-                        hunterTom.decreaseStamina( delta*.003f );
-                        moved = true;
+                        this.hunterTom.decreaseStamina( delta*.003f );
+                        movedWhileRunning = true;
                     }
                 }
+            }
+                // If the player did not move, stop playing walking animation
+            else {
+                this.hunterTom.stopAnimationWalking();
+            }
+
+                // If player attacks and the player has stamina to attack
+            if ( input.isKeyDown(Input.KEY_SPACE) && this.hunterTom.getStamina() > this.hunterTom.getMoveSelected() ) {
+                this.hunterTom.startAnimationAttacking();
+                this.attacking = true;
+                this.hunterTom.decreaseStamina();
             } else {
-                hunterTom.stopAnimationWalking();
-
+                this.hunterTom.stopAnimationAttacking();
             }
 
-            if ( input.isKeyDown(Input.KEY_SPACE) && hunterTom.getStamina() > 10 ) {
-                hunterTom.startAnimationAttacking();
-                attacking = true;
-                hunterTom.decreaseStamina();
-            } else {
-                hunterTom.stopAnimationAttacking();
+                // If the player moves and did not run, he gains stanima
+            if( !movedWhileRunning ) {
+                this.hunterTom.increaseStamina(delta * .003f);
             }
+        } // End of not attacking
 
-            if( !moved ) {
-                hunterTom.increaseStamina(delta * .003f);
-            }
-
-        }
-
+            // Enter Inventory
         if( input.isKeyPressed( Input.KEY_F ) ) {
             sbg.enterState( 2 );
         }
 
-        if( input.isKeyPressed( Input.KEY_LSHIFT ) && hunterTom.getStamina() > 10 ) {
-            running = !running;
+            // Start Running
+        if( input.isKeyPressed( Input.KEY_LSHIFT ) && this.hunterTom.getStamina() > this.hunterTom.getMinRunningStamina() ) {
+            this.running = !this.running;
         }
 
-        if(  hunterTom.getStamina() <= 10 ) {
-            running = false;
+            // If player has stamina to run
+        if(  this.hunterTom.getStamina() <= this.hunterTom.getMinRunningStamina() ) {   // ****************( Need to add variable to get running stamina min  )
+            this.running = false;
         }
 
-        if( running ) {
-            hunterTom.isRunning();
-            map.isRunning();
+            // if rinnign is true, speed up player animation
+        if( this.running ) {
+            this.hunterTom.isRunning();
+            this.map.isRunning();
         }
+            // Slow it down
         else {
-            hunterTom.isNotRunning();
-            map.isNotRunning();
+            this.hunterTom.isNotRunning();
+            this.map.isNotRunning();
         }
 
+            // This is when the players animation has stopped and he began to fire
         if( hunterTom.isStopped() && attacking ) {
-            attacking = false;
-            shot = true;
+            this.attacking = false;
+            attacked = true;
         }
 
+            // Bring up debugging
         if( input.isKeyPressed(Input.KEY_ESCAPE) ) {
-            showInfo = !showInfo;
+            this.showInfo = !showInfo;
         }
 
+            // If he is not in combat increase health
         if( !hunterTom.getInCombat() ) {
-            hunterTom.increaseHealth( delta*.003f );
+            this.hunterTom.increaseHealth( delta*.003f );
         }
 
-        hunterTom.updateProjectile( delta, shot, map );
-        shot = false;
-
+            // Update projectiles position
+        this.hunterTom.updateAttack(delta, attacked, map);
     }
 
     public int getID( ) {

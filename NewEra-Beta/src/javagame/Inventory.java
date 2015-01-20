@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -147,6 +148,36 @@ public class Inventory {
 
     public int getItemCount() { return this.currentInventoryCount; }
 
+    public int getInventoryCount() {
+        int inventory = this.currentInventoryCount;
+
+        if( this.playerHelmet != -1 ) {
+            inventory--;
+        }
+        if( this.playerWeapon != -1 ) {
+            inventory--;
+        }
+        if( this.playerBoots != -1 ) {
+            inventory--;
+        }
+        if( this.playerRing != -1 ) {
+            inventory--;
+        }
+        if( this.playerNecklaces != -1 ) {
+            inventory--;
+        }
+        if( this.playerBody != -1 ) {
+            inventory--;
+        }
+        if( this.playerGloves != -1 ) {
+            inventory--;
+        }
+        if( this.playerPants != -1 ) {
+            inventory--;
+        }
+        return inventory;
+    }
+
     public void addMoney( int money ) { this.money += money; }
     public void subMoney( int money ) { this.money -= money; }
     public int getMoney() { return this.money; }
@@ -178,6 +209,8 @@ public class Inventory {
         for( int x = 0; x < getItemCount(); x++ ) {
             if( this.itemList.elementAt( x ).getID() == ID ) {
                 this.itemList.removeElementAt( x );
+                this.currentInventoryCount--;
+                System.out.println( "Dropped" );
                 return true;
             }
         }
@@ -241,6 +274,7 @@ public class Inventory {
                         if (this.itemList.elementAt(x).getClassID() == this.classID) {
                             this.playerHelmet = ID;
                             calculateAttackAndDefence();
+
                             return true;
                         }
                         break;

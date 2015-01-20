@@ -15,7 +15,7 @@ public class Player {
     private SpriteSheet playerSpriteSheet;
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
-    private int[] durationSpeedAttack = { 80,80,80,80,80,80,80,80,80,80,80,80,80 };
+    private int[] durationSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
 
     // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
@@ -28,7 +28,7 @@ public class Player {
         // Players position in pixels of map
     private float playerX, playerY;
 
-        // For Projectiles
+        // For Projectiles if player has them
     private Projectile[] projectiles;
         // How long arrow will live for.
     private static int FIRE_RATE = 250;
@@ -42,12 +42,12 @@ public class Player {
 
     public Player(String sheetName, String name ) {
             // Sets name and spriteSheet
-        spriteSheetName = sheetName;
-        playerName = name;
+        this.spriteSheetName = sheetName;
+        this.playerName = name;
 
              // Creates new sprite sheet
         try {
-            playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + spriteSheetName, 32, 32);
+            this.playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + sheetName, 32, 32);
 
         }
         catch ( SlickException e ){
@@ -61,10 +61,10 @@ public class Player {
         Image[] down = { playerSpriteSheet.getSubImage(1,10), playerSpriteSheet.getSubImage(2,10) , playerSpriteSheet.getSubImage(3,10), playerSpriteSheet.getSubImage(4,10), playerSpriteSheet.getSubImage(5,10), playerSpriteSheet.getSubImage(6,10), playerSpriteSheet.getSubImage(7,10), playerSpriteSheet.getSubImage(8,10) };
         Image[] right = { playerSpriteSheet.getSubImage(1,11), playerSpriteSheet.getSubImage(2,11) , playerSpriteSheet.getSubImage(3,11), playerSpriteSheet.getSubImage(4,11), playerSpriteSheet.getSubImage(5,11), playerSpriteSheet.getSubImage(6,11), playerSpriteSheet.getSubImage(7,11), playerSpriteSheet.getSubImage(8,11) };
         // Assigning the Images to the animations
-        movingUp = new Animation( up, durationSpeed, true );
-        movingRight = new Animation( right, durationSpeed, true );
-        movingDown = new Animation( down, durationSpeed, true );
-        movingLeft = new Animation( left, durationSpeed, true );
+        this.movingUp = new Animation( up, durationSpeed, true );
+        this.movingRight = new Animation( right, durationSpeed, true );
+        this.movingDown = new Animation( down, durationSpeed, true );
+        this.movingLeft = new Animation( left, durationSpeed, true );
 
         // Sets images for attacking animations
         Image[] upAttack = { playerSpriteSheet.getSubImage(0,16), playerSpriteSheet.getSubImage(1,16), playerSpriteSheet.getSubImage(2,16) , playerSpriteSheet.getSubImage(3,16), playerSpriteSheet.getSubImage(4,16), playerSpriteSheet.getSubImage(5,16), playerSpriteSheet.getSubImage(6,16), playerSpriteSheet.getSubImage(7,16), playerSpriteSheet.getSubImage(8,16), playerSpriteSheet.getSubImage(9,16), playerSpriteSheet.getSubImage(10,16), playerSpriteSheet.getSubImage(11,16) , playerSpriteSheet.getSubImage(12,16) };
@@ -72,10 +72,10 @@ public class Player {
         Image[] downAttack = { playerSpriteSheet.getSubImage(0,18), playerSpriteSheet.getSubImage(1,18), playerSpriteSheet.getSubImage(2,18) , playerSpriteSheet.getSubImage(3,18), playerSpriteSheet.getSubImage(4,18), playerSpriteSheet.getSubImage(5,18), playerSpriteSheet.getSubImage(6,18), playerSpriteSheet.getSubImage(7,18), playerSpriteSheet.getSubImage(8,18), playerSpriteSheet.getSubImage(9,18), playerSpriteSheet.getSubImage(10,18), playerSpriteSheet.getSubImage(11,18) , playerSpriteSheet.getSubImage(12,18) };
         Image[] rightAttack = { playerSpriteSheet.getSubImage(0,19), playerSpriteSheet.getSubImage(1,19), playerSpriteSheet.getSubImage(2,19) , playerSpriteSheet.getSubImage(3,19), playerSpriteSheet.getSubImage(4,19), playerSpriteSheet.getSubImage(5,19), playerSpriteSheet.getSubImage(6,19), playerSpriteSheet.getSubImage(7,19), playerSpriteSheet.getSubImage(8,19), playerSpriteSheet.getSubImage(9,19), playerSpriteSheet.getSubImage(10,19), playerSpriteSheet.getSubImage(11,19) , playerSpriteSheet.getSubImage(12,19) };
         // Assigning the Images to the animations
-        attackingUp = new Animation( upAttack, durationSpeedAttack, true );
-        attackingRight = new Animation( rightAttack, durationSpeedAttack, true );
-        attackingDown = new Animation( downAttack, durationSpeedAttack, true );
-        attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
+        this.attackingUp = new Animation( upAttack, durationSpeedAttack, true );
+        this.attackingRight = new Animation( rightAttack, durationSpeedAttack, true );
+        this.attackingDown = new Animation( downAttack, durationSpeedAttack, true );
+        this.attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
 
         // Setting walking animation
         setPlayerDirection( 2 );
@@ -85,11 +85,10 @@ public class Player {
         setPlayerY( 0 );
 
         // Should not be able to shoot more then 8 projectiles at once
-        projectiles = new Projectile[ 8 ];
-        for( int x = 0; x < projectiles.length; x++ ){
-            projectiles[ x ] = new Projectile();
+        this.projectiles = new Projectile[ 8 ];
+        for( int x = 0; x < this.projectiles.length; x++ ){
+            this.projectiles[ x ] = new Projectile();
         }
-
     }
 
     public void setProjectileImage( Image[] projectileImage ) {
@@ -97,85 +96,91 @@ public class Player {
     }
 
     public Animation getMovingPlayer(){
-        return movingPlayer;
+        return this.movingPlayer;
     }
 
-    public void drawPlayer( float x, float y ) { movingPlayer.draw( x, y );  }
-    public void drawPlayerAttacking( float x, float y ) { attackingPlayer.draw( x, y );  }
+    public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
+    public void drawPlayerAttacking( float x, float y ) { this.attackingPlayer.draw( x, y );  }
 
     // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
         switch ( newDirection ) {
             case 0:
-                movingPlayer = movingUp;
-                attackingPlayer = attackingUp;
+                this.movingPlayer = this.movingUp;
+                this.attackingPlayer = this.attackingUp;
                 break;
             case 1:
-                movingPlayer = movingRight;
-                attackingPlayer = attackingRight;
+                this.movingPlayer = this.movingRight;
+                this.attackingPlayer = this.attackingRight;
                 break;
             case 2:
-                movingPlayer = movingDown;
-                attackingPlayer = attackingDown;
+                this.movingPlayer = this.movingDown;
+                this.attackingPlayer = this.attackingDown;
                 break;
             case 3:
-                movingPlayer = movingLeft;
-                attackingPlayer = attackingLeft;
+                this.movingPlayer = this.movingLeft;
+                this.attackingPlayer = this.attackingLeft;
                 break;
             default:
-                movingPlayer = movingDown;
-                attackingPlayer = attackingDown;
+                this.movingPlayer = this.movingDown;
+                this.attackingPlayer = this.attackingDown;
         }
     }
 
     public float getPlayerX() {
-        return playerX;
+        return this.playerX;
     }
     public void setPlayerX( float x ) {
-        playerX = x*32;
+        this.playerX = x*32;
+    }
+    public void setPlayerXinPixels( float x ) {
+        this.playerX = x;
     }
 
-    public void incrementPlayerX( int delta ) {
-            playerX += playerSpeed;
+    public void incrementPlayerX() {
+        this.playerX += this.playerSpeed;
     }
-    public void decrementPlayerX( int delta ) {
-            playerX -= playerSpeed;
-    }
-
-    public float getPlayerY() { return playerY; }
-    public void setPlayerY( float y ) { playerY = y*32; }
-
-    public void incrementPlayerY( int delta ) {
-            playerY += playerSpeed;
-    }
-    public void decrementPlayerY( int delta ) {
-            playerY -= playerSpeed;
+    public void decrementPlayerX() {
+        this.playerX -= this.playerSpeed;
     }
 
-    public void startAnimationWalking() { movingPlayer.start(); }
-    public void stopAnimationWalking() { movingPlayer.stop(); }
+    public float getPlayerY() { return this.playerY; }
+    public void setPlayerY( float y ) { this.playerY = y*32; }
+    public void setPlayerYinPixels( float y ) {
+        this.playerY = y;
+    }
+
+    public void incrementPlayerY() {
+        this.playerY += this.playerSpeed;
+    }
+    public void decrementPlayerY() {
+        this.playerY -= this.playerSpeed;
+    }
+
+    public void startAnimationWalking() { this.movingPlayer.start(); }
+    public void stopAnimationWalking() { this.movingPlayer.stop(); }
 
     public void startAnimationAttacking() {
-        attackingPlayer.restart();
-        attackingPlayer.start();
+        this.attackingPlayer.restart();
+        this.attackingPlayer.start();
     }
-    public void stopAnimationAttacking() { attackingPlayer.stopAt(12); }
+    public void stopAnimationAttacking() { this.attackingPlayer.stopAt(12); }
 
     public boolean isStopped() {
-        return attackingPlayer.isStopped();
+        return this.attackingPlayer.isStopped();
     }
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
-        for( Projectile p : projectiles ) {
+        for( Projectile p : this.projectiles ) {
             p.render( gc, g, this.projectileImage );
         }
     }
     public void updateProjectile( int delta, boolean shot, Map map  )  {
 
             // Increases time since last shot
-        lastShot += delta;
+        this.lastShot += delta;
             // Checks if the time is good to shoot again and if the player shot an projectile
-        if( lastShot > FIRE_RATE && shot) {
+        if( this.lastShot > this.FIRE_RATE && shot) {
 
             /*
                 This section checks which direction the player is looking then creates a new projectile in that direcetion.
@@ -185,26 +190,26 @@ public class Player {
                   There needs to be two vectors passed in for the players position because of how the Vector2f works
             */
 
-            if( attackingPlayer == attackingUp ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
+            if( this.attackingPlayer == this.attackingUp ) {
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
             }
-            else if( attackingPlayer == attackingRight ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
+            else if( this.attackingPlayer == this.attackingRight ) {
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
             }
-            else if( attackingPlayer == attackingDown ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
+            else if( this.attackingPlayer == this.attackingDown ) {
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
             }
-            else if( attackingPlayer == attackingLeft ) {
-                projectiles[ currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
+            else if( this.attackingPlayer == this.attackingLeft ) {
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
             }
 
-            if( currentIndex >= projectiles.length ) {
-                currentIndex = 0;
+            if( this.currentIndex >= this.projectiles.length ) {
+                this.currentIndex = 0;
             }
-            lastShot = 0;
+            this.lastShot = 0;
         }
 
-        for (Projectile p : projectiles) {
+        for (Projectile p : this.projectiles) {
             p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
         }
 
@@ -213,7 +218,6 @@ public class Player {
     public void isRunning() {
         this.playerSpeed = 3;
     }
-
     public void isNotRunning() {
         this.playerSpeed = 2;
     }
