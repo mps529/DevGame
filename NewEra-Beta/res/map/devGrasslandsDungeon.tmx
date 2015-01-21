@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <layer name="ground" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3ZUQ7DIAgGYLMmu/9xdoa1B3G32EPTFyMW8Veh8kCyLFvKV0Abu28h7ER8OwR1rZ6xgiOCHZH5nfV61JjS60jyjMTnnAN1v3s4pPX4AQ2zHRJLrqbptVCzzZ0PVE3S3kIbOHOO7K/WviqZLTlKEV5njOitK45MXHm0htQhWas1OBB7jAaH5b5CW3IOlAV9z1d13OX3eZ+xmiNusjWp5j+j6kFZSrn2dkjnIxLBdaDyGj3n7tDlSMOag9rr3THeUXr20uDg7gWl50cNjpXm/K5mVhxeD12Op9TDggNxJqLB0XqWqsGBOBOe7eCcE2vvK9T5/CwHOv/RDuQ7EgsOy+tuzR5C/U6L4wn7oDvc4Q53cOIPOARuLxAnAAA=
+  </data>
+ </layer>
+ <layer name="floordetail" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3PwQkAIAwEwTzSkrau5SloDUJkBo57bwQAAPCLnhFjb96vquVpqd4BAAAAAADAWws7JeuXECcAAA==
+  </data>
+ </layer>
+ <layer name="doorway" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DsQ0AAAgDoPr/5sWOXtANEhIAAAAAAAAAAADo2flNB/J7WYMQJwAA
+  </data>
+ </layer>
+ <layer name="collision" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YQU5DIRCGH6GQeCqvVL2EMcZXewJXphutN3DTbnsCXdvewY2QPiLhAQ8qMFOdP/kXnVDgS2cYaM+7bnHmflB+Vn45c6+VSSQIzVXuXVX0daPc7hucNcTxvzn0mu+svImDOP4ax0Z5ZdnEVxH3gBz2PXJtcWyVd5ZNfBfxPSBHit54+p6Io6x8a3/NxvHQHrFxfHB/PPTZjWPluJBHu+NC38fC8ciPdTE1LhQvzVGjr8X2SBxlOe7YT39+Zf6+beI9Ug7NcMviPdvt3604Utk0w5PyTeK6XJ1dl3Ich+TIZciZuxVHLsOn6Lq98McOAobjlN9hpnJJWPmk925iUrbl2AxnzSm5JIf9htSSYzucNSXqwVVLjhTpfJmqBV8MG4fOnVgt2IKqj5qCOK9qzg3FEasFo5SageRwe4BRrBZ8sdb1kTO/2ysw9Y/U+Q9iekxobkwcv5kb6t5e08QRl74nLtn4veqLuW9b31vXfue2viemvl1zjP1/6hwRBy4RBy4RR1zfNoPXlxAnAAA=
+  </data>
+ </layer>
+ <layer name="above" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3WvQmAMBAGUMGfOXRuXcNJHEB7KzewsDSFChJj3oM0V91HclyKAgAAAJ5b6+MApKhrYneQri12A5Hczd3/4I3NZewO+Ko789BW59rw0fkI5bpaIx9P7z80C2OglqIpkGOxQwDgdbn+S3PNzTU7UJN4tRAnAAA=
+  </data>
+ </layer>
+</map>
