@@ -18,6 +18,8 @@ public class Map {
     private int collisionsLayer;
         // This is the layer that will store passages to new maps
     private int doorLayer;
+        // Above Layer
+    private int aboveLayer;
 
         // Map size in tiles
     private int mapHeight, mapWidth;
@@ -41,6 +43,7 @@ public class Map {
             // Getting the different layers id's
         this.collisionsLayer = map.getLayerIndex( "collision" );
         this.doorLayer = map.getLayerIndex( "doorway" );
+        this.aboveLayer = map.getLayerIndex( "above" );
 
             // Setting 2D array for collisions
         this.mapObjects = new int[ getMapWidth() ][ getMapHeight() ];
@@ -63,6 +66,7 @@ public class Map {
         // Send in TileX
     public void setMapCoordX( float x ) { mapCoordX = x*32; }
     public float getMapCoordX() { return mapCoordX; }
+
     public void incrementMapCoordX( ) {
         mapCoordX += speed;
     }
@@ -84,6 +88,9 @@ public class Map {
             // This is rendering portions but is glitchy, maybe will get to
         //map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
         map.render( (int)mapCoordX, (int)mapCoordY );
+    }
+    public void drawMapAbove() {
+        this.map.render( (int)mapCoordX, (int)mapCoordY, this.aboveLayer );
     }
 
     private void fillMapObjects() {
