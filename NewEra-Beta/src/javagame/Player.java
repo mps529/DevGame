@@ -16,11 +16,14 @@ public class Player {
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
+    private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
 
-    // Walking animations
+        // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
-    // Fighting animations
+        // Fighting animations
     private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
+        // Death
+    private Animation playingDeath;
 
         // Pixels to move
     private int playerSpeed = 2;
@@ -77,6 +80,10 @@ public class Player {
         this.attackingDown = new Animation( downAttack, durationSpeedAttack, true );
         this.attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
 
+        // Death Animation
+        Image[] death = { playerSpriteSheet.getSubImage(0, 20), playerSpriteSheet.getSubImage(1, 20), playerSpriteSheet.getSubImage(2, 20),playerSpriteSheet.getSubImage(3, 20), playerSpriteSheet.getSubImage(4, 20), playerSpriteSheet.getSubImage(5, 20) };
+        this.playingDeath = new Animation( death, durationSpeedDeath, true );
+
         // Setting walking animation
         setPlayerDirection( 2 );
 
@@ -101,6 +108,7 @@ public class Player {
 
     public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
     public void drawPlayerAttacking( float x, float y ) { this.attackingPlayer.draw( x, y );  }
+    public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
 
     // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
@@ -166,7 +174,15 @@ public class Player {
     }
     public void stopAnimationAttacking() { this.attackingPlayer.stopAt(12); }
 
+    public void startAnimationDeath() {
+        this.playingDeath.start();
+    }
+    public void stopAnimationDeath() { this.playingDeath.stopAt(5); }
+
     public boolean isStopped() {
+        return this.attackingPlayer.isStopped();
+    }
+    public boolean isStoppedDead() {
         return this.attackingPlayer.isStopped();
     }
 

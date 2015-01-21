@@ -89,7 +89,7 @@ public class Hunter extends Player {
             // Set Player starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( MAX_HEALTH );
+        setHealth( 20 );
         setStamina( MAX_STAMINA );
         setExp( 0 );
 
@@ -169,6 +169,13 @@ public class Hunter extends Player {
     }
     public void setMinRunningStamina( int newMin ) { this.minRunningStamina = newMin; }
     public int getMinRunningStamina() { return this.minRunningStamina; }
+
+    public boolean checkDeath() {
+        if( getHealth() <= 0 ) {
+            return true;
+        }
+        return false;
+    }
 
     public void setExpToLevelUp( double exp ) { this.expToLevelUp = exp; }
     public double getExpToLevelUp() { return this.expToLevelUp; }
