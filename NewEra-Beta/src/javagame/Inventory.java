@@ -1,6 +1,5 @@
 package javagame;
 
-import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -218,7 +217,6 @@ public class Inventory {
     public void addStartingItems( ) {
             // Holds Items
         Items[] basic = new Items[8];
-        Items[] random = new Items[21];
 
             // Assigning basic Items
         basic[ 0 ] = new Items( 2, playerInvintory.classID, 0, 1 );
@@ -243,11 +241,6 @@ public class Inventory {
 
         basic[ 6 ] = new Items( 7, playerInvintory.classID, 0, 1 );
         basic[ 7 ] = new Items( 8, playerInvintory.classID, 0, 1 );
-
-        for( int x=0; x < 21; x++ ) {
-            random[x] = new Items( -1, 4, -1, 1 );
-            addItem(random[x]);
-        }
 
             // Adding to inventory and equipping item
         for( int x=0; x < basic.length; x++ ) {
