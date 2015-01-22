@@ -15,7 +15,7 @@ public class Game extends BasicGameState {
         // Game State
     private static int gameState;
         // Player Class
-    private Wizard hunterTom;
+    private Warrior hunterTom;
         // Map Class
     private Map map;
         // Is Attacking animation playing
@@ -38,7 +38,7 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        this.hunterTom = new Wizard( "wizard.png", "Tom" );
+        this.hunterTom = new Warrior( "warrior.png", "Tom" );
 
             // Starting tile
         this.hunterTom.setPlayerX( 94 );
@@ -170,7 +170,7 @@ public class Game extends BasicGameState {
                     this.hunterTom.stopAnimationAttacking();
                 }
 
-                // If the player moves and did not run, he gains stanima
+                // If the player moves and did not run, he gains stamina
                 if (!movedWhileRunning) {
                     this.hunterTom.increaseStamina(delta * .003f);
                 }

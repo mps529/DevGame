@@ -16,6 +16,7 @@ public class Player {
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
     private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60,60 };
+    private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
 
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
 
@@ -88,6 +89,18 @@ public class Player {
             this.attackingDown = new Animation(downAttack, durationHunterSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
 
+        }
+        else if( classID == 1 ) {
+            // Sets images for attacking animations
+            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 4), playerSpriteSheet.getSubImage(1, 4), playerSpriteSheet.getSubImage(2, 4), playerSpriteSheet.getSubImage(3, 4), playerSpriteSheet.getSubImage(4, 4), playerSpriteSheet.getSubImage(5, 4), playerSpriteSheet.getSubImage(6, 4), playerSpriteSheet.getSubImage(7, 4)   };
+            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 5), playerSpriteSheet.getSubImage(1, 5), playerSpriteSheet.getSubImage(2, 5), playerSpriteSheet.getSubImage(3, 5), playerSpriteSheet.getSubImage(4, 5), playerSpriteSheet.getSubImage(5, 5), playerSpriteSheet.getSubImage(6, 5), playerSpriteSheet.getSubImage(7, 5)  };
+            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 6), playerSpriteSheet.getSubImage(1, 6), playerSpriteSheet.getSubImage(2, 6), playerSpriteSheet.getSubImage(3, 6), playerSpriteSheet.getSubImage(4, 6), playerSpriteSheet.getSubImage(5, 6), playerSpriteSheet.getSubImage(6, 6) , playerSpriteSheet.getSubImage(7, 6) };
+            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 7), playerSpriteSheet.getSubImage(1, 7), playerSpriteSheet.getSubImage(2, 7), playerSpriteSheet.getSubImage(3, 7), playerSpriteSheet.getSubImage(4, 7), playerSpriteSheet.getSubImage(5, 7), playerSpriteSheet.getSubImage(6, 7), playerSpriteSheet.getSubImage(7, 7)  };
+            // Assigning the Images to the animations
+            this.attackingUp = new Animation(upAttack, durationWarriorSpeedAttack, true);
+            this.attackingRight = new Animation(rightAttack, durationWarriorSpeedAttack, true);
+            this.attackingDown = new Animation(downAttack, durationWarriorSpeedAttack, true);
+            this.attackingLeft = new Animation(leftAttack, durationWarriorSpeedAttack, true);
         }
             // Wizard
         else if( classID == 2 ) {
@@ -202,6 +215,9 @@ public class Player {
         else if( this.playerClass == 2 ) {
             this.attackingPlayer.stopAt( 6 );
         }
+        else if( this.playerClass == 1 ) {
+            this.attackingPlayer.stopAt( 7 );
+        }
     }
 
     public void startAnimationDeath() {
@@ -217,9 +233,11 @@ public class Player {
     }
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
-        for( Projectile p : this.projectiles ) {
-            p.render( gc, g, this.projectileImage );
-        }
+       if( this.playerClass == 0 || this.playerClass == 2 ) {
+           for (Projectile p : this.projectiles) {
+               p.render(gc, g, this.projectileImage);
+           }
+       }
     }
     public void updateProjectile( int delta, boolean shot, Map map  )  {
 
