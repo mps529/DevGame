@@ -7,22 +7,22 @@ import org.newdawn.slick.SlickException;
 
 import java.util.Random;
 
-public class Hunter extends Player {
+public class Wizard extends Player {
 
-        // Max Health for hunter
+    // Max Health for hunter
     private static double MAX_HEALTH = 100.0;
-        // Max Stamina
+    // Max Stamina
     private static double MAX_STAMINA = 100.0;
-        // Max level
+    // Max level
     private static final int MAX_LEVEL = 20;
 
-        // Base Attack and Defend
+    // Base Attack and Defend
     private static final int BASE_ATTACK = 8;
     private static final int BASE_DEFENCE = 3;
 
     private int minRunningStamina = 10;
 
-        // The amount of stamina it takes to attack
+    // The amount of stamina it takes to attack
     private int basicAttackStamina  = 10;
     private int powerAttackStamina  = 30;
     private int otherStamina  = 40;
@@ -37,56 +37,56 @@ public class Hunter extends Player {
     */
     private int moveSelected;
 
-        // Status Bar colors
+    // Status Bar colors
     private Color red, blue, green, black, grey;
 
-        // Experence needed to level up
+    // Experence needed to level up
     private double expToLevelUp;
-        // Amount of experience player has
+    // Amount of experience player has
     private double exp;
 
-        // Player Health
+    // Player Health
     private double health;
-        // Player Stamina
+    // Player Stamina
     private double stamina;
-        // Player level
+    // Player level
     private int level;
 
-        // Arrow Animations
-    private Image[] arrows;
+    // Spells Animations
+    private Image[] fireBalls;
 
-        // Currently Selected Attack
+    // Currently Selected Attack
     private Image currentAttack;
-        // Players Inventory
+    // Players Inventory
     private Inventory inventory;
 
-        // If the player is in combat
+    // If the player is in combat
     private boolean inCombat;
 
-    public Hunter( String sheetName, String name ) throws SlickException {
-            // Call Player constructor
-        super(  sheetName, name, 0 );
+    public Wizard( String sheetName, String name ) throws SlickException {
+        // Call Player constructor
+        super(  sheetName, name, 2  );
 
-            // Settign arrow animations
-        arrows = new Image[4];
-        arrows[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
-        arrows[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
-        arrows[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
-        arrows[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
-            // sets the projectile
-        setProjectileImage( arrows );
+        // Settign arrow animations
+        fireBalls = new Image[4];
+        fireBalls[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
+        fireBalls[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
+        fireBalls[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
+        fireBalls[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
+        // sets the projectile
+        setProjectileImage( fireBalls );
 
-            // This sets the display image for which attack is chosen
-        currentAttack = arrows[1];
+        // This sets the display image for which attack is chosen
+        currentAttack = fireBalls[1];
 
-            // Set the color
+        // Set the color
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,255,0, .7f );
         blue = new Color( 0,206,209, .7f );
         black = new Color( 0,0,0, .5f );
         grey = new Color( 0, 0, 0, .3f );
 
-            // Set Player starting attributes
+        // Set Player starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
         setHealth( MAX_HEALTH );
@@ -95,9 +95,9 @@ public class Hunter extends Player {
 
         this.moveSelected = 0;
 
-             // Set up player Inventory/ give default items
+        // Set up player Inventory/ give default items
         inventory = inventory.getPlayerInvintory();
-        inventory.setClassID( 0 );
+        inventory.setClassID( 2 );
         inventory.setBaseAttack( this.BASE_ATTACK );
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setPlayerName( name );
@@ -181,7 +181,7 @@ public class Hunter extends Player {
     public double getExpToLevelUp() { return this.expToLevelUp; }
     public void calculateExpToLevelUp() {
         Random random = new Random();
-            // Next level Experience
+        // Next level Experience
         this.expToLevelUp = getLevel() * ( random.nextInt(40) + 20 );
 
     }
@@ -197,9 +197,9 @@ public class Hunter extends Player {
         checkLevelUp();
     }
     private void checkLevelUp() {
-            // Check for level up
+        // Check for level up
         if( getExp() > getExpToLevelUp() ) {
-                // Collect exp to continue it to next level
+            // Collect exp to continue it to next level
             double overFlowExp = getExp() - getExpToLevelUp();
 
             setExp( overFlowExp );
@@ -225,13 +225,13 @@ public class Hunter extends Player {
     }
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
-            // Update projectiles position
+        // Update projectiles position
         updateProjectile( delta, attacked, map );
     }
 
     public void drawPlayerInfo( Graphics g ) {
 
-            // Calculate Percents
+        // Calculate Percents
         double healthPercent = getHealth() / MAX_HEALTH;
         double staminaPercent = getStamina() / MAX_STAMINA;
         double experiencePercent = getExp() / getExpToLevelUp();

@@ -14,7 +14,9 @@ public class Player {
     private SpriteSheet playerSpriteSheet;
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
-    private int[] durationSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
+    private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
+    private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60,60 };
+
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
 
         // Walking animations
@@ -26,6 +28,8 @@ public class Player {
 
         // Pixels to move
     private int playerSpeed = 2;
+
+    private int playerClass;
 
         // Players position in pixels of map
     private float playerX, playerY;
@@ -42,10 +46,12 @@ public class Player {
     // projectile Animations
     private Image[] projectileImage;
 
-    public Player(String sheetName, String name ) {
+    public Player(String sheetName, String name, int classID ) {
             // Sets name and spriteSheet
         this.spriteSheetName = sheetName;
         this.playerName = name;
+
+        this.playerClass = classID;
 
              // Creates new sprite sheet
         try {
@@ -68,16 +74,32 @@ public class Player {
         this.movingDown = new Animation( down, durationSpeed, true );
         this.movingLeft = new Animation( left, durationSpeed, true );
 
-        // Sets images for attacking animations
-        Image[] upAttack = { playerSpriteSheet.getSubImage(0,16), playerSpriteSheet.getSubImage(1,16), playerSpriteSheet.getSubImage(2,16) , playerSpriteSheet.getSubImage(3,16), playerSpriteSheet.getSubImage(4,16), playerSpriteSheet.getSubImage(5,16), playerSpriteSheet.getSubImage(6,16), playerSpriteSheet.getSubImage(7,16), playerSpriteSheet.getSubImage(8,16), playerSpriteSheet.getSubImage(9,16), playerSpriteSheet.getSubImage(10,16), playerSpriteSheet.getSubImage(11,16) , playerSpriteSheet.getSubImage(12,16) };
-        Image[] leftAttack = { playerSpriteSheet.getSubImage(0,17), playerSpriteSheet.getSubImage(1,17), playerSpriteSheet.getSubImage(2,17) , playerSpriteSheet.getSubImage(3,17), playerSpriteSheet.getSubImage(4,17), playerSpriteSheet.getSubImage(5,17), playerSpriteSheet.getSubImage(6,17), playerSpriteSheet.getSubImage(7,17), playerSpriteSheet.getSubImage(8,17), playerSpriteSheet.getSubImage(9,17), playerSpriteSheet.getSubImage(10,17), playerSpriteSheet.getSubImage(11,17) , playerSpriteSheet.getSubImage(12,17) };
-        Image[] downAttack = { playerSpriteSheet.getSubImage(0,18), playerSpriteSheet.getSubImage(1,18), playerSpriteSheet.getSubImage(2,18) , playerSpriteSheet.getSubImage(3,18), playerSpriteSheet.getSubImage(4,18), playerSpriteSheet.getSubImage(5,18), playerSpriteSheet.getSubImage(6,18), playerSpriteSheet.getSubImage(7,18), playerSpriteSheet.getSubImage(8,18), playerSpriteSheet.getSubImage(9,18), playerSpriteSheet.getSubImage(10,18), playerSpriteSheet.getSubImage(11,18) , playerSpriteSheet.getSubImage(12,18) };
-        Image[] rightAttack = { playerSpriteSheet.getSubImage(0,19), playerSpriteSheet.getSubImage(1,19), playerSpriteSheet.getSubImage(2,19) , playerSpriteSheet.getSubImage(3,19), playerSpriteSheet.getSubImage(4,19), playerSpriteSheet.getSubImage(5,19), playerSpriteSheet.getSubImage(6,19), playerSpriteSheet.getSubImage(7,19), playerSpriteSheet.getSubImage(8,19), playerSpriteSheet.getSubImage(9,19), playerSpriteSheet.getSubImage(10,19), playerSpriteSheet.getSubImage(11,19) , playerSpriteSheet.getSubImage(12,19) };
-        // Assigning the Images to the animations
-        this.attackingUp = new Animation( upAttack, durationSpeedAttack, true );
-        this.attackingRight = new Animation( rightAttack, durationSpeedAttack, true );
-        this.attackingDown = new Animation( downAttack, durationSpeedAttack, true );
-        this.attackingLeft = new Animation( leftAttack, durationSpeedAttack, true );
+        if( classID == 0 ) {
+
+            // Sets images for attacking animations
+            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 16), playerSpriteSheet.getSubImage(1, 16), playerSpriteSheet.getSubImage(2, 16), playerSpriteSheet.getSubImage(3, 16), playerSpriteSheet.getSubImage(4, 16), playerSpriteSheet.getSubImage(5, 16), playerSpriteSheet.getSubImage(6, 16), playerSpriteSheet.getSubImage(7, 16), playerSpriteSheet.getSubImage(8, 16), playerSpriteSheet.getSubImage(9, 16), playerSpriteSheet.getSubImage(10, 16), playerSpriteSheet.getSubImage(11, 16), playerSpriteSheet.getSubImage(12, 16)};
+            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 17), playerSpriteSheet.getSubImage(1, 17), playerSpriteSheet.getSubImage(2, 17), playerSpriteSheet.getSubImage(3, 17), playerSpriteSheet.getSubImage(4, 17), playerSpriteSheet.getSubImage(5, 17), playerSpriteSheet.getSubImage(6, 17), playerSpriteSheet.getSubImage(7, 17), playerSpriteSheet.getSubImage(8, 17), playerSpriteSheet.getSubImage(9, 17), playerSpriteSheet.getSubImage(10, 17), playerSpriteSheet.getSubImage(11, 17), playerSpriteSheet.getSubImage(12, 17)};
+            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 18), playerSpriteSheet.getSubImage(1, 18), playerSpriteSheet.getSubImage(2, 18), playerSpriteSheet.getSubImage(3, 18), playerSpriteSheet.getSubImage(4, 18), playerSpriteSheet.getSubImage(5, 18), playerSpriteSheet.getSubImage(6, 18), playerSpriteSheet.getSubImage(7, 18), playerSpriteSheet.getSubImage(8, 18), playerSpriteSheet.getSubImage(9, 18), playerSpriteSheet.getSubImage(10, 18), playerSpriteSheet.getSubImage(11, 18), playerSpriteSheet.getSubImage(12, 18)};
+            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 19), playerSpriteSheet.getSubImage(1, 19), playerSpriteSheet.getSubImage(2, 19), playerSpriteSheet.getSubImage(3, 19), playerSpriteSheet.getSubImage(4, 19), playerSpriteSheet.getSubImage(5, 19), playerSpriteSheet.getSubImage(6, 19), playerSpriteSheet.getSubImage(7, 19), playerSpriteSheet.getSubImage(8, 19), playerSpriteSheet.getSubImage(9, 19), playerSpriteSheet.getSubImage(10, 19), playerSpriteSheet.getSubImage(11, 19), playerSpriteSheet.getSubImage(12, 19)};
+            // Assigning the Images to the animations
+            this.attackingUp = new Animation(upAttack, durationHunterSpeedAttack, true);
+            this.attackingRight = new Animation(rightAttack, durationHunterSpeedAttack, true);
+            this.attackingDown = new Animation(downAttack, durationHunterSpeedAttack, true);
+            this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
+
+        }
+        else if( classID == 2 ) {
+            // Sets images for attacking animations
+            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 0), playerSpriteSheet.getSubImage(1, 0), playerSpriteSheet.getSubImage(2, 0), playerSpriteSheet.getSubImage(3, 0), playerSpriteSheet.getSubImage(4, 0), playerSpriteSheet.getSubImage(5, 0), playerSpriteSheet.getSubImage(6, 0) };
+            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 1), playerSpriteSheet.getSubImage(1, 1), playerSpriteSheet.getSubImage(2, 1), playerSpriteSheet.getSubImage(3, 1), playerSpriteSheet.getSubImage(4, 1), playerSpriteSheet.getSubImage(5, 1), playerSpriteSheet.getSubImage(6, 1) };
+            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 2), playerSpriteSheet.getSubImage(1, 2), playerSpriteSheet.getSubImage(2, 2), playerSpriteSheet.getSubImage(3, 2), playerSpriteSheet.getSubImage(4, 2), playerSpriteSheet.getSubImage(5, 2), playerSpriteSheet.getSubImage(6, 2) };
+            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 3), playerSpriteSheet.getSubImage(1, 3), playerSpriteSheet.getSubImage(2, 3), playerSpriteSheet.getSubImage(3, 3), playerSpriteSheet.getSubImage(4, 3), playerSpriteSheet.getSubImage(5, 3), playerSpriteSheet.getSubImage(6, 3) };
+            // Assigning the Images to the animations
+            this.attackingUp = new Animation(upAttack, durationWizardSpeedAttack, true);
+            this.attackingRight = new Animation(rightAttack, durationWizardSpeedAttack, true);
+            this.attackingDown = new Animation(downAttack, durationWizardSpeedAttack, true);
+            this.attackingLeft = new Animation(leftAttack, durationWizardSpeedAttack, true);
+        }
 
         // Death Animation
         Image[] death = { playerSpriteSheet.getSubImage(0, 20), playerSpriteSheet.getSubImage(1, 20), playerSpriteSheet.getSubImage(2, 20),playerSpriteSheet.getSubImage(3, 20), playerSpriteSheet.getSubImage(4, 20), playerSpriteSheet.getSubImage(5, 20) };
@@ -171,7 +193,14 @@ public class Player {
         this.attackingPlayer.restart();
         this.attackingPlayer.start();
     }
-    public void stopAnimationAttacking() { this.attackingPlayer.stopAt(12); }
+    public void stopAnimationAttacking() {
+        if (this.playerClass == 0) {
+            this.attackingPlayer.stopAt(12);
+        }
+        else if( this.playerClass == 2 ) {
+            this.attackingPlayer.stopAt( 6 );
+        }
+    }
 
     public void startAnimationDeath() {
         this.playingDeath.start();
