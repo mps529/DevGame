@@ -38,7 +38,7 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        this.hunterTom = new Wizard( "Wizard.png", "Tom" );
+        this.hunterTom = new Wizard( "wizard.png", "Tom" );
 
             // Starting tile
         this.hunterTom.setPlayerX( 94 );

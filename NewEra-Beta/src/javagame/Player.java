@@ -74,6 +74,7 @@ public class Player {
         this.movingDown = new Animation( down, durationSpeed, true );
         this.movingLeft = new Animation( left, durationSpeed, true );
 
+            // Hunter
         if( classID == 0 ) {
 
             // Sets images for attacking animations
@@ -88,6 +89,7 @@ public class Player {
             this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
 
         }
+            // Wizard
         else if( classID == 2 ) {
             // Sets images for attacking animations
             Image[] upAttack = {playerSpriteSheet.getSubImage(0, 0), playerSpriteSheet.getSubImage(1, 0), playerSpriteSheet.getSubImage(2, 0), playerSpriteSheet.getSubImage(3, 0), playerSpriteSheet.getSubImage(4, 0), playerSpriteSheet.getSubImage(5, 0), playerSpriteSheet.getSubImage(6, 0) };
