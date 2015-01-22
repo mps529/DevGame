@@ -249,7 +249,7 @@ public class Items {
                     break;
                 // Mage
                 case 2:
-                    this.name += "Mages ";
+                    this.name += "Wizards ";
                     break;
                 // Rough
                 case 3:
@@ -284,7 +284,7 @@ public class Items {
                     this.name += "Necklace ";
                     break;
                 case 9:
-                    this.name += "Sword ";
+                    this.name += "Spear ";
                     break;
                 case 10:
                     this.name += "Bow ";
@@ -1099,7 +1099,7 @@ public class Items {
                     this.imageItem = ringAndNecklace.getSubImage( randomPicture.nextInt( 8 ), 1 ).copy();
                     break;
                 case 9:
-                    this.imageItem = new Image("NewEra-Beta/res/items/sword.png");
+                    this.imageItem = new Image("NewEra-Beta/res/items/spear.png");
                     break;
                 case 10:
                     this.imageItem = new Image("NewEra-Beta/res/items/bow.png");
