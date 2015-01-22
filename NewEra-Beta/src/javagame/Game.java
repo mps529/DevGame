@@ -15,7 +15,7 @@ public class Game extends BasicGameState {
         // Game State
     private static int gameState;
         // Player Class
-    private Warrior hunterTom;
+    private Rouge hunterTom;
         // Map Class
     private Map map;
         // Is Attacking animation playing
@@ -38,7 +38,7 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        this.hunterTom = new Warrior( "warrior.png", "Tom" );
+        this.hunterTom = new Rouge( "rouge.png", "Tom" );
 
             // Starting tile
         this.hunterTom.setPlayerX( 94 );

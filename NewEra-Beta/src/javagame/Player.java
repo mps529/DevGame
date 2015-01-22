@@ -16,6 +16,7 @@ public class Player {
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
     private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60,60 };
+    private int[] durationRougeSpeedAttack = { 60,60,60,60,60,60  };
     private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
 
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
@@ -114,6 +115,18 @@ public class Player {
             this.attackingRight = new Animation(rightAttack, durationWizardSpeedAttack, true);
             this.attackingDown = new Animation(downAttack, durationWizardSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationWizardSpeedAttack, true);
+        }
+        else if( classID == 3 ) {
+            // Sets images for attacking animations
+            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 12), playerSpriteSheet.getSubImage(1, 12), playerSpriteSheet.getSubImage(2, 12), playerSpriteSheet.getSubImage(3, 12), playerSpriteSheet.getSubImage(4, 12), playerSpriteSheet.getSubImage(5, 12) };
+            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 13), playerSpriteSheet.getSubImage(1, 13), playerSpriteSheet.getSubImage(2, 13), playerSpriteSheet.getSubImage(3, 13), playerSpriteSheet.getSubImage(4, 13), playerSpriteSheet.getSubImage(5, 13)};
+            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 14), playerSpriteSheet.getSubImage(1, 14), playerSpriteSheet.getSubImage(2, 14), playerSpriteSheet.getSubImage(3, 14), playerSpriteSheet.getSubImage(4, 14), playerSpriteSheet.getSubImage(5, 14) };
+            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 15), playerSpriteSheet.getSubImage(1, 15), playerSpriteSheet.getSubImage(2, 15), playerSpriteSheet.getSubImage(3, 15), playerSpriteSheet.getSubImage(4, 15), playerSpriteSheet.getSubImage(5, 15) };
+            // Assigning the Images to the animations
+            this.attackingUp = new Animation(upAttack, durationRougeSpeedAttack, true);
+            this.attackingRight = new Animation(rightAttack, durationRougeSpeedAttack, true);
+            this.attackingDown = new Animation(downAttack, durationRougeSpeedAttack, true);
+            this.attackingLeft = new Animation(leftAttack, durationRougeSpeedAttack, true);
         }
 
         // Death Animation
@@ -217,6 +230,9 @@ public class Player {
         }
         else if( this.playerClass == 1 ) {
             this.attackingPlayer.stopAt( 7 );
+        }
+        else if( this.playerClass == 3 ) {
+            this.attackingPlayer.stopAt( 5 );
         }
     }
 
