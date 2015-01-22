@@ -25,7 +25,7 @@ public class Game extends BasicGameState {
         // if player is DED
     private boolean dead = false;
 
-    boolean dedTest = false;
+    private boolean startDed = false;
 
         // Is player Running
     private boolean running = false;
@@ -59,8 +59,9 @@ public class Game extends BasicGameState {
 
             // Switches to attack animation if true
         if( this.attacking ) {
-            this.hunterTom.drawPlayerAttacking( this.halfScreenWidth, this.halfScreenHeight );
+            this.hunterTom.drawPlayerAttacking(this.halfScreenWidth, this.halfScreenHeight);
         }
+            // If dead
         else if( this.dead ) {
             this.hunterTom.drawPlayerDieing( this.halfScreenWidth, this.halfScreenHeight );
         }
@@ -68,6 +69,7 @@ public class Game extends BasicGameState {
             this.hunterTom.drawPlayer( this.halfScreenWidth, this.halfScreenHeight );
         }
 
+            // Render the layer the player will walk under
         this.map.drawMapAbove();
 
             // Drawing arrows if he has them
@@ -90,10 +92,11 @@ public class Game extends BasicGameState {
 
         Input input = gc.getInput();
 
+            // Checks if the plaer is dead
         dead = hunterTom.checkDeath();
 
+            // If player is ded
         if( !dead ) {
-
             // Did player attack
             boolean attacked = false;
 
@@ -184,7 +187,7 @@ public class Game extends BasicGameState {
             }
 
             // If player has stamina to run
-            if (this.hunterTom.getStamina() <= this.hunterTom.getMinRunningStamina()) {   // ****************( Need to add variable to get running stamina min  )
+            if (this.hunterTom.getStamina() <= this.hunterTom.getMinRunningStamina()) {
                 this.running = false;
             }
 
@@ -218,11 +221,15 @@ public class Game extends BasicGameState {
             this.hunterTom.updateAttack(delta, attacked, map);
         }
         else {
-            if( !dedTest ) {
+            if( !this.startDed ) {
                 this.hunterTom.startAnimationDeath();
                 this.hunterTom.stopAnimationDeath();
-                dedTest = true;
+                this.startDed = true;
             }
+            else if( this.hunterTom.isStoppedDead() ) {
+               // Switch State to main menu =)
+            }
+
 
         }
 

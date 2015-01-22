@@ -89,7 +89,7 @@ public class Hunter extends Player {
             // Set Player starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( 20 );
+        setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
         setExp( 0 );
 

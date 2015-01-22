@@ -3,7 +3,6 @@ package javagame;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
-
 public class Player {
 
     // This will be the name of the sprite sheet the user choose
@@ -183,7 +182,7 @@ public class Player {
         return this.attackingPlayer.isStopped();
     }
     public boolean isStoppedDead() {
-        return this.attackingPlayer.isStopped();
+        return this.playingDeath.isStopped();
     }
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
