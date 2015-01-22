@@ -18,8 +18,8 @@ public class Rouge extends Player {
     private static final int MAX_LEVEL = 20;
 
     // Base Attack and Defend
-    private static final int BASE_ATTACK = 8;
-    private static final int BASE_DEFENCE = 3;
+    private static final int BASE_ATTACK = 11;
+    private static final int BASE_DEFENCE = 9;
 
     private int minRunningStamina = 10;
 

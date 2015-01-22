@@ -12,13 +12,13 @@ public class Hunter extends Player {
         // Max Health for hunter
     private static double MAX_HEALTH = 100.0;
         // Max Stamina
-    private static double MAX_STAMINA = 100.0;
+    private static double MAX_STAMINA = 120.0;
         // Max level
     private static final int MAX_LEVEL = 20;
 
         // Base Attack and Defend
-    private static final int BASE_ATTACK = 8;
-    private static final int BASE_DEFENCE = 3;
+    private static final int BASE_ATTACK = 13;
+    private static final int BASE_DEFENCE = 5;
 
     private int minRunningStamina = 10;
 
