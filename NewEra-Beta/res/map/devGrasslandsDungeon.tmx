@@ -16,6 +16,15 @@
    H4sIAAAAAAAAA+3PwQkAIAwEwTzSkrau5SloDUJkBo57bwQAAPCLnhFjb96vquVpqd4BAAAAAADAWws7JeuXECcAAA==
   </data>
  </layer>
+ <objectgroup name="objectDoorway" width="50" height="50">
+  <object name="mansionexit" type="doorway" x="768" y="1568" width="96" height="32">
+   <properties>
+    <property name="destX" value="-510"/>
+    <property name="destY" value="-604"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer name="doorway" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3DsQ0AAAgDoPr/5sWOXtANEhIAAAAAAAAAAADo2flNB/J7WYMQJwAA
