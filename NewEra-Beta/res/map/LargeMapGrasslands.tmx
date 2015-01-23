@@ -36,12 +36,19 @@
    H4sIAAAAAAAAA+3Xqw0AIBBEQRDURZ1UQnvIkyQIfplJ1p98lxIAAAAAAAAAAAAAAOzVSox39BIDAAAAAAAAAAAAAAAAAAAAAM6p+fQFAMCrZh2hMwAAgBl/AwAA3Gm11TU+AADAv/x8AAAAAAAAfxqDqsqeEL0AAA==
   </data>
  </layer>
- <objectgroup name="objectDoorway" width="110" height="110">
+ <objectgroup name="objectDoorway">
   <object name="mansionentrance" type="doorway" x="802" y="897" width="93" height="29">
    <properties>
     <property name="destX" value="-448"/>
     <property name="destY" value="-1216"/>
     <property name="mapName" value="devGrasslandsDungeon.tmx"/>
+   </properties>
+  </object>
+  <object name="homeentrance" type="doorway" x="3008" y="3008" width="32" height="32">
+   <properties>
+    <property name="destX" value="0"/>
+    <property name="destY" value="0"/>
+    <property name="mapName" value="null"/>
    </properties>
   </object>
  </objectgroup>
