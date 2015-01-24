@@ -11,15 +11,15 @@ import java.util.Random;
 public class Warrior extends Player {
 
     // Max Health for hunter
-    private static double MAX_HEALTH = 100.0;
+    private static double MAX_HEALTH = 120.0;
     // Max Stamina
-    private static double MAX_STAMINA = 100.0;
+    private static double MAX_STAMINA = 110.0;
     // Max level
     private static final int MAX_LEVEL = 20;
 
     // Base Attack and Defend
-    private static final int BASE_ATTACK = 8;
-    private static final int BASE_DEFENCE = 3;
+    private static final int BASE_ATTACK = 7;
+    private static final int BASE_DEFENCE = 10;
 
     private int minRunningStamina = 10;
 

@@ -5,20 +5,21 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import javax.imageio.ImageWriteParam;
 import java.util.Random;
 
-public class Wizard extends Player {
+public class Rouge extends Player {
 
     // Max Health for hunter
-    private static double MAX_HEALTH = 90.0;
+    private static double MAX_HEALTH = 100.0;
     // Max Stamina
-    private static double MAX_STAMINA = 110.0;
+    private static double MAX_STAMINA = 100.0;
     // Max level
     private static final int MAX_LEVEL = 20;
 
     // Base Attack and Defend
-    private static final int BASE_ATTACK = 15;
-    private static final int BASE_DEFENCE = 5;
+    private static final int BASE_ATTACK = 11;
+    private static final int BASE_DEFENCE = 9;
 
     private int minRunningStamina = 10;
 
@@ -52,8 +53,8 @@ public class Wizard extends Player {
     // Player level
     private int level;
 
-    // Spells Animations
-    private Image[] fireBalls;
+    // Arrow Animations
+    // private Image[] arrows;
 
     // Currently Selected Attack
     private Image currentAttack;
@@ -63,21 +64,23 @@ public class Wizard extends Player {
     // If the player is in combat
     private boolean inCombat;
 
-    public Wizard( String sheetName, String name ) throws SlickException {
+    public Rouge( String sheetName, String name ) throws SlickException {
         // Call Player constructor
-        super(  sheetName, name, 2  );
+        super(  sheetName, name, 3 );
 
-        // Settign arrow animations
-        fireBalls = new Image[4];
-        fireBalls[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
-        fireBalls[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
-        fireBalls[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
-        fireBalls[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
+        /*
+       // Settign arrow animations
+        arrows = new Image[4];
+        arrows[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
+        arrows[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
+        arrows[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
+        arrows[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
         // sets the projectile
-        setProjectileImage( fireBalls );
+        setProjectileImage( arrows );
+        */
 
         // This sets the display image for which attack is chosen
-        currentAttack = fireBalls[1];
+        currentAttack = new Image("NewEra-Beta/res/items/dagger.png");
 
         // Set the color
         red = new Color( 225, 0, 0, .7f );
@@ -97,7 +100,7 @@ public class Wizard extends Player {
 
         // Set up player Inventory/ give default items
         inventory = inventory.getPlayerInvintory();
-        inventory.setClassID( 2 );
+        inventory.setClassID( 3 );
         inventory.setBaseAttack( this.BASE_ATTACK );
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setPlayerName( name );
@@ -226,7 +229,10 @@ public class Wizard extends Player {
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
-        updateProjectile( delta, attacked, map );
+
+        //updateProjectile( delta, attacked, map );
+
+
     }
 
     public void drawPlayerInfo( Graphics g ) {
