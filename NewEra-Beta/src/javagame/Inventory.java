@@ -29,6 +29,7 @@ public class Inventory {
     private int baseAttack;
     private int baseDefence;
 
+        // Class
     private int playerLevel;
 
     private int playerOverallAttack;
