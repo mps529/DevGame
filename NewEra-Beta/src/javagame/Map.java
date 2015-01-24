@@ -24,6 +24,14 @@ public class Map {
         // Map size in tiles
     private int mapHeight, mapWidth;
 
+        // Number of object groups
+    private int objectGroupCount;
+        // Number of objects
+    private int objectCount;
+
+    private int objectX;
+    private int objectY;
+
         // How many pixels to move
     private static int speed = 2;
 
@@ -36,8 +44,13 @@ public class Map {
             // Defining Map
         this.map = new TiledMap( "NewEra-Beta/res/map/"+mapName );
 
+            // We will only have one object group
+        this.objectGroupCount = this.map.getObjectGroupCount();
+        this.objectGroupCount --;
+            // the number of groups in our objects layer
+        this.objectCount = this.map.getObjectCount( objectGroupCount );
             // Setting map size by tiles
-        setMapWidth( map.getWidth() );
+        setMapWidth(map.getWidth());
         setMapHeight( map.getHeight() );
 
             // Getting the different layers id's
@@ -100,9 +113,6 @@ public class Map {
                 if( this.map.getTileId( x, y, this.collisionsLayer) != 0 ) {
                     this.mapObjects[ x ][ y ] = 1;
                 }
-                else if( this.map.getTileId( x, y, this.doorLayer) != 0 ) {
-                    this.mapObjects[ x ][ y ] = 2;
-                }
                 else {
                     this.mapObjects[ x ][ y ] = 0;
                 }
@@ -135,6 +145,48 @@ public class Map {
 
     public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
     public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }
+
+    public void setObjectX( int x ) {
+        this.objectX = x;
+    }
+    public void setObjectX( String x ) {
+        this.objectX = Integer.parseInt( x );
+    }
+    public int getObjectX() { return this.objectX; }
+
+    public void setObjectY( int y ) {
+        this.objectY = y;
+    }
+    public void setObjectY( String y ) {
+        this.objectY = Integer.parseInt( y );
+    }
+    public int getObjectY() { return this.objectY; }
+
+    public String isOnObjectLayer( float x, float y ) {
+        String objName;
+        int objectX = 0;
+        int objectY = 0;
+        int objectWidth = 0;
+        int objectHeight = 0;
+
+        for( int i = 0; i < this.objectCount; i++ ) {
+            objectX = this.map.getObjectX( this.objectGroupCount, i );
+            objectY = this.map.getObjectY(this.objectGroupCount, i);
+            objectWidth = this.map.getObjectWidth(this.objectGroupCount, i );
+            objectHeight = this.map.getObjectHeight(this.objectGroupCount, i);
+            objName = this.map.getObjectProperty( this.objectGroupCount, i, "mapName", null );
+
+            if( ((objectX-12) <= x) && ((objectX+objectWidth+12)) >= x  ) {
+                if( (objectY >= y) && ((objectY - objectHeight)) <= y  ) {
+                    setObjectX( this.map.getObjectProperty( this.objectGroupCount, i, "destX", "-1" ) );
+                    setObjectY( this.map.getObjectProperty( this.objectGroupCount, i, "destY", "-1" ) );
+                    return objName;
+                }
+            }
+        }
+
+        return null;
+    }
 
     public void isRunning() {
         this.speed = 3;

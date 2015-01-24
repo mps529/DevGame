@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1801" name="TileC" tilewidth="32" tileheight="32">
+  <image source="tilesets/TileC.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <layer name="ground" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC4tkYmCIHMWDCkcNUrOoYedAuGcoxNNgcsdg8ddIxYMp/Am5BQBRHuIkQAYAAA==
+  </data>
+ </layer>
+ <objectgroup name="objectDoorway" width="20" height="20" >
+  <object name="houseExit" type="doorway" x="288" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-84"/>
+    <property name="destY" value="-85"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="doorway" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYBSMglEwCiBgEiMEEwMA2CMZIkAGAAA=
+  </data>
+ </layer>
+ <layer name="collision" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7vDyMBwl0r4HhD/BGIpJgaGX4yYuAKLGD78G2oesepxmQ9zD8g8cSBbggQM0gdjz2JHYBBfEogjgdgYyDcBYhDQB9IGQHyEmQEFPASKPWKHmNcOpGcimTUbiOewQ8wCYWcg24WdgSgAMg8XgJlHCsBlnhE7xJ/I5pkB+eZAbMEOYZPqPpA/vyDpA5nhDsQeBMxrBsq1YJEn179HcNgFMusOgfSODu5gkUMWw5eef2Mx7ycWOWQxfOlZEktYiGORQxZbSGS6QwZCWPQIsmOPj33MmGqJBTDzKDEDGSxBS8+UmOvKTj23wcoTbOHHyUa6u2DlCb78YceGKQ/jI8uhYwBnq6yMQAYAAA==
+  </data>
+ </layer>
+ <layer name="above" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgQAX87AwMAuwMVAP2QLMckMzLBbLzKDAf3bxaILsOi3mVQLEqKK4G4hocdsoDxRWwyF0Eil2CipcD6U4g7oLibiDuQdKzGMhewky+n4YKSMISToFAsXgC8VkMlC/BoeYLmngCFdMeLcFWFvLU/2SHYBBwBNJOUPZlPOa9wRIm+NSPgqENgoDxHU4gHyiwkSaXQ0G+ssNjFwCtZamFQAYAAA==
+  </data>
+ </layer>
+</map>

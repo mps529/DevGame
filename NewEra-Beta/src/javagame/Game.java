@@ -1,7 +1,5 @@
 package javagame;
 
-
-import org.lwjgl.Sys;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -10,22 +8,29 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.Vector;
+
 public class Game extends BasicGameState {
 
         // Game State
     private static int gameState;
         // Player Class
     private Wizard hunterTom;
-        // Map Class
-    private Map map;
+
+    private Vector<Map> maps;
+
         // Is Attacking animation playing
     private boolean attacking = false;
         // Display fps and coords
     private boolean showInfo = false;
         // if player is DED
     private boolean dead = false;
-
+        // Starting of death animaiton
     private boolean startDed = false;
+        // Current map
+    private int currentMap;
+        // Temp map name to see if there needs to be a map change
+    private String mapName;
 
         // Is player Running
     private boolean running = false;
@@ -44,18 +49,29 @@ public class Game extends BasicGameState {
         this.hunterTom.setPlayerX( 94 );
         this.hunterTom.setPlayerY( 96 );
 
-            // Map **Starting tiles for map are 10 under
-            // PlayerX and PlayerY then negative
-        this.map = new Map( "LargeMapGrasslands.tmx", -84, -86 );
+        maps = new Vector<Map>();
 
+            // Maps **Starting tiles for map are 10 under
+            // PlayerX and PlayerY then negative
+        maps.addElement( new Map( "LargeMapGrasslands.tmx", -84, -86 )  );
+        maps.addElement( new Map( "devGrasslandsDungeon.tmx", -15, -38 )  );
+        maps.addElement( new Map( "devGrasslandsHome.tmx", 0, -8 )  );
+
+            // Setting starting map
+        for( int x = 0; x < maps.size(); x++) {
+            if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
+                currentMap = x;
+                break;
+            }
+        }
             // Getting the screen Sizes
         this.halfScreenHeight = gc.getHeight()/2;
         this.halfScreenWidth = gc.getWidth()/2;
      }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
-
-        this.map.drawMap();
+            // render current map
+        this.maps.elementAt(this.currentMap).drawMap();
 
             // Switches to attack animation if true
         if( this.attacking ) {
@@ -70,7 +86,7 @@ public class Game extends BasicGameState {
         }
 
             // Render the layer the player will walk under
-        this.map.drawMapAbove();
+        this.maps.elementAt(this.currentMap).drawMapAbove();
 
             // Drawing arrows if he has them
         this.hunterTom.renderProjectile( gc, g );
@@ -81,7 +97,7 @@ public class Game extends BasicGameState {
         if( this.showInfo ) {
             g.setColor( Color.white );
             g.drawString("X: " + this.hunterTom.getPlayerX() + ", Y: " + this.hunterTom.getPlayerY(), 300, 10);
-            g.drawString("X: " + this.map.getMapCoordX() + ", Y: " +  this.map.getMapCoordY() , 300, 30);
+            g.drawString("X: " + this.maps.elementAt(this.currentMap).getMapCoordX() + ", Y: " +  this.maps.elementAt(this.currentMap).getMapCoordY() , 300, 30);
             g.drawString("Running: " + this.running , 300, 50);
         }
             // FPS show, also for debugging
@@ -92,11 +108,11 @@ public class Game extends BasicGameState {
 
         Input input = gc.getInput();
 
-            // Checks if the plaer is dead
+        // Checks if the plaer is dead
         dead = hunterTom.checkDeath();
 
-            // If player is ded
-        if( !dead ) {
+        // If player is ded
+        if (!dead) {
             // Did player attack
             boolean attacked = false;
 
@@ -113,9 +129,14 @@ public class Game extends BasicGameState {
                 if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
                     this.hunterTom.startAnimationWalking();
                     this.hunterTom.setPlayerDirection(0);
-                    if (this.map.isSpaceTaken((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY() - 12) == 0) {
+                    if (this.maps.elementAt(this.currentMap).isSpaceTaken((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY() - 12) == 0) {
                         this.hunterTom.decrementPlayerY();
-                        this.map.incrementMapCoordY();
+                        this.maps.elementAt(this.currentMap).incrementMapCoordY();
+                            // Checking for map switch
+                        this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY());
+                        if (this.mapName != null) {
+                            changeMap(this.mapName);
+                        }
                         if (this.running) {
                             this.hunterTom.decreaseStamina(delta * .003f);
                             movedWhileRunning = true;
@@ -124,9 +145,15 @@ public class Game extends BasicGameState {
                 } else if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT)) {
                     this.hunterTom.startAnimationWalking();
                     this.hunterTom.setPlayerDirection(1);
-                    if (this.map.isSpaceTaken(this.hunterTom.getPlayerX() + 12, this.hunterTom.getPlayerY()) == 0) {
+                    if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.hunterTom.getPlayerX() + 12, this.hunterTom.getPlayerY()) == 0) {
                         this.hunterTom.incrementPlayerX();
-                        this.map.decrementMapCoordX();
+                        this.maps.elementAt(this.currentMap).decrementMapCoordX();
+                            // Checking for map switch
+                        this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY());
+                        if (this.mapName != null) {
+                            changeMap(this.mapName);
+                        }
+
                         if (this.running) {
                             this.hunterTom.decreaseStamina(delta * .003f);
                             movedWhileRunning = true;
@@ -136,9 +163,14 @@ public class Game extends BasicGameState {
                 } else if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN)) {
                     this.hunterTom.startAnimationWalking();
                     this.hunterTom.setPlayerDirection(2);
-                    if (this.map.isSpaceTaken(this.hunterTom.getPlayerX(), this.hunterTom.getPlayerY() + 24) == 0) {
+                    if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.hunterTom.getPlayerX(), this.hunterTom.getPlayerY() + 24) == 0) {
                         this.hunterTom.incrementPlayerY();
-                        this.map.decrementMapCoordY();
+                        this.maps.elementAt(this.currentMap).decrementMapCoordY();
+                            // Checking for map switch
+                        this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY());
+                        if (this.mapName != null) {
+                            changeMap(this.mapName);
+                        }
                         if (this.running) {
                             this.hunterTom.decreaseStamina(delta * .003f);
                             movedWhileRunning = true;
@@ -147,9 +179,14 @@ public class Game extends BasicGameState {
                 } else if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT)) {
                     this.hunterTom.startAnimationWalking();
                     this.hunterTom.setPlayerDirection(3);
-                    if (this.map.isSpaceTaken(this.hunterTom.getPlayerX() - 12, this.hunterTom.getPlayerY()) == 0) {
+                    if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.hunterTom.getPlayerX() - 12, this.hunterTom.getPlayerY()) == 0) {
                         this.hunterTom.decrementPlayerX();
-                        this.map.incrementMapCoordX();
+                        this.maps.elementAt(this.currentMap).incrementMapCoordX();
+                            // Checking for map switch
+                        this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.hunterTom.getPlayerX(), (int) this.hunterTom.getPlayerY());
+                        if (this.mapName != null) {
+                            changeMap(this.mapName);
+                        }
                         if (running) {
                             this.hunterTom.decreaseStamina(delta * .003f);
                             movedWhileRunning = true;
@@ -194,12 +231,12 @@ public class Game extends BasicGameState {
             // if running is true, speed up player animation
             if (this.running) {
                 this.hunterTom.isRunning();
-                this.map.isRunning();
+                this.maps.elementAt(this.currentMap).isRunning();
             }
             // Slow it down
             else {
                 this.hunterTom.isNotRunning();
-                this.map.isNotRunning();
+                this.maps.elementAt(this.currentMap).isNotRunning();
             }
 
             // This is when the players animation has stopped and he began to fire
@@ -218,21 +255,34 @@ public class Game extends BasicGameState {
                 this.hunterTom.increaseHealth(delta * .003f);
             }
             // Update projectiles position
-            this.hunterTom.updateAttack(delta, attacked, map);
-        }
-        else {
-            if( !this.startDed ) {
+            this.hunterTom.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
+        } else {
+            if (!this.startDed) {
                 this.hunterTom.startAnimationDeath();
                 this.hunterTom.stopAnimationDeath();
                 this.startDed = true;
+            } else if (this.hunterTom.isStoppedDead()) {
+                // Switch State to main menu =)
             }
-            else if( this.hunterTom.isStoppedDead() ) {
-               // Switch State to main menu =)
-            }
-
-
         }
+    }
 
+
+    public void changeMap( String newName ) {
+            // Checking all maps for similar name
+        for( int x = 0; x < this.maps.size(); x++ ) {
+            if( this.maps.elementAt( x ).getMapName().equals(newName) ) {
+                    // Setting new coords
+                hunterTom.setPlayerXinPixels( Math.abs( this.maps.elementAt(this.currentMap).getObjectX()*32 )+320 );
+                hunterTom.setPlayerYinPixels(Math.abs(this.maps.elementAt(this.currentMap).getObjectY()*32 )+320 );
+                this.maps.elementAt( x ).setMapCoordX( this.maps.elementAt(this.currentMap).getObjectX() );
+                this.maps.elementAt( x ).setMapCoordY( this.maps.elementAt(this.currentMap).getObjectY() );
+                // Setting the current map
+                this.currentMap = x;
+
+                return;
+            }
+        }
     }
 
     public int getID( ) {
