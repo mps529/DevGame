@@ -23,7 +23,7 @@ public class Main extends StateBasedGame {
     public void initStatesList( GameContainer gc ) throws SlickException {
         // Inits the two screens
         this.getState( game ).init( gc, this );
-        this.getState(inventoryScreen).init( gc, this );
+        this.getState( inventoryScreen ).init( gc, this );
         this.getState( playerScreen ).init( gc, this );
         // Sets menu as start screen
         this.enterState( game );
@@ -34,8 +34,8 @@ public class Main extends StateBasedGame {
         try{
             appgc = new AppGameContainer( new Main( gameName ) );
             appgc.setDisplayMode( 640, 640, false );
-            appgc.setVSync( true );
-            appgc.setTargetFrameRate( 60 );
+            appgc.setVSync(true );
+            appgc.setTargetFrameRate(60 );
             appgc.setShowFPS(false);
             appgc.setSmoothDeltas( true );
             appgc.start();

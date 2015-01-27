@@ -45,10 +45,10 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        this.player = this.player.createInstance( "hunter.png", "Tom" , 0 );
+        //this.player = this.player.createInstance( "hunter.png", "Tom" , 0 );
         //this.player = this.player.createInstance( "warrior.png", "Tom", 1 );
         //this.player = this.player.createInstance( "wizard.png", "Tom" , 2 );
-        //this.player = this.player.createInstance( "rouge.png", "Tom" , 3 );
+        this.player = this.player.createInstance( "rouge.png", "Tom" , 3 );
 
 
             // Starting tile
@@ -202,6 +202,30 @@ public class Game extends BasicGameState {
                 // If the player did not move, stop playing walking animation
                 else {
                     this.player.stopAnimationWalking();
+                }
+
+                if( input.isKeyDown( Input.KEY_1 ) ) {
+                    if( this.player.isMoveKnown( 0 ) ) {
+                        this.player.setMoveSelected( 0 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_2 ) ) {
+                    if( this.player.isMoveKnown( 1 ) ) {
+                        this.player.setMoveSelected( 1 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_3 ) ) {
+                    if( this.player.isMoveKnown( 2 ) ) {
+                        this.player.setMoveSelected( 2 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_4 ) ) {
+                    if( this.player.isMoveKnown( 3 ) ) {
+                        this.player.setMoveSelected( 3 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_V ) ) {
+                    this.player.increaseExp( 10 );
                 }
 
                 // If player attacks and the player has stamina to attack
