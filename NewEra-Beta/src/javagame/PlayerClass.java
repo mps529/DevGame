@@ -77,6 +77,11 @@ public class PlayerClass extends Player {
     // Time since last shot
     private int lastShot = 0;
 
+        // Health and stamina bar
+    private Image emptyHealth;
+        // Exp bar
+    private Image emptyExpBar;
+
     // If the player is in combat
     private boolean inCombat;
 
@@ -105,17 +110,17 @@ public class PlayerClass extends Player {
 
         // Set the color
         red = new Color( 225, 0, 0, .7f );
-        green = new Color( 0,255,0, .7f );
-        blue = new Color( 0,206,209, .7f );
+        green = new Color( 0,128,0, .7f );
+        blue = new Color( 0,206,209 );
         black = new Color( 0,0,0, .5f );
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Player starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( MAX_HEALTH );
+        setHealth( 80 );
         setStamina( MAX_STAMINA );
-        setExp( 0 );
+        setExp( expToLevelUp - 10 );
 
         this.moveSelected = 0;
 
@@ -124,6 +129,9 @@ public class PlayerClass extends Player {
         inventory.setBaseAttack( this.BASE_ATTACK );
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setClassID( classID );
+
+        this.emptyHealth = new Image( "NewEra-Beta/res/dash/EmptyBar.png" );
+        this.emptyExpBar = new Image( "NewEra-Beta/res/dash/EmptyBarLong.png" );
     }
 
     public static PlayerClass getInstance() {
@@ -392,25 +400,23 @@ public class PlayerClass extends Player {
         double staminaPercent = getStamina() / MAX_STAMINA;
         double experiencePercent = getExp() / getExpToLevelUp();
 
-        /*
-            Shitty done Health System
-         */
         g.setColor( grey );
         g.fillRect( 30, 16, 32, 32 );
         currentAttack.draw( 32, 16 );
 
-        g.setColor( black );
-        g.drawRoundRect(68, 23, 198, 10, 10);
-        g.drawRoundRect(68, 38, 198, 10, 10 );
-        g.drawRoundRect(32, 54, 235, 5, 10 );
 
         g.setColor( red );
-        g.fillRoundRect(68, 23, 198 * (float)healthPercent, 10, 10 );
+        g.fillRoundRect(111, 558, 191 * (float)healthPercent, 10, 10 );
+        this.emptyHealth.draw( 104, 550 );
+
         g.setColor( green );
-        g.fillRoundRect(68, 38, 198 * (float) staminaPercent, 10, 10);
-        g.setColor( blue );
-        g.fillRoundRect(32, 54, 235 * (float)experiencePercent, 5, 10 );
+        g.fillRoundRect(328, 558, 191 * (float)staminaPercent, 10, 10 );
+        this.emptyHealth.draw( 320, 550 );
 
 
+
+        g.setColor( Color.blue );
+        g.fillRoundRect( 110, 623, 423 * (float)experiencePercent, 4, 5 );
+        this.emptyExpBar.draw( 104, 620 );
     }
 }
