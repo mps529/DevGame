@@ -159,6 +159,8 @@ public class Player {
     public void drawPlayerAttacking( float x, float y ) { this.attackingPlayer.draw( x, y );  }
     public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
 
+    public String getPlayerName() { return this.playerName; }
+
     // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
         switch ( newDirection ) {

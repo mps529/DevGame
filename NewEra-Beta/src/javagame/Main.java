@@ -19,10 +19,9 @@ public class Main extends StateBasedGame {
     }
 
     public void initStatesList( GameContainer gc ) throws SlickException {
-        // Inits the three screens
-        this.getState( mainMenu ).init( gc, this );
+        // Inits the two screens
         this.getState( game ).init( gc, this );
-        this.getState( inventoryScreen ).init( gc, this );
+        this.getState(inventoryScreen).init( gc, this );
         // Sets menu as start screen
         this.enterState( mainMenu );
     }
@@ -35,7 +34,6 @@ public class Main extends StateBasedGame {
             appgc.setVSync( true );
             appgc.setTargetFrameRate( 60 );
             appgc.setSmoothDeltas( true );
-            appgc.setShowFPS(false);
             appgc.start();
         }
         catch( SlickException e ) {

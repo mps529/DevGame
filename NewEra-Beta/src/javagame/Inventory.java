@@ -13,7 +13,7 @@ public class Inventory {
              between states, I created a singleton. This
              makes data transfer between states very easy
          */
-    private static Inventory playerInvintory = null;
+   // private static Inventory playerInvintory = null;
 
         // This is the max, although 2 spots are for potions
     private static int MAX_ITEMS_IN_INVENTORY = 21;
@@ -21,13 +21,9 @@ public class Inventory {
 
         // Currency for game
     private int money;
-        /*
-            This is cheat way of getting some information into the Inventory Screen
-        */
-    private String playerName;
 
-    private int baseAttack;
-    private int baseDefence;
+    private static int baseAttack;
+    private static int baseDefence;
 
         // Class
     private int playerLevel;
@@ -74,26 +70,23 @@ public class Inventory {
             Call this function to get a copy of the class between states.
             Do NOT make a new Inventory, this function handles if it needs
             to be created or not.
-        */
+
     public static Inventory getPlayerInvintory( ) {
         if( playerInvintory == null ) {
             playerInvintory = new Inventory( );
         }
         return playerInvintory;
     }
+    */
 
-    public void setPlayerName( String name ) {
-        this.playerName = name;
-    }
-    public String getPlayerName() { return this.playerName; }
 
-    public void setBaseAttack( int attack ) { this.baseAttack = attack; }
+    public void setBaseAttack( int attack ) { this.baseAttack = attack;}
     public int getPlayerOverallAttack() { return this.playerOverallAttack; }
 
     public void setBaseDefence( int defence ) { this.baseDefence = defence; }
     public int getPlayerOverallDefence() { return this.playerOverallDefence; }
 
-    private void calculateAttackAndDefence() {
+    private void calculateAttackAndDefence(  ) {
             // Setting to base
         this.playerOverallAttack = this.baseAttack;
         this.playerOverallDefence = this.baseDefence;
@@ -220,28 +213,28 @@ public class Inventory {
         Items[] basic = new Items[8];
 
             // Assigning basic Items
-        basic[ 0 ] = new Items( 2, playerInvintory.classID, 0, 1 );
-        basic[ 1 ] = new Items( 3, playerInvintory.classID, 0, 1 );
-        basic[ 2 ] = new Items( 4, playerInvintory.classID, 0, 1 );
-        basic[ 3 ] = new Items( 5, playerInvintory.classID, 0, 1 );
-        basic[ 4 ] = new Items( 6, playerInvintory.classID, 0, 1 );
+        basic[ 0 ] = new Items( 2, this.classID, 0, 1 );
+        basic[ 1 ] = new Items( 3, this.classID, 0, 1 );
+        basic[ 2 ] = new Items( 4, this.classID, 0, 1 );
+        basic[ 3 ] = new Items( 5, this.classID, 0, 1 );
+        basic[ 4 ] = new Items( 6, this.classID, 0, 1 );
 
             // Check class to give correct weapon
         if( this.classID == 0 ) {
-            basic[ 5 ] = new Items( 10, playerInvintory.classID, 0, 1 );
+            basic[ 5 ] = new Items( 10, this.classID, 0, 1 );
         }
         else if( this.classID == 1 ) {
-            basic[ 5 ] = new Items( 9, playerInvintory.classID, 0, 1 );
+            basic[ 5 ] = new Items( 9, this.classID, 0, 1 );
         }
         else if( this.classID == 2 ) {
-            basic[ 5 ] = new Items( 12, playerInvintory.classID, 0, 1 );
+            basic[ 5 ] = new Items( 12, this.classID, 0, 1 );
         }
         else if( this.classID == 3 ) {
-            basic[ 5 ] = new Items( 11, playerInvintory.classID, 0, 1 );
+            basic[ 5 ] = new Items( 11, this.classID, 0, 1 );
         }
 
-        basic[ 6 ] = new Items( 7, playerInvintory.classID, 0, 1 );
-        basic[ 7 ] = new Items( 8, playerInvintory.classID, 0, 1 );
+        basic[ 6 ] = new Items( 7, this.classID, 0, 1 );
+        basic[ 7 ] = new Items( 8, this.classID, 0, 1 );
 
             // Adding to inventory and equipping item
         for( int x=0; x < basic.length; x++ ) {
