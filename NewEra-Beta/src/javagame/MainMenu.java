@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
-import java.awt.*;
 import java.util.Random;
 
 /**
@@ -22,7 +21,9 @@ public class MainMenu extends BasicGameState {
     private TiledMap map;
     private float mapX, mapY;
     private boolean loadPressed, newPressed;
-    private Random randInt;
+    private boolean moveUp, moveDown, moveLeft, moveRight;
+    private Random randNum;
+    private double scrollSpeedX, scrollSpeedY;
 
 
     public MainMenu( int state ) {
@@ -35,7 +36,6 @@ public class MainMenu extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-        randInt = new Random();
 
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
@@ -55,6 +55,17 @@ public class MainMenu extends BasicGameState {
         this.mapX = -2688;
         this.mapY = -2752;
 
+        //booleans for map animation
+        this.moveUp = true;
+        this.moveDown = false;
+        this.moveLeft = true;
+        this.moveRight = false;
+
+        //numbers for map animation speed
+        randNum = new Random();
+        scrollSpeedX = .1f;
+        scrollSpeedY = .2f;
+
     }
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
@@ -69,21 +80,98 @@ public class MainMenu extends BasicGameState {
         if(!loadPressed) { this.loadGame.draw(352, 300); }
         else { this.loadGamePressed.draw(352, 300); }
 
+
     }
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
         Input input = gc.getInput();
         int mouseX = input.getMouseX();
         int mouseY = input.getMouseY();
 
-       // if(randInt.nextInt(2)== 0) {
-        if(mapX >=-3200) {
-            mapX += delta * .2f;
-            mapY += delta * .2f;
+
+        if(moveUp) {
+            if(mapY <= -5) {
+                mapY+= delta * scrollSpeedY;
+            }
+            else {
+                moveUp = false;
+                moveDown = true;
+
+                int rand = randNum.nextInt(3);
+                if(rand == 0) {
+                    scrollSpeedY = .1f;
+                }
+                else if(rand == 1){
+                    scrollSpeedY = .11f;
+                }
+                else{
+                    scrollSpeedY = .12f;
+                }
+
+            }
+
         }
-        if(mapX <= 0) {
-            mapX -= delta * .2f;
-            mapY += delta * .2f;
+        if(moveDown) {
+            if(mapY >= -2800) {
+                mapY-= delta * scrollSpeedY;
+            }
+            else {
+                moveUp = true;
+                moveDown = false;
+
+                int rand = randNum.nextInt(3);
+                if(rand == 0) {
+                    scrollSpeedY = .1f;
+                }
+                else if(rand == 1){
+                    scrollSpeedY = .11f;
+                }
+                else{
+                    scrollSpeedY = .12f;
+                }
+            }
         }
+        if(moveRight) {
+            if(mapX <= -5) {
+                mapX += delta * scrollSpeedX;
+            }
+            else {
+                moveRight = false;
+                moveLeft = true;
+
+                int rand = randNum.nextInt(3);
+                if(rand == 0) {
+                    scrollSpeedX = .1f;
+                }
+                else if(rand == 1){
+                    scrollSpeedX = .11f;
+                }
+                else{
+                    scrollSpeedX = .12f;
+                }
+            }
+        }
+        if(moveLeft) {
+            if(mapX >= -2800) {
+                mapX -= delta * scrollSpeedX;
+            }
+            else {
+                moveLeft = false;
+                moveRight = true;
+
+                int rand = randNum.nextInt(3);
+                if(rand == 0) {
+                    scrollSpeedX = .1f;
+                }
+                else if(rand == 1){
+                    scrollSpeedX = .11f;
+                }
+                else{
+                    scrollSpeedX = .12f;
+                }
+
+            }
+        }
+
 
 
         //New Game button operations
@@ -101,12 +189,6 @@ public class MainMenu extends BasicGameState {
         else{
             loadPressed = false;
         }
-
-
-
-
-
-
 
 
     }

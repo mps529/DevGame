@@ -33,6 +33,7 @@ public class Main extends StateBasedGame {
             appgc.setDisplayMode( 640, 640, false );
             appgc.setVSync( true );
             appgc.setTargetFrameRate( 60 );
+            appgc.setShowFPS(false);
             appgc.setSmoothDeltas( true );
             appgc.start();
         }
