@@ -11,6 +11,9 @@ import org.newdawn.slick.tiled.TiledMap;
 public class InventoryScreen extends BasicGameState{
 
         // singelton for Inventory
+    private PlayerClass player;
+
+    // singelton for Inventory
     private Inventory playerInventory;
         // Background
     private TiledMap inventoryMap;
@@ -61,7 +64,9 @@ public class InventoryScreen extends BasicGameState{
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
             // Inventory
-        this.playerInventory = this.playerInventory.getPlayerInvintory();
+        this.player = this.player.getInstance();
+
+        this.playerInventory = this.player.getInventory();
 
         // Inventory Background
         this.inventoryMap = new TiledMap( "NewEra-Beta/res/map/Inventory2.tmx" );
@@ -130,7 +135,7 @@ public class InventoryScreen extends BasicGameState{
                 g.drawString("Class: Warrior", 360, 100);
             }
             else if( classID == 2 ) {
-                g.drawString("Class: Mage", 360, 100);
+                g.drawString("Class: Wizard", 360, 100);
             }
             else if( classID == 3 ) {
                 g.drawString("Class: Rouge", 360, 100);
@@ -208,8 +213,11 @@ public class InventoryScreen extends BasicGameState{
 
         if( !this.settingName ) {
 
-            // I will return to game
+            // 'I' will return to game
             if (input.isKeyPressed(Input.KEY_I)) {
+                this.player.setOverallAttack( playerInventory.getPlayerOverallAttack() );
+                this.player.setOverallDefence( playerInventory.getPlayerOverallDefence() );
+                input.clearKeyPressedRecord();
                 sbg.enterState(1);
             }
             // HEAD
@@ -331,7 +339,7 @@ public class InventoryScreen extends BasicGameState{
                         this.displayItem = null;
                         spotSelected = true;
                     }
-                } else if ((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320)) {
+                } else if ((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320) && !drop ) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.drop = true;
                         spotSelected = true;
@@ -353,7 +361,7 @@ public class InventoryScreen extends BasicGameState{
                         spotSelected = true;
                     }
                 }
-                if (((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320)) && !drop) {
+                else if (((this.mouseX >= 544 && this.mouseX <= 608) && (this.mouseY >= 256 && this.mouseY <= 320)) && !drop) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.drop = true;
                         spotSelected = true;
