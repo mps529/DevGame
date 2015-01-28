@@ -28,7 +28,7 @@ public class PlayerScreen extends BasicGameState {
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
-        this.player = player.getInstance();
+        this.player = this.player.getInstance();
         this.background = new TiledMap( "NewEra-Beta/res/map/PlayerMenu.tmx" );
 
         this.plus = new Image( "NewEra-Beta/res/buttons/plus.png" );

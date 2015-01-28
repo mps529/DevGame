@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -49,11 +50,13 @@ public class Game extends BasicGameState {
         //this.player = this.player.createInstance( "warrior.png", "Tom", 1 );
         //this.player = this.player.createInstance( "wizard.png", "Tom" , 2 );
         //this.player = this.player.createInstance( "rouge.png", "Tom" , 3 );
-        this.player.getInstance();
+
+        this.player = this.player.getInstance();
 
             // Starting tile
         this.player.setPlayerX(94);
-        this.player.setPlayerY( 96 );
+        this.player.setPlayerY(96);
+
 
         maps = new Vector<Map>();
 
