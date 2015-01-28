@@ -136,10 +136,6 @@ public class Player {
         // Setting walking animation
         setPlayerDirection( 2 );
 
-        // Setting player coords;
-        setPlayerX( 0 );
-        setPlayerY( 0 );
-
         // Should not be able to shoot more then 8 projectiles at once
         this.projectiles = new Projectile[ 8 ];
         for( int x = 0; x < this.projectiles.length; x++ ){
@@ -238,10 +234,6 @@ public class Player {
 
         // Setting walking animation
         setPlayerDirection( 2 );
-
-        // Setting player coords;
-        setPlayerX( 0 );
-        setPlayerY( 0 );
 
         // Should not be able to shoot more then 8 projectiles at once
         this.projectiles = new Projectile[ 8 ];
