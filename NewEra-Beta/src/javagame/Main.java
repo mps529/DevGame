@@ -26,7 +26,7 @@ public class Main extends StateBasedGame {
         this.getState( inventoryScreen ).init( gc, this );
         this.getState( playerScreen ).init( gc, this );
         // Sets menu as start screen
-        this.enterState( game );
+        this.enterState( mainMenu );
     }
 
     public static void main( String[] args ) {

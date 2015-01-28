@@ -264,8 +264,6 @@ public class MainMenu extends BasicGameState {
 
                     if(sprite1Selected) {
                         this.player = this.player.createInstance("warrior.png", playerName, 1);
-                        this.player.setPlayerX(94);
-                        this.player.setPlayerY( 96 );
                         sbg.enterState(1);
                     }
 
@@ -273,8 +271,6 @@ public class MainMenu extends BasicGameState {
 
                     if(sprite1Selected) {
                         this.player = this.player.createInstance( "wizard.png", playerName , 2 );
-                        this.player.setPlayerX(94);
-                        this.player.setPlayerY( 96 );
                         sbg.enterState(1);
                     }
 
@@ -282,8 +278,6 @@ public class MainMenu extends BasicGameState {
 
                     if(sprite1Selected) {
                         this.player = this.player.createInstance( "rouge.png", playerName , 3 );
-                        this.player.setPlayerX(94);
-                        this.player.setPlayerY( 96 );
                         sbg.enterState(1);
                     }
 
@@ -291,8 +285,6 @@ public class MainMenu extends BasicGameState {
 
                     if(sprite1Selected) {
                         this.player = this.player.createInstance( "hunter.png", playerName , 0 );
-                        this.player.setPlayerX(94);
-                        this.player.setPlayerY( 96 );
                         sbg.enterState(1);
                     }
 
