@@ -51,7 +51,6 @@ public class Game extends BasicGameState {
         //this.player = this.player.createInstance( "rouge.png", "Tom" , 3 );
         this.player.getInstance();
 
-
             // Starting tile
         this.player.setPlayerX(94);
         this.player.setPlayerY( 96 );
@@ -203,6 +202,30 @@ public class Game extends BasicGameState {
                 // If the player did not move, stop playing walking animation
                 else {
                     this.player.stopAnimationWalking();
+                }
+
+                if( input.isKeyDown( Input.KEY_1 ) ) {
+                    if( this.player.isMoveKnown( 0 ) ) {
+                        this.player.setMoveSelected( 0 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_2 ) ) {
+                    if( this.player.isMoveKnown( 1 ) ) {
+                        this.player.setMoveSelected( 1 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_3 ) ) {
+                    if( this.player.isMoveKnown( 2 ) ) {
+                        this.player.setMoveSelected( 2 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_4 ) ) {
+                    if( this.player.isMoveKnown( 3 ) ) {
+                        this.player.setMoveSelected( 3 );
+                    }
+                }
+                if( input.isKeyDown( Input.KEY_V ) ) {
+                    this.player.increaseExp( 10 );
                 }
 
                 // If player attacks and the player has stamina to attack

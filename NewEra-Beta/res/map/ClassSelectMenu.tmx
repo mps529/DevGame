@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="tmw_desert_spacing" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="tilesets/tmw_desert_spacing.png" trans="ff00ff" width="265" height="199"/>
+ </tileset>
+ <tileset firstgid="949" name="TileC" tilewidth="32" tileheight="32">
+  <image source="tilesets/TileC.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA7vBxMBwG4hvkoGR9f0A4ltAfBWIr6Hh71jEYPgMIwKroam/g8M8cjHMvGXM1MGj5iHwDCCeiYfGpuc6HvMWAPFCPDQ+86iVXogxDzn9gjCl5lHiPlhYY+N/JyCPzTxYWJPLH4j4GI7m4Ss/B9p9AGRIB+BABgAA
+  </data>
+ </layer>
+</map>

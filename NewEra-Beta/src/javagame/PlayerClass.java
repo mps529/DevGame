@@ -4,7 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.tiled.TiledMap;
 
 import java.util.Random;
 
@@ -81,8 +81,15 @@ public class PlayerClass extends Player {
     private Image emptyHealth;
         // Exp bar
     private Image emptyExpBar;
+        // Player Moves
+    private TiledMap playerMoves;
 
-    // If the player is in combat
+        // Health Potion
+    private Image healthPotion;
+        // Stamin Potion
+    private Image staminaPotion;
+
+        // If the player is in combat
     private boolean inCombat;
 
     private static PlayerClass playerClass = null;
@@ -112,7 +119,7 @@ public class PlayerClass extends Player {
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,128,0, .7f );
         blue = new Color( 0,206,209 );
-        black = new Color( 0,0,0, .5f );
+        black = new Color( 0,0,0, .7f );
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Player starting attributes
@@ -130,8 +137,13 @@ public class PlayerClass extends Player {
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setClassID( classID );
 
+        this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
+
         this.emptyHealth = new Image( "NewEra-Beta/res/dash/EmptyBar.png" );
         this.emptyExpBar = new Image( "NewEra-Beta/res/dash/EmptyBarLong.png" );
+
+        this.healthPotion = new Image( "NewEra-Beta/res/items/health.png" );
+        this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
     }
 
     public static PlayerClass getInstance() {
@@ -158,9 +170,9 @@ public class PlayerClass extends Player {
         currentAttack = projectileImage[1];
 
         this.attackImages[0] =  projectileImage[1];
-        this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/trap.png" );
-        this.attackImages[2] = new Image( "NEwEra-Beta/res/moves/bush.png" );
-        this.attackImages[3 ]= new Image( "NEwEra-Beta/res/projectiles/Double-Arrow-Right.png" );
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/trap.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/bush.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/projectiles/Double-Arrow-Right.png" );
 
         this.attacksKnown[0] = 1;
         this.attacksKnown[1] = -1;
@@ -180,7 +192,19 @@ public class PlayerClass extends Player {
     }
     private void setWarrior() throws SlickException {
             // This sets the display image for which attack is chosen
-        currentAttack = new Image("NewEra-Beta/res/items/spear.png");
+
+        this.attackImages[0] =  new Image("NewEra-Beta/res/items/spear.png");
+        this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/battleCry.png" );
+        this.attackImages[2] = new Image( "NEwEra-Beta/res/moves/stun.png" );
+        this.attackImages[3 ]= new Image( "NEwEra-Beta/res/moves/berserk.png" );
+
+        currentAttack =this.attackImages[0];
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
+
         this.MAX_HEALTH = 120;
         this.MAX_STAMINA = 110;
         this.BASE_ATTACK = 7;
@@ -201,8 +225,15 @@ public class PlayerClass extends Player {
         // sets the projectile
         setProjectileImage( projectileImage );
 
-        // This sets the display image for which attack is chosen
-        currentAttack = projectileImage[1];
+        this.attackImages[0] =  projectileImage[1];
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/transmute.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/summon.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/immulate.png" );
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
 
         this.MAX_HEALTH = 90;
         this.MAX_STAMINA = 110;
@@ -216,8 +247,24 @@ public class PlayerClass extends Player {
 
     }
     private void setRouge() throws SlickException {
-            // This sets the display image for which attack is chosen
-        currentAttack = new Image("NewEra-Beta/res/items/dagger.png");
+
+        projectileImage = new Image[4];
+        projectileImage[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
+        projectileImage[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
+        projectileImage[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
+        projectileImage[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+        // sets the projectile
+        setProjectileImage( projectileImage );
+
+        this.attackImages[0] = new Image("NewEra-Beta/res/items/dagger.png");
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/ninjaStar.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/invisible.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
 
         this.MAX_HEALTH = 100;
         this.MAX_STAMINA = 100;
@@ -288,6 +335,12 @@ public class PlayerClass extends Player {
 
     public void setMoveSelected( int move ) { this.moveSelected = move; }
     public int getMoveSelected( ) { return this.moveSelected; }
+    public boolean isMoveKnown( int move ) {
+        if( this.attacksKnown[ move ] == 1 ) {
+            return true;
+        }
+        return false;
+    }
 
     public void setStamina( double stamina ) {
         this.stamina = stamina;
@@ -400,23 +453,47 @@ public class PlayerClass extends Player {
         double staminaPercent = getStamina() / MAX_STAMINA;
         double experiencePercent = getExp() / getExpToLevelUp();
 
-        g.setColor( grey );
-        g.fillRect( 30, 16, 32, 32 );
-        currentAttack.draw( 32, 16 );
-
+        this.playerMoves.render( 0, 538 );
 
         g.setColor( red );
-        g.fillRoundRect(111, 558, 191 * (float)healthPercent, 10, 10 );
-        this.emptyHealth.draw( 104, 550 );
+        g.fillRoundRect(121, 558, 191 * (float)healthPercent, 10, 10 );
+        this.emptyHealth.draw( 114, 550 );
 
         g.setColor( green );
         g.fillRoundRect(328, 558, 191 * (float)staminaPercent, 10, 10 );
         this.emptyHealth.draw( 320, 550 );
 
-
-
         g.setColor( Color.blue );
-        g.fillRoundRect( 110, 623, 423 * (float)experiencePercent, 4, 5 );
-        this.emptyExpBar.draw( 104, 620 );
+        g.fillRoundRect( 110, 631, 423 * (float)experiencePercent, 4, 5 );
+        this.emptyExpBar.draw( 104, 628 );
+
+        int xPos = 144;
+        g.setColor( grey );
+
+        for( int x = 0; x < 4; x++ ) {
+            if( this.attacksKnown[ x ] == 1 ) {
+                g.setColor( grey );
+                g.fillRect(xPos, 586, 32, 32);
+                attackImages[x].draw(xPos, 586);
+                if( moveSelected == x ) {
+                    g.setColor( Color.white );
+                    g.drawRect( xPos, 586, 32, 32 );
+                }
+            }
+            else {
+                g.setColor( black );
+                attackImages[x].draw(xPos, 586);
+                g.fillRect(xPos,586, 32,32  );
+            }
+            xPos+=64;
+        }
+
+        g.setColor( grey );
+        g.fillRect(xPos, 586, 32, 32);
+        this.healthPotion.draw( xPos, 586 );
+        xPos += 64;
+        g.fillRect(xPos, 586, 32, 32);
+        this.staminaPotion.draw( xPos, 586 );
+
     }
 }
