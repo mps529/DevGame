@@ -62,7 +62,9 @@ public class PlayerClass extends Player {
     private int movePoints;
 
     // projectile Animations
-     private Image[] projectileImage;
+    private Image[] projectileImageOne = null;
+    private Image[] projectileImageTwo = null;
+
 
     // Currently Selected Attack
     private Image currentAttack;
@@ -151,7 +153,7 @@ public class PlayerClass extends Player {
 
     public void setUpInstance( String sheetName, String name, int classID ) throws SlickException {
         // Call Player constructor
-        setPLayerClass(sheetName, name, classID);
+        setPlayerClass(sheetName, name, classID);
 
         this.attackImages = new Image[4];
         this.attacksKnown = new int[4];
@@ -210,18 +212,25 @@ public class PlayerClass extends Player {
 
     private void setHunter() throws SlickException {
         // Setting arrow animations
-        projectileImage = new Image[4];
-        projectileImage[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
-        projectileImage[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
-        projectileImage[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
-        projectileImage[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+
+        projectileImageTwo = new Image[4];
+        projectileImageTwo[0] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Up.png");
+        projectileImageTwo[1] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Right.png");
+        projectileImageTwo[2] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Down.png");
+        projectileImageTwo[3] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Left.png");
+
         // sets the projectile
-        setProjectileImage( projectileImage );
+        setProjectileImage( projectileImageOne );
 
         // This sets the display image for which attack is chosen
-        currentAttack = projectileImage[1];
+        currentAttack = projectileImageOne[1];
 
-        this.attackImages[0] =  projectileImage[1];
+        this.attackImages[0] =  projectileImageOne[1];
         this.attackImages[1] = new Image( "NewEra-Beta/res/moves/trap.png" );
         this.attackImages[2] = new Image( "NewEra-Beta/res/moves/bush.png" );
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/projectiles/Double-Arrow-Right.png" );
@@ -269,15 +278,15 @@ public class PlayerClass extends Player {
     }
     private void setWizard() throws SlickException {
         // Setting projectileImage animations
-        projectileImage = new Image[4];
-        projectileImage[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
-        projectileImage[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
-        projectileImage[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
-        projectileImage[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
         // sets the projectile
-        setProjectileImage( projectileImage );
+        setProjectileImage( projectileImageOne );
 
-        this.attackImages[0] =  projectileImage[1];
+        this.attackImages[0] =  projectileImageOne[1];
         this.attackImages[1] = new Image( "NewEra-Beta/res/moves/transmute.png" );
         this.attackImages[2] = new Image( "NewEra-Beta/res/moves/summon.png" );
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/immulate.png" );
@@ -300,13 +309,13 @@ public class PlayerClass extends Player {
     }
     private void setRouge() throws SlickException {
 
-        projectileImage = new Image[4];
-        projectileImage[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
-        projectileImage[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
-        projectileImage[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
-        projectileImage[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
         // sets the projectile
-        setProjectileImage( projectileImage );
+        setProjectileImage( projectileImageOne );
 
         this.attackImages[0] = new Image("NewEra-Beta/res/items/dagger.png");
         this.attackImages[1] = new Image( "NewEra-Beta/res/moves/ninjaStar.png" );
@@ -385,7 +394,17 @@ public class PlayerClass extends Player {
         MAX_HEALTH += random.nextInt( 20 ) + 5;
     }
 
-    public void setMoveSelected( int move ) { this.moveSelected = move; }
+    public void setMoveSelected( int move ) {
+        if( getPlayerClass() == 0 ) {
+            if( move == 0 ) {
+                setProjectileImage( this.projectileImageOne );
+            }
+            else if( move == 3 ) {
+                setProjectileImage( this.projectileImageTwo );
+            }
+        }
+        this.moveSelected = move;
+    }
     public int getMoveSelected( ) { return this.moveSelected; }
     public boolean isMoveKnown( int move ) {
         if( this.attacksKnown[ move ] == 1 ) {

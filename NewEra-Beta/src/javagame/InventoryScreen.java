@@ -205,6 +205,8 @@ public class InventoryScreen extends BasicGameState{
 
         Input input = gc.getInput();
 
+        this.playerInventory = this.player.getInventory();
+
         boolean spotSelected =false;
 
             // Mouse X & Y

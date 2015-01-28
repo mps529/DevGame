@@ -147,7 +147,7 @@ public class Player {
 
     }
 
-    public void setPLayerClass( String sheetName, String name, int classID ) {
+    public void setPlayerClass( String sheetName, String name, int classID ) {
         // Sets name and spriteSheet
         this.spriteSheetName = sheetName;
         this.playerName = name;
@@ -280,6 +280,8 @@ public class Player {
                 this.attackingPlayer = this.attackingDown;
         }
     }
+
+    public int getPlayerClass() { return this.playerClass; }
 
     public float getPlayerX() {
         return this.playerX;

@@ -95,7 +95,9 @@ public class PlayerScreen extends BasicGameState {
 
         Input input = gc.getInput();
 
+        this.playersAttacks = this.player.getAttackImages();
         this.knownAttacks = this.player.getAttacksKnown();
+
         this.player.setOverallAttack( this.player.getInventory().getPlayerOverallAttack()  );
         this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence() );
 
