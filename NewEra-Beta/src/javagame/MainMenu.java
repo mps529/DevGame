@@ -136,6 +136,7 @@ public class MainMenu extends BasicGameState {
 
         });
 
+        this.player = this.player.getInstance();
 
     }
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
@@ -263,28 +264,28 @@ public class MainMenu extends BasicGameState {
                 if(warriorSelected) {
 
                     if(sprite1Selected) {
-                        this.player = this.player.createInstance("warrior.png", playerName, 1);
+                        this.player.setUpInstance("warrior.png", playerName, 1);
                         sbg.enterState(1);
                     }
 
                 } else if(wizardSelected) {
 
                     if(sprite1Selected) {
-                        this.player = this.player.createInstance( "wizard.png", playerName , 2 );
+                        this.player.setUpInstance( "wizard.png", playerName , 2 );
                         sbg.enterState(1);
                     }
 
                 } else if(rogueSelected) {
 
                     if(sprite1Selected) {
-                        this.player = this.player.createInstance( "rouge.png", playerName , 3 );
+                        this.player.setUpInstance( "rouge.png", playerName , 3 );
                         sbg.enterState(1);
                     }
 
                 } else if(hunterSelected) {
 
                     if(sprite1Selected) {
-                        this.player = this.player.createInstance( "hunter.png", playerName , 0 );
+                        this.player.setUpInstance( "hunter.png", playerName , 0 );
                         sbg.enterState(1);
                     }
 
