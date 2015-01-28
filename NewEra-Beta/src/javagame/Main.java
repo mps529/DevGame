@@ -21,11 +21,11 @@ public class Main extends StateBasedGame {
     }
 
     public void initStatesList( GameContainer gc ) throws SlickException {
-        // Inits the two screens
+            // Inits the two screens
         this.getState( game ).init( gc, this );
         this.getState( inventoryScreen ).init( gc, this );
         this.getState( playerScreen ).init( gc, this );
-        // Sets menu as start screen
+            // Sets menu as start screen
         this.enterState( mainMenu );
     }
 

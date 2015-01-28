@@ -5,7 +5,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
-
 import java.util.Random;
 
 public class PlayerClass extends Player {
@@ -146,12 +145,65 @@ public class PlayerClass extends Player {
         this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
     }
 
-    public static PlayerClass getInstance() {
-        return playerClass;
+    public PlayerClass() {
+        super();
     }
-    public static PlayerClass createInstance( String sheetName, String name, int classID ) throws SlickException  {
+
+    public void setUpInstance( String sheetName, String name, int classID ) throws SlickException {
+        // Call Player constructor
+        setPLayerClass(sheetName, name, classID);
+
+        this.attackImages = new Image[4];
+        this.attacksKnown = new int[4];
+
+        if( classID == 0 ) {
+            setHunter();
+        }
+        else if( classID == 1 ){
+            setWarrior();
+        }
+        else if( classID == 2 ) {
+            setWizard();
+        }
+        else if( classID == 3 ) {
+            setRouge();
+        }
+
+        // Set the color
+        red = new Color( 225, 0, 0, .7f );
+        green = new Color( 0,128,0, .7f );
+        blue = new Color( 0,206,209 );
+        black = new Color( 0,0,0, .7f );
+        grey = new Color( 0, 0, 0, .3f );
+
+        // Set Player starting attributes
+        setLevel( 1 );
+        calculateExpToLevelUp();
+        setHealth( 80 );
+        setStamina( MAX_STAMINA );
+        setExp( expToLevelUp - 10 );
+
+        this.moveSelected = 0;
+
+        // Set up player Inventory/ give default items
+        inventory = new Inventory( );
+        inventory.setBaseAttack( this.BASE_ATTACK );
+        inventory.setBaseDefence( this.BASE_DEFENCE );
+        inventory.setClassID( classID );
+
+        this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
+
+        this.emptyHealth = new Image( "NewEra-Beta/res/dash/EmptyBar.png" );
+        this.emptyExpBar = new Image( "NewEra-Beta/res/dash/EmptyBarLong.png" );
+
+        this.healthPotion = new Image( "NewEra-Beta/res/items/health.png" );
+        this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
+
+    }
+
+    public static PlayerClass getInstance() {
         if( playerClass == null ) {
-            playerClass = new PlayerClass( sheetName, name, classID );
+            playerClass = new PlayerClass();
         }
         return playerClass;
     }
