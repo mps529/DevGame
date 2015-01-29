@@ -1,6 +1,5 @@
 package javagame;
 
-import org.lwjgl.Sys;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -16,8 +15,8 @@ public class Game extends BasicGameState {
         // Game State
     private static int gameState;
         
-        // Player Class
-    private PlayerClass player;
+        // Movement Class
+    private Player player;
 
     private Vector<Map> maps;
 
@@ -117,7 +116,7 @@ public class Game extends BasicGameState {
 
         Input input = gc.getInput();
 
-        // Checks if the plaer is dead
+        // Checks if the player is dead
         dead = player.checkDeath();
 
         // If player is ded
@@ -251,7 +250,7 @@ public class Game extends BasicGameState {
                 input.clearKeyPressedRecord();
                 sbg.enterState( 2 );
             }
-            // Enter Player Screen
+            // Enter Movement Screen
             if( input.isKeyPressed( Input.KEY_P ) ) {
                 input.clearKeyPressedRecord();
                 sbg.enterState( 3 );
@@ -302,7 +301,7 @@ public class Game extends BasicGameState {
                 this.player.stopAnimationDeath();
                 this.startDed = true;
             } else if (this.player.isStoppedDead()) {
-                // Switch State to main menu =)
+                sbg.enterState( 0 );
             }
         }
     }

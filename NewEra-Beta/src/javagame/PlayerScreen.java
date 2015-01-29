@@ -10,9 +10,9 @@ public class PlayerScreen extends BasicGameState {
 
         // This game state
     private static int gameState;
-        // Player class
-    private PlayerClass player;
-        // Player class background
+        // Movement class
+    private Player player;
+        // Movement class background
     private TiledMap background;
         // Increasing stats
     private Image plus;

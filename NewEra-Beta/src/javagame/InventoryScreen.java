@@ -11,7 +11,7 @@ import org.newdawn.slick.tiled.TiledMap;
 public class InventoryScreen extends BasicGameState{
 
         // singelton for Inventory
-    private PlayerClass player;
+    private Player player;
 
     // singelton for Inventory
     private Inventory playerInventory;
