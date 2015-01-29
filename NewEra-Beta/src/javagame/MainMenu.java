@@ -12,9 +12,7 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import java.util.Random;
 
-/**
- * Created by mattslavin on 1/26/15.
- */
+
 public class MainMenu extends BasicGameState {
 
     private int gameState;
@@ -32,7 +30,7 @@ public class MainMenu extends BasicGameState {
     private Player player;
 
     //map information
-    private TiledMap map, menu;
+    private TiledMap map, newMenu, loadMenu;
     private float mapX, mapY;
 
     //map scroll values
@@ -84,7 +82,7 @@ public class MainMenu extends BasicGameState {
         this.mapY = -2752;
 
         //init menus
-        this.menu = new TiledMap("NewEra-Beta/res/map/ClassSelectMenu.tmx");
+        this.newMenu = new TiledMap("NewEra-Beta/res/map/ClassSelectMenu.tmx");
 
         this.goBack = new Image("NewEra-Beta/res/buttons/BackButton.png");
 
@@ -161,7 +159,7 @@ public class MainMenu extends BasicGameState {
         }
         else if(newGameStarted && !loadGameStarted) {
 
-            this.menu.render(0, 0);
+            this.newMenu.render(0, 0);
 
             this.goBack.draw(10,10);
 
@@ -259,35 +257,40 @@ public class MainMenu extends BasicGameState {
 
             if( gameStarted ) {
                 //PLAYER STARTED GAME
-                playerName = characterName.getText();
+                if(newGameStarted) {
+                    playerName = characterName.getText();
 
-                if(warriorSelected) {
+                    if (warriorSelected) {
 
-                    if(sprite1Selected) {
-                        this.player.setUpInstance("warrior.png", playerName, 1);
-                        sbg.enterState(1);
+                        if (sprite1Selected) {
+                            this.player.setUpInstance("warrior.png", playerName, 1);
+                            sbg.enterState(1);
+                        }
+
+                    } else if (wizardSelected) {
+
+                        if (sprite1Selected) {
+                            this.player.setUpInstance("wizard.png", playerName, 2);
+                            sbg.enterState(1);
+                        }
+
+                    } else if (rogueSelected) {
+
+                        if (sprite1Selected) {
+                            this.player.setUpInstance("rouge.png", playerName, 3);
+                            sbg.enterState(1);
+                        }
+
+                    } else if (hunterSelected) {
+
+                        if (sprite1Selected) {
+                            this.player.setUpInstance("hunter.png", playerName, 0);
+                            sbg.enterState(1);
+                        }
+
                     }
+                } else if(loadGameStarted && !newGameStarted) {
 
-                } else if(wizardSelected) {
-
-                    if(sprite1Selected) {
-                        this.player.setUpInstance( "wizard.png", playerName , 2 );
-                        sbg.enterState(1);
-                    }
-
-                } else if(rogueSelected) {
-
-                    if(sprite1Selected) {
-                        this.player.setUpInstance( "rouge.png", playerName , 3 );
-                        sbg.enterState(1);
-                    }
-
-                } else if(hunterSelected) {
-
-                    if(sprite1Selected) {
-                        this.player.setUpInstance( "hunter.png", playerName , 0 );
-                        sbg.enterState(1);
-                    }
 
                 }
 
