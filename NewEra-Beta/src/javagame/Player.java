@@ -1,404 +1,517 @@
 package javagame;
 
-import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.tiled.TiledMap;
+import java.util.Random;
 
-public class Player {
+public class Player extends Movement {
 
-    // This will be the name of the sprite sheet the user choose
-    private String spriteSheetName;
-    // Player Name
-    private String playerName;
+    // Max Health for hunter
+    private static double MAX_HEALTH;
+    // Max Stamina
+    private static double MAX_STAMINA ;
+    // Max level
+    private static final int MAX_LEVEL = 20;
 
-    // This is the sheet that holds all the characters sprites
-    private SpriteSheet playerSpriteSheet;
+    // Base Attack and Defend
+    private static int BASE_ATTACK ;
+    private static int BASE_DEFENCE;
 
-    private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
-    private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
-    private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60 };
-    private int[] durationRougeSpeedAttack = { 60,60,60,60,60,60  };
-    private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
+    // overall attack and defence
+    private static int OVERALL_ATTACK;
+    private static int OVERALL_DEFENCE;
 
-    private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
+    private int minRunningStamina = 10;
 
-        // Walking animations
-    private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
-        // Fighting animations
-    private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
-        // Death
-    private Animation playingDeath;
+    // The amount of stamina it takes to attack
+    private int attackOne;
+    private int attackTwo;
+    private int attackThree;
+    private int attackFour;
 
-        // Pixels to move
-    private int playerSpeed = 2;
+    /*
+        0 - attackOne
+        1- attackTwo
+        2- attackThree
+        3 - attackFour
+    */
+    private int moveSelected;
 
-    private int playerClass;
+    private Image[] attackImages;
+    private int[] attacksKnown;
 
-        // Players position in pixels of map
-    private float playerX, playerY;
+    // Status Bar colors
+    private Color red, blue, green, black, grey;
 
-        // For Projectiles if player has them
-    private Projectile[] projectiles;
-        // How long arrow will live for.
-    private static int FIRE_RATE = 250;
-        // Index of the projectile array
-    private int currentIndex = 0;
-        // Time since last shot
-    private int lastShot = 0;
+    // Experence needed to level up
+    private double expToLevelUp;
+    // Amount of experience player has
+    private double exp;
+
+    // Movement Health
+    private double health;
+    // Movement Stamina
+    private double stamina;
+    // Movement level
+    private int level;
+
+    private int perkPoints;
+    private int movePoints;
 
     // projectile Animations
-    private Image[] projectileImage;
+    private Image[] projectileImageOne = null;
+    private Image[] projectileImageTwo = null;
 
-    public Player(String sheetName, String name, int classID ) {
-            // Sets name and spriteSheet
-        this.spriteSheetName = sheetName;
-        this.playerName = name;
+    // Currently Selected Attack
+    private Image currentAttack;
+    // Players Inventory
+    private Inventory inventory;
 
-        this.playerClass = classID;
+    // How long arrow will live for.
+    private static int FIRE_RATE = 250;
+    // Index of the projectile array
+    private int currentIndex = 0;
+    // Time since last shot
+    private int lastShot = 0;
 
-             // Creates new sprite sheet
-        try {
-            this.playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + sheetName, 32, 32);
+        // Health and stamina bar
+    private Image emptyHealth;
+        // Exp bar
+    private Image emptyExpBar;
+        // Movement Moves
+    private TiledMap playerMoves;
 
-        }
-        catch ( SlickException e ){
-            System.out.println( "Spritesheet load fail." );
-            e.printStackTrace();
-        }
+        // Health Potion
+    private Image healthPotion;
+        // Stamin Potion
+    private Image staminaPotion;
 
-        // Sets images for walking animations
-        Image[] up = { playerSpriteSheet.getSubImage(1,8), playerSpriteSheet.getSubImage(2,8) , playerSpriteSheet.getSubImage(3,8), playerSpriteSheet.getSubImage(4,8), playerSpriteSheet.getSubImage(5,8), playerSpriteSheet.getSubImage(6,8), playerSpriteSheet.getSubImage(7,8), playerSpriteSheet.getSubImage(8,8) };
-        Image[] left = { playerSpriteSheet.getSubImage(1,9), playerSpriteSheet.getSubImage(2,9) , playerSpriteSheet.getSubImage(3,9), playerSpriteSheet.getSubImage(4,9), playerSpriteSheet.getSubImage(5,9), playerSpriteSheet.getSubImage(6,9), playerSpriteSheet.getSubImage(7,9), playerSpriteSheet.getSubImage(8,9) };
-        Image[] down = { playerSpriteSheet.getSubImage(1,10), playerSpriteSheet.getSubImage(2,10) , playerSpriteSheet.getSubImage(3,10), playerSpriteSheet.getSubImage(4,10), playerSpriteSheet.getSubImage(5,10), playerSpriteSheet.getSubImage(6,10), playerSpriteSheet.getSubImage(7,10), playerSpriteSheet.getSubImage(8,10) };
-        Image[] right = { playerSpriteSheet.getSubImage(1,11), playerSpriteSheet.getSubImage(2,11) , playerSpriteSheet.getSubImage(3,11), playerSpriteSheet.getSubImage(4,11), playerSpriteSheet.getSubImage(5,11), playerSpriteSheet.getSubImage(6,11), playerSpriteSheet.getSubImage(7,11), playerSpriteSheet.getSubImage(8,11) };
-        // Assigning the Images to the animations
-        this.movingUp = new Animation( up, durationSpeed, true );
-        this.movingRight = new Animation( right, durationSpeed, true );
-        this.movingDown = new Animation( down, durationSpeed, true );
-        this.movingLeft = new Animation( left, durationSpeed, true );
+        // If the player is in combat
+    private boolean inCombat;
 
-            // Hunter
-        if( classID == 0 ) {
-
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 16), playerSpriteSheet.getSubImage(1, 16), playerSpriteSheet.getSubImage(2, 16), playerSpriteSheet.getSubImage(3, 16), playerSpriteSheet.getSubImage(4, 16), playerSpriteSheet.getSubImage(5, 16), playerSpriteSheet.getSubImage(6, 16), playerSpriteSheet.getSubImage(7, 16), playerSpriteSheet.getSubImage(8, 16), playerSpriteSheet.getSubImage(9, 16), playerSpriteSheet.getSubImage(10, 16), playerSpriteSheet.getSubImage(11, 16), playerSpriteSheet.getSubImage(12, 16)};
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 17), playerSpriteSheet.getSubImage(1, 17), playerSpriteSheet.getSubImage(2, 17), playerSpriteSheet.getSubImage(3, 17), playerSpriteSheet.getSubImage(4, 17), playerSpriteSheet.getSubImage(5, 17), playerSpriteSheet.getSubImage(6, 17), playerSpriteSheet.getSubImage(7, 17), playerSpriteSheet.getSubImage(8, 17), playerSpriteSheet.getSubImage(9, 17), playerSpriteSheet.getSubImage(10, 17), playerSpriteSheet.getSubImage(11, 17), playerSpriteSheet.getSubImage(12, 17)};
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 18), playerSpriteSheet.getSubImage(1, 18), playerSpriteSheet.getSubImage(2, 18), playerSpriteSheet.getSubImage(3, 18), playerSpriteSheet.getSubImage(4, 18), playerSpriteSheet.getSubImage(5, 18), playerSpriteSheet.getSubImage(6, 18), playerSpriteSheet.getSubImage(7, 18), playerSpriteSheet.getSubImage(8, 18), playerSpriteSheet.getSubImage(9, 18), playerSpriteSheet.getSubImage(10, 18), playerSpriteSheet.getSubImage(11, 18), playerSpriteSheet.getSubImage(12, 18)};
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 19), playerSpriteSheet.getSubImage(1, 19), playerSpriteSheet.getSubImage(2, 19), playerSpriteSheet.getSubImage(3, 19), playerSpriteSheet.getSubImage(4, 19), playerSpriteSheet.getSubImage(5, 19), playerSpriteSheet.getSubImage(6, 19), playerSpriteSheet.getSubImage(7, 19), playerSpriteSheet.getSubImage(8, 19), playerSpriteSheet.getSubImage(9, 19), playerSpriteSheet.getSubImage(10, 19), playerSpriteSheet.getSubImage(11, 19), playerSpriteSheet.getSubImage(12, 19)};
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationHunterSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationHunterSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationHunterSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
-
-        }
-        else if( classID == 1 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 4), playerSpriteSheet.getSubImage(1, 4), playerSpriteSheet.getSubImage(2, 4), playerSpriteSheet.getSubImage(3, 4), playerSpriteSheet.getSubImage(4, 4), playerSpriteSheet.getSubImage(5, 4), playerSpriteSheet.getSubImage(6, 4), playerSpriteSheet.getSubImage(7, 4)   };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 5), playerSpriteSheet.getSubImage(1, 5), playerSpriteSheet.getSubImage(2, 5), playerSpriteSheet.getSubImage(3, 5), playerSpriteSheet.getSubImage(4, 5), playerSpriteSheet.getSubImage(5, 5), playerSpriteSheet.getSubImage(6, 5), playerSpriteSheet.getSubImage(7, 5)  };
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 6), playerSpriteSheet.getSubImage(1, 6), playerSpriteSheet.getSubImage(2, 6), playerSpriteSheet.getSubImage(3, 6), playerSpriteSheet.getSubImage(4, 6), playerSpriteSheet.getSubImage(5, 6), playerSpriteSheet.getSubImage(6, 6) , playerSpriteSheet.getSubImage(7, 6) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 7), playerSpriteSheet.getSubImage(1, 7), playerSpriteSheet.getSubImage(2, 7), playerSpriteSheet.getSubImage(3, 7), playerSpriteSheet.getSubImage(4, 7), playerSpriteSheet.getSubImage(5, 7), playerSpriteSheet.getSubImage(6, 7), playerSpriteSheet.getSubImage(7, 7)  };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationWarriorSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationWarriorSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationWarriorSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationWarriorSpeedAttack, true);
-        }
-            // Wizard
-        else if( classID == 2 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 12), playerSpriteSheet.getSubImage(1, 12), playerSpriteSheet.getSubImage(2, 12), playerSpriteSheet.getSubImage(3, 12), playerSpriteSheet.getSubImage(4, 12), playerSpriteSheet.getSubImage(5, 12) };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 13), playerSpriteSheet.getSubImage(1, 13), playerSpriteSheet.getSubImage(2, 13), playerSpriteSheet.getSubImage(3, 13), playerSpriteSheet.getSubImage(4, 13), playerSpriteSheet.getSubImage(5, 13) };
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 14), playerSpriteSheet.getSubImage(1, 14), playerSpriteSheet.getSubImage(2, 14), playerSpriteSheet.getSubImage(3, 14), playerSpriteSheet.getSubImage(4, 14), playerSpriteSheet.getSubImage(5, 14) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 15), playerSpriteSheet.getSubImage(1, 15), playerSpriteSheet.getSubImage(2, 15), playerSpriteSheet.getSubImage(3, 15), playerSpriteSheet.getSubImage(4, 15), playerSpriteSheet.getSubImage(5, 15) };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationWizardSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationWizardSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationWizardSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationWizardSpeedAttack, true);
-        }
-        else if( classID == 3 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 12), playerSpriteSheet.getSubImage(1, 12), playerSpriteSheet.getSubImage(2, 12), playerSpriteSheet.getSubImage(3, 12), playerSpriteSheet.getSubImage(4, 12), playerSpriteSheet.getSubImage(5, 12) };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 13), playerSpriteSheet.getSubImage(1, 13), playerSpriteSheet.getSubImage(2, 13), playerSpriteSheet.getSubImage(3, 13), playerSpriteSheet.getSubImage(4, 13), playerSpriteSheet.getSubImage(5, 13)};
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 14), playerSpriteSheet.getSubImage(1, 14), playerSpriteSheet.getSubImage(2, 14), playerSpriteSheet.getSubImage(3, 14), playerSpriteSheet.getSubImage(4, 14), playerSpriteSheet.getSubImage(5, 14) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 15), playerSpriteSheet.getSubImage(1, 15), playerSpriteSheet.getSubImage(2, 15), playerSpriteSheet.getSubImage(3, 15), playerSpriteSheet.getSubImage(4, 15), playerSpriteSheet.getSubImage(5, 15) };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationRougeSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationRougeSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationRougeSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationRougeSpeedAttack, true);
-        }
-
-        // Death Animation
-        Image[] death = { playerSpriteSheet.getSubImage(0, 20), playerSpriteSheet.getSubImage(1, 20), playerSpriteSheet.getSubImage(2, 20),playerSpriteSheet.getSubImage(3, 20), playerSpriteSheet.getSubImage(4, 20), playerSpriteSheet.getSubImage(5, 20) };
-        this.playingDeath = new Animation( death, durationSpeedDeath, true );
-
-        // Setting walking animation
-        setPlayerDirection( 2 );
-
-        // Should not be able to shoot more then 8 projectiles at once
-        this.projectiles = new Projectile[ 8 ];
-        for( int x = 0; x < this.projectiles.length; x++ ){
-            this.projectiles[ x ] = new Projectile();
-        }
-    }
+    private static Player playerClass = null;
 
     public Player() {
-
+        super();
     }
 
-    public void setPlayerClass( String sheetName, String name, int classID ) {
-        // Sets name and spriteSheet
-        this.spriteSheetName = sheetName;
-        this.playerName = name;
+    public void setUpInstance( String sheetName, String name, int classID ) throws SlickException {
+        // Call Movement constructor
+        setPlayerClass(sheetName, name, classID);
 
-        this.playerClass = classID;
+        this.attackImages = new Image[4];
+        this.attacksKnown = new int[4];
 
-        // Creates new sprite sheet
-        try {
-            this.playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + sheetName, 32, 32);
-
-        }
-        catch ( SlickException e ){
-            System.out.println( "Spritesheet load fail." );
-            e.printStackTrace();
-        }
-
-        // Sets images for walking animations
-        Image[] up = { playerSpriteSheet.getSubImage(1,8), playerSpriteSheet.getSubImage(2,8) , playerSpriteSheet.getSubImage(3,8), playerSpriteSheet.getSubImage(4,8), playerSpriteSheet.getSubImage(5,8), playerSpriteSheet.getSubImage(6,8), playerSpriteSheet.getSubImage(7,8), playerSpriteSheet.getSubImage(8,8) };
-        Image[] left = { playerSpriteSheet.getSubImage(1,9), playerSpriteSheet.getSubImage(2,9) , playerSpriteSheet.getSubImage(3,9), playerSpriteSheet.getSubImage(4,9), playerSpriteSheet.getSubImage(5,9), playerSpriteSheet.getSubImage(6,9), playerSpriteSheet.getSubImage(7,9), playerSpriteSheet.getSubImage(8,9) };
-        Image[] down = { playerSpriteSheet.getSubImage(1,10), playerSpriteSheet.getSubImage(2,10) , playerSpriteSheet.getSubImage(3,10), playerSpriteSheet.getSubImage(4,10), playerSpriteSheet.getSubImage(5,10), playerSpriteSheet.getSubImage(6,10), playerSpriteSheet.getSubImage(7,10), playerSpriteSheet.getSubImage(8,10) };
-        Image[] right = { playerSpriteSheet.getSubImage(1,11), playerSpriteSheet.getSubImage(2,11) , playerSpriteSheet.getSubImage(3,11), playerSpriteSheet.getSubImage(4,11), playerSpriteSheet.getSubImage(5,11), playerSpriteSheet.getSubImage(6,11), playerSpriteSheet.getSubImage(7,11), playerSpriteSheet.getSubImage(8,11) };
-        // Assigning the Images to the animations
-        this.movingUp = new Animation( up, durationSpeed, true );
-        this.movingRight = new Animation( right, durationSpeed, true );
-        this.movingDown = new Animation( down, durationSpeed, true );
-        this.movingLeft = new Animation( left, durationSpeed, true );
-
-        // Hunter
         if( classID == 0 ) {
-
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 16), playerSpriteSheet.getSubImage(1, 16), playerSpriteSheet.getSubImage(2, 16), playerSpriteSheet.getSubImage(3, 16), playerSpriteSheet.getSubImage(4, 16), playerSpriteSheet.getSubImage(5, 16), playerSpriteSheet.getSubImage(6, 16), playerSpriteSheet.getSubImage(7, 16), playerSpriteSheet.getSubImage(8, 16), playerSpriteSheet.getSubImage(9, 16), playerSpriteSheet.getSubImage(10, 16), playerSpriteSheet.getSubImage(11, 16), playerSpriteSheet.getSubImage(12, 16)};
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 17), playerSpriteSheet.getSubImage(1, 17), playerSpriteSheet.getSubImage(2, 17), playerSpriteSheet.getSubImage(3, 17), playerSpriteSheet.getSubImage(4, 17), playerSpriteSheet.getSubImage(5, 17), playerSpriteSheet.getSubImage(6, 17), playerSpriteSheet.getSubImage(7, 17), playerSpriteSheet.getSubImage(8, 17), playerSpriteSheet.getSubImage(9, 17), playerSpriteSheet.getSubImage(10, 17), playerSpriteSheet.getSubImage(11, 17), playerSpriteSheet.getSubImage(12, 17)};
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 18), playerSpriteSheet.getSubImage(1, 18), playerSpriteSheet.getSubImage(2, 18), playerSpriteSheet.getSubImage(3, 18), playerSpriteSheet.getSubImage(4, 18), playerSpriteSheet.getSubImage(5, 18), playerSpriteSheet.getSubImage(6, 18), playerSpriteSheet.getSubImage(7, 18), playerSpriteSheet.getSubImage(8, 18), playerSpriteSheet.getSubImage(9, 18), playerSpriteSheet.getSubImage(10, 18), playerSpriteSheet.getSubImage(11, 18), playerSpriteSheet.getSubImage(12, 18)};
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 19), playerSpriteSheet.getSubImage(1, 19), playerSpriteSheet.getSubImage(2, 19), playerSpriteSheet.getSubImage(3, 19), playerSpriteSheet.getSubImage(4, 19), playerSpriteSheet.getSubImage(5, 19), playerSpriteSheet.getSubImage(6, 19), playerSpriteSheet.getSubImage(7, 19), playerSpriteSheet.getSubImage(8, 19), playerSpriteSheet.getSubImage(9, 19), playerSpriteSheet.getSubImage(10, 19), playerSpriteSheet.getSubImage(11, 19), playerSpriteSheet.getSubImage(12, 19)};
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationHunterSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationHunterSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationHunterSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
-
+            setHunter();
         }
-        else if( classID == 1 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 4), playerSpriteSheet.getSubImage(1, 4), playerSpriteSheet.getSubImage(2, 4), playerSpriteSheet.getSubImage(3, 4), playerSpriteSheet.getSubImage(4, 4), playerSpriteSheet.getSubImage(5, 4), playerSpriteSheet.getSubImage(6, 4), playerSpriteSheet.getSubImage(7, 4)   };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 5), playerSpriteSheet.getSubImage(1, 5), playerSpriteSheet.getSubImage(2, 5), playerSpriteSheet.getSubImage(3, 5), playerSpriteSheet.getSubImage(4, 5), playerSpriteSheet.getSubImage(5, 5), playerSpriteSheet.getSubImage(6, 5), playerSpriteSheet.getSubImage(7, 5)  };
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 6), playerSpriteSheet.getSubImage(1, 6), playerSpriteSheet.getSubImage(2, 6), playerSpriteSheet.getSubImage(3, 6), playerSpriteSheet.getSubImage(4, 6), playerSpriteSheet.getSubImage(5, 6), playerSpriteSheet.getSubImage(6, 6) , playerSpriteSheet.getSubImage(7, 6) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 7), playerSpriteSheet.getSubImage(1, 7), playerSpriteSheet.getSubImage(2, 7), playerSpriteSheet.getSubImage(3, 7), playerSpriteSheet.getSubImage(4, 7), playerSpriteSheet.getSubImage(5, 7), playerSpriteSheet.getSubImage(6, 7), playerSpriteSheet.getSubImage(7, 7)  };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationWarriorSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationWarriorSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationWarriorSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationWarriorSpeedAttack, true);
+        else if( classID == 1 ){
+            setWarrior();
         }
-        // Wizard
         else if( classID == 2 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 12), playerSpriteSheet.getSubImage(1, 12), playerSpriteSheet.getSubImage(2, 12), playerSpriteSheet.getSubImage(3, 12), playerSpriteSheet.getSubImage(4, 12), playerSpriteSheet.getSubImage(5, 12) };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 13), playerSpriteSheet.getSubImage(1, 13), playerSpriteSheet.getSubImage(2, 13), playerSpriteSheet.getSubImage(3, 13), playerSpriteSheet.getSubImage(4, 13), playerSpriteSheet.getSubImage(5, 13) };
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 14), playerSpriteSheet.getSubImage(1, 14), playerSpriteSheet.getSubImage(2, 14), playerSpriteSheet.getSubImage(3, 14), playerSpriteSheet.getSubImage(4, 14), playerSpriteSheet.getSubImage(5, 14) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 15), playerSpriteSheet.getSubImage(1, 15), playerSpriteSheet.getSubImage(2, 15), playerSpriteSheet.getSubImage(3, 15), playerSpriteSheet.getSubImage(4, 15), playerSpriteSheet.getSubImage(5, 15) };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationWizardSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationWizardSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationWizardSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationWizardSpeedAttack, true);
+            setWizard();
         }
         else if( classID == 3 ) {
-            // Sets images for attacking animations
-            Image[] upAttack = {playerSpriteSheet.getSubImage(0, 12), playerSpriteSheet.getSubImage(1, 12), playerSpriteSheet.getSubImage(2, 12), playerSpriteSheet.getSubImage(3, 12), playerSpriteSheet.getSubImage(4, 12), playerSpriteSheet.getSubImage(5, 12) };
-            Image[] leftAttack = {playerSpriteSheet.getSubImage(0, 13), playerSpriteSheet.getSubImage(1, 13), playerSpriteSheet.getSubImage(2, 13), playerSpriteSheet.getSubImage(3, 13), playerSpriteSheet.getSubImage(4, 13), playerSpriteSheet.getSubImage(5, 13)};
-            Image[] downAttack = {playerSpriteSheet.getSubImage(0, 14), playerSpriteSheet.getSubImage(1, 14), playerSpriteSheet.getSubImage(2, 14), playerSpriteSheet.getSubImage(3, 14), playerSpriteSheet.getSubImage(4, 14), playerSpriteSheet.getSubImage(5, 14) };
-            Image[] rightAttack = {playerSpriteSheet.getSubImage(0, 15), playerSpriteSheet.getSubImage(1, 15), playerSpriteSheet.getSubImage(2, 15), playerSpriteSheet.getSubImage(3, 15), playerSpriteSheet.getSubImage(4, 15), playerSpriteSheet.getSubImage(5, 15) };
-            // Assigning the Images to the animations
-            this.attackingUp = new Animation(upAttack, durationRougeSpeedAttack, true);
-            this.attackingRight = new Animation(rightAttack, durationRougeSpeedAttack, true);
-            this.attackingDown = new Animation(downAttack, durationRougeSpeedAttack, true);
-            this.attackingLeft = new Animation(leftAttack, durationRougeSpeedAttack, true);
+            setRouge();
         }
 
-        // Death Animation
-        Image[] death = { playerSpriteSheet.getSubImage(0, 20), playerSpriteSheet.getSubImage(1, 20), playerSpriteSheet.getSubImage(2, 20),playerSpriteSheet.getSubImage(3, 20), playerSpriteSheet.getSubImage(4, 20), playerSpriteSheet.getSubImage(5, 20) };
-        this.playingDeath = new Animation( death, durationSpeedDeath, true );
+        // Set the color
+        red = new Color( 225, 0, 0, .7f );
+        green = new Color( 0,128,0, .7f );
+        blue = new Color( 0,206,209 );
+        black = new Color( 0,0,0, .7f );
+        grey = new Color( 0, 0, 0, .3f );
 
-        // Setting walking animation
-        setPlayerDirection( 2 );
+        // Set Movement starting attributes
+        setLevel( 1 );
+        calculateExpToLevelUp();
+        setHealth( 80 );
+        setStamina( MAX_STAMINA );
+        setExp( expToLevelUp - 10 );
 
-        // Should not be able to shoot more then 8 projectiles at once
-        this.projectiles = new Projectile[ 8 ];
-        for( int x = 0; x < this.projectiles.length; x++ ){
-            this.projectiles[ x ] = new Projectile();
+        this.moveSelected = 0;
+
+        // Set up player Inventory/ give default items
+        inventory = new Inventory( );
+        inventory.setBaseAttack( this.BASE_ATTACK );
+        inventory.setBaseDefence( this.BASE_DEFENCE );
+        inventory.setClassID( classID );
+
+        this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
+
+        this.emptyHealth = new Image( "NewEra-Beta/res/dash/EmptyBar.png" );
+        this.emptyExpBar = new Image( "NewEra-Beta/res/dash/EmptyBarLong.png" );
+
+        this.healthPotion = new Image( "NewEra-Beta/res/items/health.png" );
+        this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
+
+    }
+
+    public static Player getInstance() {
+        if( playerClass == null ) {
+            playerClass = new Player();
         }
+        return playerClass;
     }
 
-    public void setProjectileImage( Image[] projectileImage ) {
-        this.projectileImage = projectileImage;
+    private void setHunter() throws SlickException {
+        // Setting arrow animations
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/projectiles/Arrow-Right.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
+
+        projectileImageTwo = new Image[4];
+        projectileImageTwo[0] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Up.png");
+        projectileImageTwo[1] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Right.png");
+        projectileImageTwo[2] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Down.png");
+        projectileImageTwo[3] = new Image("NewEra-Beta/res/projectiles/Double-Arrow-Left.png");
+
+        // sets the projectile
+        setProjectileImage( projectileImageOne );
+
+        // This sets the display image for which attack is chosen
+        currentAttack = projectileImageOne[1];
+
+        this.attackImages[0] =  projectileImageOne[1];
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/trap.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/bush.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/projectiles/Double-Arrow-Right.png" );
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
+
+        this.MAX_HEALTH = 100;
+        this.MAX_STAMINA = 120;
+        this.BASE_ATTACK = 13;
+        this.BASE_DEFENCE = 5;
+
+        this.attackOne = 10;
+        this.attackTwo = 20;
+        this.attackThree = 30;
+        this.attackFour = 40;
+
+    }
+    private void setWarrior() throws SlickException {
+            // This sets the display image for which attack is chosen
+
+        this.attackImages[0] =  new Image("NewEra-Beta/res/items/spear.png");
+        this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/battleCry.png" );
+        this.attackImages[2] = new Image( "NEwEra-Beta/res/moves/stun.png" );
+        this.attackImages[3 ]= new Image( "NEwEra-Beta/res/moves/berserk.png" );
+
+        currentAttack =this.attackImages[0];
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
+
+        this.MAX_HEALTH = 120;
+        this.MAX_STAMINA = 110;
+        this.BASE_ATTACK = 7;
+        this.BASE_DEFENCE = 10;
+
+        this.attackOne = 10;
+        this.attackTwo = 20;
+        this.attackThree = 30;
+        this.attackFour = 40;
+    }
+    private void setWizard() throws SlickException {
+        // Setting projectileImage animations
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
+        // sets the projectile
+        setProjectileImage( projectileImageOne );
+
+        this.attackImages[0] =  projectileImageOne[1];
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/transmute.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/summon.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/immulate.png" );
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
+
+        this.MAX_HEALTH = 90;
+        this.MAX_STAMINA = 110;
+        this.BASE_ATTACK = 15;
+        this.BASE_DEFENCE = 5;
+
+        this.attackOne = 10;
+        this.attackTwo = 20;
+        this.attackThree = 30;
+        this.attackFour = 40;
+
+    }
+    private void setRouge() throws SlickException {
+
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
+        // sets the projectile
+        setProjectileImage( projectileImageOne );
+
+        this.attackImages[0] = new Image("NewEra-Beta/res/items/dagger.png");
+        this.attackImages[1] = new Image( "NewEra-Beta/res/moves/ninjaStar.png" );
+        this.attackImages[2] = new Image( "NewEra-Beta/res/moves/invisible.png" );
+        this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
+
+        this.attacksKnown[0] = 1;
+        this.attacksKnown[1] = -1;
+        this.attacksKnown[2] = -1;
+        this.attacksKnown[3] = -1;
+
+        this.MAX_HEALTH = 100;
+        this.MAX_STAMINA = 100;
+        this.BASE_ATTACK = 11;
+        this.BASE_DEFENCE = 9;
+
+        this.attackOne = 10;
+        this.attackTwo = 20;
+        this.attackThree = 30;
+        this.attackFour = 40;
     }
 
-    public Animation getMovingPlayer(){
-        return this.movingPlayer;
+    public Image[] getAttackImages() { return this.attackImages; }
+    public int[] getAttacksKnown() { return this.attacksKnown; }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+    public void setInventory( Inventory inventory) {
+        this.inventory = inventory;
     }
 
-    public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
-    public void drawPlayerAttacking( float x, float y ) { this.attackingPlayer.draw( x, y );  }
-    public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
+    public boolean getInCombat() { return this.inCombat; }
+    public void setInCombat( boolean inCombat ) { this.inCombat = inCombat; }
 
-    public String getPlayerName() { return this.playerName; }
+    public double getMaxHealth() { return this.MAX_HEALTH; }
+    public void setMaxHealth( int health ) { this.MAX_HEALTH = health; }
+    public void incrementMaxHealth( ) { this.MAX_HEALTH += 10; }
 
-    // 0-Up, 1-Right, 2-Down, 3-Left
-    public void setPlayerDirection( int newDirection ) {
-        switch ( newDirection ) {
-            case 0:
-                this.movingPlayer = this.movingUp;
-                this.attackingPlayer = this.attackingUp;
-                break;
-            case 1:
-                this.movingPlayer = this.movingRight;
-                this.attackingPlayer = this.attackingRight;
-                break;
-            case 2:
-                this.movingPlayer = this.movingDown;
-                this.attackingPlayer = this.attackingDown;
-                break;
-            case 3:
-                this.movingPlayer = this.movingLeft;
-                this.attackingPlayer = this.attackingLeft;
-                break;
-            default:
-                this.movingPlayer = this.movingDown;
-                this.attackingPlayer = this.attackingDown;
+    public double getMaxStamina() { return this.MAX_STAMINA; }
+    public void setMaxStamina( int stamina ) { this.MAX_STAMINA = stamina; }
+    public void incrementMaxStamina( ) { this.MAX_STAMINA += 10; }
+
+    public int getOverallAttack() { return this.OVERALL_ATTACK; }
+    public void setOverallAttack( int attack ) { this.OVERALL_ATTACK = attack; }
+
+    public int getOverallDefence() { return this.OVERALL_DEFENCE; }
+    public void setOverallDefence( int defence ) { this.OVERALL_DEFENCE = defence; }
+
+    public void setBaseAttack( int attack ) { this.BASE_ATTACK = attack; }
+    public void increaseBaseAttack( int increase ) { this.BASE_ATTACK += increase; }
+    public int getBaseAttack() { return this.BASE_ATTACK; }
+
+    public void setBaseDefence( int attack ) { this.BASE_DEFENCE = attack; }
+    public void increaseBaseDefence( int increase ) { this.BASE_DEFENCE += increase; }
+    public int getBaseDefence() { return this.BASE_DEFENCE; }
+
+    public void setHealth( double health ) {
+        this.health = health;
+    }
+    public double getHealth() {
+        return this.health;
+    }
+    public void decreaseHealth( double damage ) {
+        this.health -= damage;
+    }
+    public void increaseHealth( double heal ) {
+        this.health += heal;
+        if( this.health >= MAX_HEALTH ) {
+            this.health = MAX_HEALTH;
         }
+
+    }
+    public void increaseMaxHealth( ) {
+        Random random = new Random();
+        MAX_HEALTH += random.nextInt( 20 ) + 5;
     }
 
-    public int getPlayerClass() { return this.playerClass; }
-
-    public float getPlayerX() {
-        return this.playerX;
-    }
-    public void setPlayerX( float x ) {
-        this.playerX = x*32;
-    }
-    public void setPlayerXinPixels( float x ) {
-        this.playerX = x;
-    }
-
-    public void incrementPlayerX() {
-        this.playerX += this.playerSpeed;
-    }
-    public void decrementPlayerX() {
-        this.playerX -= this.playerSpeed;
-    }
-
-    public float getPlayerY() { return this.playerY; }
-    public void setPlayerY( float y ) { this.playerY = y*32; }
-    public void setPlayerYinPixels( float y ) {
-        this.playerY = y;
-    }
-
-    public void incrementPlayerY() {
-        this.playerY += this.playerSpeed;
-    }
-    public void decrementPlayerY() {
-        this.playerY -= this.playerSpeed;
-    }
-
-    public void startAnimationWalking() { this.movingPlayer.start(); }
-    public void stopAnimationWalking() { this.movingPlayer.stop(); }
-
-    public void startAnimationAttacking() {
-        this.attackingPlayer.restart();
-        this.attackingPlayer.start();
-    }
-    public void stopAnimationAttacking() {
-        if (this.playerClass == 0) {
-            this.attackingPlayer.stopAt(12);
-        }
-        else if( this.playerClass == 2 ) {
-            this.attackingPlayer.stopAt( 5 );
-        }
-        else if( this.playerClass == 1 ) {
-            this.attackingPlayer.stopAt( 7 );
-        }
-        else if( this.playerClass == 3 ) {
-            this.attackingPlayer.stopAt( 5 );
-        }
-    }
-
-    public void startAnimationDeath() {
-        this.playingDeath.start();
-    }
-    public void stopAnimationDeath() { this.playingDeath.stopAt(5); }
-
-    public boolean isStopped() {
-        return this.attackingPlayer.isStopped();
-    }
-    public boolean isStoppedDead() {
-        return this.playingDeath.isStopped();
-    }
-
-    public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
-       if( this.playerClass == 0 || this.playerClass == 2 ) {
-           for (Projectile p : this.projectiles) {
-               p.render(gc, g, this.projectileImage);
-           }
-       }
-    }
-    public void updateProjectile( int delta, boolean shot, Map map  )  {
-
-            // Increases time since last shot
-        this.lastShot += delta;
-            // Checks if the time is good to shoot again and if the player shot an projectile
-        if( this.lastShot > this.FIRE_RATE && shot) {
-
-            /*
-                This section checks which direction the player is looking then creates a new projectile in that direcetion.
-                  The first vector is where the projectile will be drawn on the screen
-                  The second vector is for holding the position of the player, so if they move the project will move to look like it is in the sam position
-                  The third vector is for the projectiles position.  This will allow it to crash on collisions and detect people *( Future update to hurt others )
-                  There needs to be two vectors passed in for the players position because of how the Vector2f works
-            */
-
-            if( this.attackingPlayer == this.attackingUp ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
+    public void setMoveSelected( int move ) {
+        if( getPlayerClass() == 0 ) {
+            if( move == 0 ) {
+                setProjectileImage( this.projectileImageOne );
             }
-            else if( this.attackingPlayer == this.attackingRight ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
+            else if( move == 3 ) {
+                setProjectileImage( this.projectileImageTwo );
             }
-            else if( this.attackingPlayer == this.attackingDown ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
-            }
-            else if( this.attackingPlayer == this.attackingLeft ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
-            }
+        }
+        this.moveSelected = move;
+    }
+    public int getMoveSelected( ) { return this.moveSelected; }
+    public boolean isMoveKnown( int move ) {
+        if( this.attacksKnown[ move ] == 1 ) {
+            return true;
+        }
+        return false;
+    }
 
-            if( this.currentIndex >= this.projectiles.length ) {
-                this.currentIndex = 0;
+    public void setStamina( double stamina ) {
+        this.stamina = stamina;
+    }
+    public double getStamina() {
+        return this.stamina;
+    }
+    public int getAttackStamina() {
+        if( this.getMoveSelected() == 0 ) {
+            return this.attackOne;
+        }
+        else if( this.getMoveSelected() == 1 ) {
+            return  this.attackTwo;
+        }
+        else if( this.getMoveSelected() == 2 ) {
+            return this.attackThree;
+        }
+        else if( this.getMoveSelected() == 3 ) {
+            return this.attackFour;
+        }
+        else {
+            return (int)this.MAX_STAMINA;
+        }
+    }
+    public void decreaseStamina( double energy ) { this.stamina -= energy;  }
+    public void decreaseStamina( ) {
+        this.stamina -= getAttackStamina();
+    }
+    public void increaseStamina( double energy ) {
+        this.stamina += energy;
+        if( this.stamina > MAX_STAMINA ) {
+            this.stamina = MAX_STAMINA;
+        }
+    }
+    public void increaseMaxStamina( ) {
+        Random random = new Random();
+        MAX_STAMINA += random.nextInt( 20 ) + 5;
+    }
+    public void setMinRunningStamina( int newMin ) { this.minRunningStamina = newMin; }
+    public int getMinRunningStamina() { return this.minRunningStamina; }
+
+    public boolean checkDeath() {
+        if( getHealth() <= 0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setExpToLevelUp( double exp ) { this.expToLevelUp = exp; }
+    public double getExpToLevelUp() { return this.expToLevelUp; }
+    public void calculateExpToLevelUp() {
+        Random random = new Random();
+        // Next level Experience
+        this.expToLevelUp = getLevel() * ( random.nextInt(40) + 20 );
+
+    }
+
+    public void setExp( double exp ) {
+        this.exp = exp;
+    }
+    public double getExp() {
+        return this.exp;
+    }
+    public void increaseExp( double exp ) {
+        this.exp += exp;
+        checkLevelUp();
+    }
+    private void checkLevelUp() {
+        // Check for level up
+        if( getExp() > getExpToLevelUp() ) {
+            // Collect exp to continue it to next level
+            double overFlowExp = getExp() - getExpToLevelUp();
+
+            setExp( overFlowExp );
+            levelUp();
+        }
+        else if( getExp() == getExpToLevelUp() ) {
+            setExp( 0 );
+            levelUp();
+        }
+    }
+
+    public void setLevel( int level ) { this.level = level; }
+    public int getLevel() { return this.level; }
+    public void levelUp() {
+        this.level++;
+        this.perkPoints = 2;
+        this.movePoints = 1;
+        calculateExpToLevelUp();
+        increaseMaxHealth();
+        increaseMaxStamina();
+    }
+
+    public int getPerkPoints() { return this.perkPoints; }
+    public int getMovePoints() { return this.movePoints; }
+
+    public boolean isWeaponEqiupped () {
+        return this.inventory.isWeaponEquipped();
+    }
+
+    public void updateAttack( int delta, boolean attacked, Map map ) {
+        // Update projectiles position
+        updateProjectile( delta, attacked, map );
+    }
+
+    public void drawPlayerInfo( Graphics g ) {
+
+        // Calculate Percents
+        double healthPercent = getHealth() / MAX_HEALTH;
+        double staminaPercent = getStamina() / MAX_STAMINA;
+        double experiencePercent = getExp() / getExpToLevelUp();
+
+        this.playerMoves.render( 0, 538 );
+
+        g.setColor( red );
+        g.fillRoundRect(121, 558, 191 * (float)healthPercent, 10, 10 );
+        this.emptyHealth.draw( 114, 550 );
+
+        g.setColor( green );
+        g.fillRoundRect(328, 558, 191 * (float)staminaPercent, 10, 10 );
+        this.emptyHealth.draw( 320, 550 );
+
+        g.setColor( Color.blue );
+        g.fillRoundRect( 110, 631, 423 * (float)experiencePercent, 4, 5 );
+        this.emptyExpBar.draw( 104, 628 );
+
+        int xPos = 144;
+        g.setColor( grey );
+
+        for( int x = 0; x < 4; x++ ) {
+            if( this.attacksKnown[ x ] == 1 ) {
+                g.setColor( grey );
+                g.fillRect(xPos, 586, 32, 32);
+                attackImages[x].draw(xPos, 586);
+                if( moveSelected == x ) {
+                    g.setColor( Color.white );
+                    g.drawRect( xPos, 586, 32, 32 );
+                }
             }
-            this.lastShot = 0;
+            else {
+                g.setColor( black );
+                attackImages[x].draw(xPos, 586);
+                g.fillRect(xPos,586, 32,32  );
+            }
+            xPos+=64;
         }
 
-        for (Projectile p : this.projectiles) {
-            p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
-        }
+        g.setColor( grey );
+        g.fillRect(xPos, 586, 32, 32);
+        this.healthPotion.draw( xPos, 586 );
+        xPos += 64;
+        g.fillRect(xPos, 586, 32, 32);
+        this.staminaPotion.draw( xPos, 586 );
 
     }
-
-    public void isRunning() {
-        this.playerSpeed = 3;
-    }
-    public void isNotRunning() {
-        this.playerSpeed = 2;
-    }
-
 }

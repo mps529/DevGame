@@ -45,7 +45,7 @@ public class Inventory {
     private int healthPotions;
     private int staminaPotions;
 
-        // Player Class
+        // Movement Class
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
 
