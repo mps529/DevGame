@@ -83,7 +83,9 @@ public class MainMenu extends BasicGameState {
 
         //init menus
         this.newMenu = new TiledMap("NewEra-Beta/res/map/ClassSelectMenu.tmx");
+        this.loadMenu = new TiledMap("NewEra-Beta/res/map/loadGameMenu.tmx");
 
+        //return button
         this.goBack = new Image("NewEra-Beta/res/buttons/BackButton.png");
 
         //booleans for map animation
@@ -95,7 +97,7 @@ public class MainMenu extends BasicGameState {
         //numbers for map animation speed
         this.randNum = new Random();
         this.scrollSpeedX = .1f;
-        this.scrollSpeedY = .2f;
+        this.scrollSpeedY = .101f;
 
         //booleans for beginning new game or loading previous save
         this.newGameStarted = false;
@@ -295,10 +297,13 @@ public class MainMenu extends BasicGameState {
                 }
 
             }
+        } else if (!newGameStarted && loadGameStarted) {
 
+            this.loadMenu.render(0,0);
 
-
+            this.goBack.draw(10,10);
         }
+
 
     }
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
@@ -398,6 +403,10 @@ public class MainMenu extends BasicGameState {
             //Load Game button operations
             if ((mouseX >= 352 && mouseX <= 546) && (mouseY >= 300 && mouseY <= 364)) {
                 loadPressed = true;
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadGameStarted = true;
+
+                }
             }
             else {
                 loadPressed = false;
@@ -550,6 +559,19 @@ public class MainMenu extends BasicGameState {
 
 
 
+        } else if (!newGameStarted && loadGameStarted) {
+            //Load Game menu functionality
+
+            //MOUSE OPTIONS
+
+            if ((mouseX >= 10 && mouseX <= 106) && (mouseY >= 10 && mouseY <= 74)) {
+                //clicking on the back button
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadGameStarted = false;
+                    gameStarted = false;
+
+                }
+            }
         }
 
     }
