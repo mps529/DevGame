@@ -83,7 +83,9 @@ public class MainMenu extends BasicGameState {
 
         //init menus
         this.newMenu = new TiledMap("NewEra-Beta/res/map/ClassSelectMenu.tmx");
+        this.loadMenu = new TiledMap("NewEra-Beta/res/map/loadGameMenu.tmx");
 
+        //return button
         this.goBack = new Image("NewEra-Beta/res/buttons/BackButton.png");
 
         //booleans for map animation
@@ -295,10 +297,10 @@ public class MainMenu extends BasicGameState {
                 }
 
             }
-
-
+        } else if (!newGameStarted && loadGameStarted) {
 
         }
+
 
     }
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
