@@ -91,15 +91,18 @@ public class PlayerScreen extends BasicGameState {
 
     }
 
-    public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException{
-
-        Input input = gc.getInput();
-
+    public void enter( GameContainer gc, StateBasedGame sbg ) {
         this.playersAttacks = this.player.getAttackImages();
         this.knownAttacks = this.player.getAttacksKnown();
 
         this.player.setOverallAttack( this.player.getInventory().getPlayerOverallAttack()  );
         this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence() );
+    }
+
+    public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException{
+
+        Input input = gc.getInput();
+
 
         if( input.isKeyPressed( Input.KEY_P ) ) {
             input.clearKeyPressedRecord();
