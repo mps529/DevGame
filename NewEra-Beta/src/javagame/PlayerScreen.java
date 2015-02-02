@@ -10,9 +10,9 @@ public class PlayerScreen extends BasicGameState {
 
         // This game state
     private static int gameState;
-        // Player class
-    private PlayerClass player;
-        // Player class background
+        // Movement class
+    private Player player;
+        // Movement class background
     private TiledMap background;
         // Increasing stats
     private Image plus;
@@ -91,15 +91,18 @@ public class PlayerScreen extends BasicGameState {
 
     }
 
-    public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException{
-
-        Input input = gc.getInput();
-
+    public void enter( GameContainer gc, StateBasedGame sbg ) {
         this.playersAttacks = this.player.getAttackImages();
         this.knownAttacks = this.player.getAttacksKnown();
 
         this.player.setOverallAttack( this.player.getInventory().getPlayerOverallAttack()  );
         this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence() );
+    }
+
+    public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException{
+
+        Input input = gc.getInput();
+
 
         if( input.isKeyPressed( Input.KEY_P ) ) {
             input.clearKeyPressedRecord();

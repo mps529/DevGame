@@ -1,6 +1,5 @@
 package javagame;
 
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -26,7 +25,9 @@ public class Projectile {
 
     private int speed = 5 ;
 
-    public Projectile( Vector2f pos, Vector2f playerPos, Vector2f projectilePos, int direction ) {
+    private boolean spin;
+
+    public Projectile( Vector2f pos, Vector2f playerPos, Vector2f projectilePos, int direction, boolean spin ) {
             // Setting Screen position
         this.pos = pos;
             // Current player position
@@ -35,6 +36,8 @@ public class Projectile {
         this.projectilePos = projectilePos;
             // Direction
         this.direction = direction;
+            //Spin
+        this.spin = spin;
     }
 
     public Projectile( ) {
@@ -96,6 +99,9 @@ public class Projectile {
 
     public void render( GameContainer gc, Graphics g, Image[] projectile ) throws SlickException {
         if( this.active ) {
+            if( this.spin ) {
+                projectile[ this.direction ].rotate( 110 );
+            }
             projectile[ this.direction ].draw( this.pos.getX(), this.pos.getY() );
         }
     }

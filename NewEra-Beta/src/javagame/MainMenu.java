@@ -27,7 +27,7 @@ public class MainMenu extends BasicGameState {
     private TextField characterName;
 
     private String playerName;
-    private PlayerClass player;
+    private Player player;
 
     //map information
     private TiledMap map, newMenu, loadMenu;
@@ -238,7 +238,7 @@ public class MainMenu extends BasicGameState {
                 g.drawString("Hunter",301, 100 );
                 g.drawString("Skilled woodsman. Occasionally forgets deodorant.", 40, 130);
                 g.drawString("- Ranged Bowman", 60, 150);
-                g.drawString("-  Bonus to Base Damage", 60, 170);
+                g.drawString("- Bonus to Base Damage", 60, 170);
                 g.drawString("- Capable of hiding in any environment...", 60, 190);
                 g.setColor(Color.transparent);
                 this.hunter.getSprite(1,2).draw(112, 400);
