@@ -28,6 +28,8 @@ public class Movement {
         // Death
     private Animation playingDeath;
 
+    private int direction;
+
         // Pixels to move
     private int playerSpeed = 2;
 
@@ -253,14 +255,19 @@ public class Movement {
         return this.movingPlayer;
     }
 
+    public SpriteSheet getPlayerSpriteSheet() { return this.playerSpriteSheet; }
+
     public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
     public void drawPlayerAttacking( float x, float y ) { this.attackingPlayer.draw( x, y );  }
     public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
 
     public String getPlayerName() { return this.playerName; }
 
+    public int getDirection() { return this.direction; }
+
     // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
+        this.direction = newDirection;
         switch ( newDirection ) {
             case 0:
                 this.movingPlayer = this.movingUp;
@@ -351,13 +358,12 @@ public class Movement {
     }
 
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
-       if( this.playerClass == 0 || this.playerClass == 2 ) {
-           for (Projectile p : this.projectiles) {
-               p.render(gc, g, this.projectileImage);
-           }
-       }
+        for (Projectile p : this.projectiles) {
+            p.render(gc, g, this.projectileImage);
+        }
+
     }
-    public void updateProjectile( int delta, boolean shot, Map map  )  {
+    public void updateProjectile( int delta, boolean shot, Map map, boolean spin  )  {
 
             // Increases time since last shot
         this.lastShot += delta;
@@ -373,16 +379,16 @@ public class Movement {
             */
 
             if( this.attackingPlayer == this.attackingUp ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0 );
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0, spin );
             }
             else if( this.attackingPlayer == this.attackingRight ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1 );
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1, spin );
             }
             else if( this.attackingPlayer == this.attackingDown ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2 );
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2, spin );
             }
             else if( this.attackingPlayer == this.attackingLeft ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3 );
+                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3, spin );
             }
 
             if( this.currentIndex >= this.projectiles.length ) {

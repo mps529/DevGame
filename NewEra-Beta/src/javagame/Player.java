@@ -184,7 +184,7 @@ public class Player extends Movement {
 
         this.attacksKnown[0] = 1;
         this.attacksKnown[1] = -1;
-        this.attacksKnown[2] = -1;
+        this.attacksKnown[2] = 1;
         this.attacksKnown[3] = -1;
 
         this.MAX_HEALTH = 100;
@@ -194,7 +194,7 @@ public class Player extends Movement {
 
         this.attackOne = 10;
         this.attackTwo = 20;
-        this.attackThree = 30;
+        this.attackThree = 2;
         this.attackFour = 40;
 
     }
@@ -270,7 +270,7 @@ public class Player extends Movement {
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = -1;
+        this.attacksKnown[1] = 1;
         this.attacksKnown[2] = -1;
         this.attacksKnown[3] = -1;
 
@@ -287,6 +287,7 @@ public class Player extends Movement {
 
     public Image[] getAttackImages() { return this.attackImages; }
     public int[] getAttacksKnown() { return this.attacksKnown; }
+    public Image getAttackImage( int index ) { return this.attackImages[ index ]; }
 
     public Inventory getInventory() {
         return inventory;
@@ -348,6 +349,11 @@ public class Player extends Movement {
             }
             else if( move == 3 ) {
                 setProjectileImage( this.projectileImageTwo );
+            }
+        }
+        else if( getPlayerClass() == 4 ) {
+            if( move == 0 ) {
+                setProjectileImage( this.projectileImageOne );
             }
         }
         this.moveSelected = move;
@@ -461,7 +467,21 @@ public class Player extends Movement {
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
-        updateProjectile( delta, attacked, map );
+        if( getPlayerClass() == 0 ) {
+            if( getMoveSelected() == 0 || getMoveSelected() == 3 ) {
+                updateProjectile(delta, attacked, map, false );
+            }
+        }
+        else if( getPlayerClass() == 2 ) {
+            if( getMoveSelected() == 0  ) {
+                updateProjectile(delta, attacked, map, false );
+            }
+        }
+        else if( getPlayerClass() == 3 ) {
+            if( getMoveSelected() == 1  ) {
+                updateProjectile(delta, attacked, map, true );
+            }
+        }
     }
 
     public void drawPlayerInfo( Graphics g ) {
