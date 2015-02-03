@@ -45,6 +45,9 @@ public class Items {
     Color itemRarityColor;
     Color itemRarityColorNoAlpha;
 
+    public Items() {
+    }
+
         // Pass -1 in if you don't want to set it
     public Items( int itemId, int classID, int rarity, int level  ) {
 
@@ -160,6 +163,8 @@ public class Items {
 
     public int getAttackPower() { return  this.attackPower; }
     public int getDefencePower() { return this.defencePower; }
+
+    public int getItemsCount() { return this.ItemsCount; }
 
     private void assignRarity(  Random randomNumber ) {
         int rarity = randomNumber.nextInt(101);
