@@ -23,8 +23,18 @@ public class MainMenu extends BasicGameState {
     private Image loadGame, loadGamePressed;
     private Image playGame, playGamePressed;
     private Image goBack;
+
+    private Image warriorSprite, warrior2Sprite, warrior3Sprite, warrior4Sprite;
+    private Image wizardSprite, wizard2Sprite, wizard3Sprite, wizard4Sprite;
+    private Image rogueSprite, rogue2Sprite, rogue3Sprite, rogue4Sprite;
+    private Image hunterSprite, hunter2Sprite, hunter3Sprite, hunter4Sprite;
+
     private SpriteSheet hunter, warrior, rogue, wizard;
     private TextField characterName;
+
+    ///////
+    private SaveGame sg = new SaveGame();
+    //////
 
     private String playerName;
     private Player player;
@@ -122,8 +132,44 @@ public class MainMenu extends BasicGameState {
 
         //init images for character select
         this.warrior = new SpriteSheet("NewEra-Beta/res/players/warrior.png", 32 ,32);
+        warriorSprite = this.warrior.getSprite(1,2);
+        this.warrior = new SpriteSheet("NewEra-Beta/res/players/warrior2.png", 32 ,32);
+        warrior2Sprite = this.warrior.getSprite(1,2);
+        this.warrior = new SpriteSheet("NewEra-Beta/res/players/warrior3.png", 32 ,32);
+        warrior3Sprite = this.warrior.getSprite(1,2);
+        this.warrior = new SpriteSheet("NewEra-Beta/res/players/warrior4.png", 32 ,32);
+        warrior4Sprite = this.warrior.getSprite(1,2);
+        this.warrior = new SpriteSheet("NewEra-Beta/res/players/warrior.png", 32 ,32);
+
+
         this.wizard = new SpriteSheet("NewEra-Beta/res/players/wizard.png", 32 ,32);
+        wizardSprite = this.wizard.getSprite(1,2);
+        this.wizard = new SpriteSheet("NewEra-Beta/res/players/wizard2.png", 32 ,32);
+        wizard2Sprite = this.wizard.getSprite(1,2);
+        this.wizard = new SpriteSheet("NewEra-Beta/res/players/wizard3.png", 32 ,32);
+        wizard3Sprite = this.wizard.getSprite(1,2);
+        this.wizard = new SpriteSheet("NewEra-Beta/res/players/wizard4.png", 32 ,32);
+        wizard4Sprite = this.wizard.getSprite(1,2);
+        this.wizard = new SpriteSheet("NewEra-Beta/res/players/wizard.png", 32 ,32);
+
         this.rogue = new SpriteSheet("NewEra-Beta/res/players/rouge.png", 32 ,32);
+        rogueSprite = this.rogue.getSprite(1,2);
+        this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue2.png", 32 ,32);
+        rogue2Sprite = this.rogue.getSprite(1,2);
+        this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue3.png", 32 ,32);
+        rogue3Sprite = this.rogue.getSprite(1,2);
+        //this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue4.png", 32 ,32);
+        //rogue4Sprite = this.rogue.getSprite(1,2);
+        this.rogue = new SpriteSheet("NewEra-Beta/res/players/rouge.png", 32 ,32);
+
+        this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter.png", 32 ,32);
+        hunterSprite = this.hunter.getSprite(1,2);
+        this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter2.png", 32 ,32);
+        hunter2Sprite = this.hunter.getSprite(1,2);
+        this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter3.png", 32 ,32);
+        hunter3Sprite = this.hunter.getSprite(1,2);
+        this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter4.png", 32 ,32);
+        hunter4Sprite = this.hunter.getSprite(1,2);
         this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter.png", 32 ,32);
 
         //text field init
@@ -198,7 +244,10 @@ public class MainMenu extends BasicGameState {
                 g.drawString("- Bonus to Base Defense ", 60, 170);
                 g.drawString("- Stronger warriors can enter a Beserk state", 60, 190);
                 g.setColor(Color.transparent);
-                this.warrior.getSprite(1,2).draw(112, 400);
+                warriorSprite.draw(112, 400);
+                warrior2Sprite.draw(240, 400);
+                warrior3Sprite.draw(368, 400);
+                warrior4Sprite.draw(496, 400);
                 g.setColor(new Color(0, 0, 0, .3f));
                 if(spriteSelected) {
                     g.fillRect(spriteSelectedX, spriteSelectedY, 32, 32);
@@ -213,7 +262,10 @@ public class MainMenu extends BasicGameState {
                 g.drawString("- Bonus to Base Attack", 60, 170);
                 g.drawString("- Mighty wizards can make it rain...fire.", 60, 190);
                 g.setColor(Color.transparent);
-                this.wizard.getSprite(1,2).draw(112, 400);
+                wizardSprite.draw(112, 400);
+                wizard2Sprite.draw(240, 400);
+                wizard3Sprite.draw(368, 400);
+                wizard4Sprite.draw(496, 400);
                 g.setColor(new Color(0, 0, 0, .3f));
                 if(spriteSelected) {
                     g.fillRect(spriteSelectedX, spriteSelectedY, 32, 32);
@@ -227,7 +279,10 @@ public class MainMenu extends BasicGameState {
                 g.drawString("- Dagger uses less Stamina at a cost to Base Damage", 60, 170);
                 g.drawString("- More adept Rogues can utilize Invisibility", 60, 190);
                 g.setColor(Color.transparent);
-                this.rogue.getSprite(1,2).draw(112, 400);
+                rogueSprite.draw(112, 400);
+                rogue2Sprite.draw(240, 400);
+                rogue3Sprite.draw(368, 400);
+                //rogue4Sprite.draw(496, 400);
                 g.setColor(new Color(0, 0, 0, .3f));
                 if(spriteSelected) {
                     g.fillRect(spriteSelectedX, spriteSelectedY, 32, 32);
@@ -241,7 +296,10 @@ public class MainMenu extends BasicGameState {
                 g.drawString("- Bonus to Base Damage", 60, 170);
                 g.drawString("- Capable of hiding in any environment...", 60, 190);
                 g.setColor(Color.transparent);
-                this.hunter.getSprite(1,2).draw(112, 400);
+                hunterSprite.draw(112, 400);
+                hunter2Sprite.draw(240, 400);
+                hunter3Sprite.draw(368, 400);
+                hunter4Sprite.draw(496, 400);
                 g.setColor(new Color(0, 0, 0, .3f));
                 if(spriteSelected) {
                     g.fillRect(spriteSelectedX, spriteSelectedY, 32, 32);
@@ -253,8 +311,8 @@ public class MainMenu extends BasicGameState {
             }
 
             this.warrior.getSprite(1,5).draw(208, 240);
-            this.wizard.getSprite(4,14).draw(272, 240);
-            this.rogue.getSprite(2,20).draw(336, 240);
+            this.wizard.getSprite(4, 14).draw(272, 240);
+            this.rogue.getSprite(2, 20).draw(336, 240);
             this.hunter.getSprite(7,17).draw(400, 240);
 
             if( gameStarted ) {
@@ -264,15 +322,34 @@ public class MainMenu extends BasicGameState {
 
                     if (warriorSelected) {
 
-                        if (sprite1Selected) {
+                        if(sprite1Selected) {
                             this.player.setUpInstance("warrior.png", playerName, 1);
                             sbg.enterState(1);
+                        } else if(sprite2Selected) {
+                            this.player.setUpInstance("warrior2.png", playerName, 1);
+                            sbg.enterState(1);
+                        } else if(sprite3Selected) {
+                            this.player.setUpInstance("warrior3.png", playerName, 1);
+                            sbg.enterState(1);
+                        } else if(sprite4Selected) {
+                            this.player.setUpInstance("warrior4.png", playerName, 1);
+                            sbg.enterState(1);
                         }
+
 
                     } else if (wizardSelected) {
 
                         if (sprite1Selected) {
                             this.player.setUpInstance("wizard.png", playerName, 2);
+                            sbg.enterState(1);
+                        } else if(sprite2Selected) {
+                            this.player.setUpInstance("wizard2.png", playerName, 2);
+                            sbg.enterState(1);
+                        } else if(sprite3Selected) {
+                            this.player.setUpInstance("wizard3.png", playerName, 2);
+                            sbg.enterState(1);
+                        } else if(sprite4Selected) {
+                            this.player.setUpInstance("wizard4.png", playerName, 2);
                             sbg.enterState(1);
                         }
 
@@ -281,12 +358,30 @@ public class MainMenu extends BasicGameState {
                         if (sprite1Selected) {
                             this.player.setUpInstance("rouge.png", playerName, 3);
                             sbg.enterState(1);
+                        } else if(sprite2Selected) {
+                            this.player.setUpInstance("rogue2.png", playerName, 3);
+                            sbg.enterState(1);
+                        } else if(sprite3Selected) {
+                            this.player.setUpInstance("rogue3.png", playerName, 3);
+                            sbg.enterState(1);
+                        } else if(sprite4Selected) {
+                            //this.player.setUpInstance("rogue4.png", playerName, 3);
+                            //sbg.enterState(1);
                         }
 
                     } else if (hunterSelected) {
 
                         if (sprite1Selected) {
                             this.player.setUpInstance("hunter.png", playerName, 0);
+                            sbg.enterState(1);
+                        } else if(sprite2Selected) {
+                            this.player.setUpInstance("hunter2.png", playerName, 0);
+                            sbg.enterState(1);
+                        } else if(sprite3Selected) {
+                            this.player.setUpInstance("hunter3.png", playerName, 0);
+                            sbg.enterState(1);
+                        } else if(sprite4Selected) {
+                            this.player.setUpInstance("hunter4.png", playerName, 0);
                             sbg.enterState(1);
                         }
 
@@ -423,6 +518,7 @@ public class MainMenu extends BasicGameState {
             if ((mouseX >= 225 && mouseX <= 417) && (mouseY >= 470 && mouseY <= 598)) {
                 playPressed = true;
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && classSelected && spriteSelected) {
+                    input.clearKeyPressedRecord();
                     gameStarted = true;
                 }
             }
