@@ -1,6 +1,5 @@
 package javagame;
 
-
 import org.newdawn.slick.*;
 
 public class PlayerAttack {
@@ -22,7 +21,6 @@ public class PlayerAttack {
     public Animation bush;
         // Indicates which frame to stop at
     private int frameStop = 0;
-
 
     private int[] durationArrowSpeed = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
     private int[] durationSpellSpeed = { 60,60,60,60,60,60,60 };
@@ -106,13 +104,13 @@ public class PlayerAttack {
             return isHunterDone( input, delta );
         }
         else if( this.player.getPlayerClass() == 1 ) {
-            return isWarriorDone( input, delta );
+            return isWarriorDone(input, delta);
         }
         else if( this.player.getPlayerClass() == 2 ) {
-            return isWizardDone( input, delta );
+            return isWizardDone(input, delta);
         }
         else if( this.player.getPlayerClass() == 3 ) {
-            return isRougeDone( input, delta );
+            return isRougeDone(input, delta);
         }
 
         return false;
@@ -410,7 +408,6 @@ public class PlayerAttack {
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {
-                setIsAttacking( false );
                 return true;
             }
         }
@@ -426,23 +423,17 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
-
-        }
-        else if( moveSelected == 2 ) {
-            if (!input.isKeyDown(Input.KEY_SPACE) ) {
+            if( this.currentAttack.isStopped() ) {
                 return true;
             }
-            else if( this.player.getStamina() >= 2 ) {
-                this.player.decreaseStamina(delta * .01f);
-                return false;
-            }
-            else {
+        }
+        else if( moveSelected == 2 ) {
+            if( this.currentAttack.isStopped() ) {
                 return true;
             }
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {
-                setIsAttacking( false );
                 return true;
             }
         }
@@ -458,23 +449,17 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
-
-        }
-        else if( moveSelected == 2 ) {
-            if (!input.isKeyDown(Input.KEY_SPACE) ) {
+            if( this.currentAttack.isStopped() ) {
                 return true;
             }
-            else if( this.player.getStamina() >= 2 ) {
-                this.player.decreaseStamina(delta * .01f);
-                return false;
-            }
-            else {
+        }
+        else if( moveSelected == 2 ) {
+            if( this.currentAttack.isStopped() ) {
                 return true;
             }
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {
-                setIsAttacking( false );
                 return true;
             }
         }
@@ -495,21 +480,12 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 2 ) {
-           /* if (!input.isKeyDown(Input.KEY_SPACE) ) {
+            if( this.currentAttack.isStopped() ) {
                 return true;
             }
-            else if( this.player.getStamina() >= 2 ) {
-                this.player.decreaseStamina(delta * .01f);
-                return false;
-            }
-            else {
-                return true;
-            }
-            */
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {
-                setIsAttacking( false );
                 return true;
             }
         }
@@ -522,7 +498,6 @@ public class PlayerAttack {
         this.currentAttack.start();
     }
     public void stopAnimationAttacking() {
-        System.out.println(this.frameStop) ;
         this.currentAttack.stopAt( this.frameStop );
     }
     public boolean isAttackingStopped() {

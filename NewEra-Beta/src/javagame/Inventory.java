@@ -86,6 +86,12 @@ public class Inventory {
     public void setBaseDefence( int defence ) { this.baseDefence = defence; }
     public int getPlayerOverallDefence() { return this.playerOverallDefence; }
 
+    public int getHealthPotions() { return this.healthPotions; }
+    public void useHealthPotion() { this.healthPotions--; }
+
+    public int getStaminaPotions() { return this.staminaPotions; }
+    public void useStaminaPotion() { this.staminaPotions--; }
+
     private void calculateAttackAndDefence(  ) {
             // Setting to base
         this.playerOverallAttack = this.baseAttack;
@@ -210,7 +216,7 @@ public class Inventory {
 
     public void addStartingItems( ) {
             // Holds Items
-        Items[] basic = new Items[8];
+        Items[] basic = new Items[18];
 
             // Assigning basic Items
         basic[ 0 ] = new Items( 2, this.classID, 0, 1 );
@@ -236,6 +242,12 @@ public class Inventory {
         basic[ 6 ] = new Items( 7, this.classID, 0, 1 );
         basic[ 7 ] = new Items( 8, this.classID, 0, 1 );
 
+        for( int x=8; x < 13; x++ ) {
+            basic[ x ] = new Items( 0, this.classID, 0, 1 );
+        }
+        for( int x=13; x < 18; x++ ) {
+            basic[ x ] = new Items( 1, this.classID, 0, 1 );
+        }
             // Adding to inventory and equipping item
         for( int x=0; x < basic.length; x++ ) {
             addItem( basic[x] );
