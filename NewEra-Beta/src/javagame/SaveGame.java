@@ -1,6 +1,5 @@
 package javagame;
 
-
 import com.thoughtworks.xstream.XStream;
 
 import java.io.File;

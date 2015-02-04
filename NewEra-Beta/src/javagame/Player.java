@@ -308,6 +308,18 @@ public class Player extends Movement {
         this.inventory = inventory;
     }
 
+    public int getAttackOneDamage() { return this.attackOneDamage; }
+    public void incrementAttackOneDamage() { this.attackOneDamage += 2; }
+
+    public int getAttackTwoDamage() { return this.attackTwoDamage; }
+    public void incrementAttackTwoDamage() { this.attackTwoDamage += 2; }
+
+    public int getAttackThreeDamage() { return this.attackThreeDamage; }
+    public void incrementAttackThreeDamage() { this.attackThreeDamage += 2; }
+
+    public int getAttackFourDamage() { return this.attackFourDamage; }
+    public void incrementAttackFourDamage() { this.attackFourDamage += 2; }
+
     public boolean getInCombat() { return this.inCombat; }
     public void setInCombat( boolean inCombat ) { this.inCombat = inCombat; }
 
@@ -348,10 +360,6 @@ public class Player extends Movement {
             this.health = MAX_HEALTH;
         }
 
-    }
-    public void increaseMaxHealth( ) {
-        Random random = new Random();
-        MAX_HEALTH += random.nextInt( 20 ) + 5;
     }
 
     public void setMoveSelected( int move ) {
@@ -469,7 +477,10 @@ public class Player extends Movement {
     }
 
     public int getPerkPoints() { return this.perkPoints; }
+    public void decrementPerkPoints() { this.perkPoints--; }
+
     public int getMovePoints() { return this.movePoints; }
+    public void decrementMovePoints() { this.movePoints--; }
 
     public boolean isWeaponEqiupped () {
         return this.inventory.isWeaponEquipped();
