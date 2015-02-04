@@ -35,7 +35,6 @@ public class Game extends BasicGameState {
         // Temp map name to see if there needs to be a map change
     private String mapName;
 
-    
         // Is player Running
     private boolean running = false;
         // Screen sizes cut in half for character rendering
@@ -230,6 +229,15 @@ public class Game extends BasicGameState {
                         this.player.setMoveSelected( 3 );
                     }
                 }
+                if (input.isKeyPressed( Input.KEY_9 ) ) {
+                    input.clearKeyPressedRecord();
+                    this.player.usedHealthPotion();
+                }
+                if( input.isKeyPressed( Input.KEY_0 ) ) {
+                    input.clearKeyPressedRecord();
+                    this.player.usedStaminaPotion();
+                }
+
                 if( input.isKeyDown( Input.KEY_V ) ) {
                     this.player.increaseExp( 10 );
                 }
@@ -246,6 +254,7 @@ public class Game extends BasicGameState {
                     this.player.increaseStamina(delta * .003f);
                 }
             } // End of not attacking
+
 
             if( this.playerAttack.isDoneAttacking( input, delta ) && this.playerAttack.getIsAttacking()  ) {
                 attacked = true;
@@ -306,6 +315,8 @@ public class Game extends BasicGameState {
                 sbg.enterState( 0 );
             }
         }
+
+        input.clearKeyPressedRecord();
     }
 
 

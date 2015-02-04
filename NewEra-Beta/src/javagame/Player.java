@@ -27,16 +27,22 @@ public class Player extends Movement {
     private int minRunningStamina = 10;
 
     // The amount of stamina it takes to attack
-    private int attackOne;
-    private int attackTwo;
-    private int attackThree;
-    private int attackFour;
+    private int attackOneStamina;
+    private int attackTwoStamina;
+    private int attackThreeStamina;
+    private int attackFourStamina;
+
+    // The amount of stamina it takes to attack
+    private int attackOneDamage;
+    private int attackTwoDamage;
+    private int attackThreeDamage;
+    private int attackFourDamage;
 
     /*
-        0 - attackOne
-        1- attackTwo
-        2- attackThree
-        3 - attackFour
+        0 - attackOneStamina
+        1- attackTwoStamina
+        2- attackThreeStamina
+        3 - attackFourStamina
     */
     private int moveSelected;
 
@@ -86,7 +92,7 @@ public class Player extends Movement {
 
         // Health Potion
     private Image healthPotion;
-        // Stamin Potion
+        // Stamina Potion
     private Image staminaPotion;
 
         // If the player is in combat
@@ -97,6 +103,7 @@ public class Player extends Movement {
     public Player() {
         super();
     }
+
 
     public void setUpInstance( String sheetName, String name, int classID ) throws SlickException {
         // Call Movement constructor
@@ -130,7 +137,7 @@ public class Player extends Movement {
         calculateExpToLevelUp();
         setHealth( 80 );
         setStamina( MAX_STAMINA );
-        setExp( expToLevelUp - 10 );
+        setExp( 0 );
 
         this.moveSelected = 0;
 
@@ -185,17 +192,22 @@ public class Player extends Movement {
         this.attacksKnown[0] = 1;
         this.attacksKnown[1] = -1;
         this.attacksKnown[2] = 1;
-        this.attacksKnown[3] = -1;
+        this.attacksKnown[3] = 1;
 
         this.MAX_HEALTH = 100;
         this.MAX_STAMINA = 120;
         this.BASE_ATTACK = 13;
         this.BASE_DEFENCE = 5;
 
-        this.attackOne = 10;
-        this.attackTwo = 20;
-        this.attackThree = 2;
-        this.attackFour = 40;
+        this.attackOneStamina = 10;
+        this.attackTwoStamina = 20;
+        this.attackThreeStamina = 2;
+        this.attackFourStamina = 40;
+
+        this.attackOneDamage = 10;
+        this.attackTwoDamage = 10;
+        this.attackThreeDamage = 10;
+        this.attackFourDamage = 10;
 
     }
     private void setWarrior() throws SlickException {
@@ -218,10 +230,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 7;
         this.BASE_DEFENCE = 10;
 
-        this.attackOne = 10;
-        this.attackTwo = 20;
-        this.attackThree = 30;
-        this.attackFour = 40;
+        this.attackOneStamina = 10;
+        this.attackTwoStamina = 20;
+        this.attackThreeStamina = 30;
+        this.attackFourStamina = 40;
     }
     private void setWizard() throws SlickException {
         // Setting projectileImage animations
@@ -248,10 +260,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 15;
         this.BASE_DEFENCE = 5;
 
-        this.attackOne = 10;
-        this.attackTwo = 20;
-        this.attackThree = 30;
-        this.attackFour = 40;
+        this.attackOneStamina = 10;
+        this.attackTwoStamina = 20;
+        this.attackThreeStamina = 30;
+        this.attackFourStamina = 40;
 
     }
     private void setRouge() throws SlickException {
@@ -267,7 +279,7 @@ public class Player extends Movement {
         this.attackImages[0] = new Image("NewEra-Beta/res/items/dagger.png");
         this.attackImages[1] = new Image( "NewEra-Beta/res/moves/ninjaStar.png" );
         this.attackImages[2] = new Image( "NewEra-Beta/res/moves/invisible.png" );
-        this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
+        this.attackImages[3]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
 
         this.attacksKnown[0] = 1;
         this.attacksKnown[1] = 1;
@@ -279,10 +291,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 11;
         this.BASE_DEFENCE = 9;
 
-        this.attackOne = 10;
-        this.attackTwo = 20;
-        this.attackThree = 30;
-        this.attackFour = 40;
+        this.attackOneStamina = 10;
+        this.attackTwoStamina = 20;
+        this.attackThreeStamina = 30;
+        this.attackFourStamina = 40;
     }
 
     public Image[] getAttackImages() { return this.attackImages; }
@@ -374,16 +386,16 @@ public class Player extends Movement {
     }
     public int getAttackStamina() {
         if( this.getMoveSelected() == 0 ) {
-            return this.attackOne;
+            return this.attackOneStamina;
         }
         else if( this.getMoveSelected() == 1 ) {
-            return  this.attackTwo;
+            return  this.attackTwoStamina;
         }
         else if( this.getMoveSelected() == 2 ) {
-            return this.attackThree;
+            return this.attackThreeStamina;
         }
         else if( this.getMoveSelected() == 3 ) {
-            return this.attackFour;
+            return this.attackFourStamina;
         }
         else {
             return (int)this.MAX_STAMINA;
@@ -454,8 +466,6 @@ public class Player extends Movement {
         this.perkPoints = 2;
         this.movePoints = 1;
         calculateExpToLevelUp();
-        increaseMaxHealth();
-        increaseMaxStamina();
     }
 
     public int getPerkPoints() { return this.perkPoints; }
@@ -467,20 +477,20 @@ public class Player extends Movement {
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
-        if( getPlayerClass() == 0 ) {
-            if( getMoveSelected() == 0 || getMoveSelected() == 3 ) {
-                updateProjectile(delta, attacked, map, false );
-            }
+        updateProjectile(delta, attacked, map, getMoveSelected() );
+    }
+
+    public void usedHealthPotion() {
+        if( this.inventory.getHealthPotions() > 0 ) {
+            this.health += 30;
+            this.inventory.useHealthPotion();
         }
-        else if( getPlayerClass() == 2 ) {
-            if( getMoveSelected() == 0  ) {
-                updateProjectile(delta, attacked, map, false );
-            }
-        }
-        else if( getPlayerClass() == 3 ) {
-            if( getMoveSelected() == 1  ) {
-                updateProjectile(delta, attacked, map, true );
-            }
+    }
+
+    public void usedStaminaPotion() {
+        if( this.inventory.getStaminaPotions() > 0 ) {
+            this.stamina += 30;
+            this.inventory.useStaminaPotion();
         }
     }
 
@@ -529,9 +539,44 @@ public class Player extends Movement {
         g.setColor( grey );
         g.fillRect(xPos, 586, 32, 32);
         this.healthPotion.draw( xPos, 586 );
+        g.setColor( Color.white );
+        g.drawString( ""+this.inventory.getHealthPotions(), xPos + 32, 580 );
+
+        g.setColor( grey );
         xPos += 64;
         g.fillRect(xPos, 586, 32, 32);
         this.staminaPotion.draw( xPos, 586 );
+        g.setColor( Color.white );
+        g.drawString( ""+this.inventory.getStaminaPotions(), xPos + 32, 580 );
+
+    }
+
+
+    public void drawPlayerInfoPlayerScreen( Graphics g ) {
+
+        // Calculate Percents
+        double healthPercent = getHealth() / MAX_HEALTH;
+        double staminaPercent = getStamina() / MAX_STAMINA;
+        double experiencePercent = getExp() / getExpToLevelUp();
+
+        g.setColor( red );
+        g.fillRoundRect(67, 128, 191 * (float)healthPercent, 10, 10 );
+        this.emptyHealth.draw( 60, 120 );
+
+        g.setColor(green);
+        g.fillRoundRect(67, 188, 191 * (float)staminaPercent, 10, 10 );
+        this.emptyHealth.draw( 60, 180 );
+
+        g.setColor( Color.blue );
+        g.fillRoundRect( 67, 263, 423 * (float)experiencePercent, 5, 5 );
+        this.emptyExpBar.draw( 60, 260 );
+
+
+        g.setColor( Color.black );
+        g.drawString( "" + (int)getHealth() + "/" + (int)this.MAX_HEALTH, 270, 123 );
+        g.drawString( "" + (int)getStamina() + "/" + (int)this.MAX_STAMINA, 270, 183 );
+        g.drawString( "" + (int)getExp() + "/" + (int)getExpToLevelUp(), 490, 255 );
+
 
     }
 }

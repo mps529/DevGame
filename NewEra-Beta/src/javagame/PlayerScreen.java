@@ -50,18 +50,23 @@ public class PlayerScreen extends BasicGameState {
 
         g.setColor(Color.black );
             // Base Stats
-        g.drawString( "Base Attack: " + this.player.getBaseAttack(), 345, 95 );
-        g.drawString( "Base Defence: " + this.player.getBaseDefence(), 345, 115 );
-        g.drawString( "Total Attack: " + this.player.getOverallAttack(), 345, 135 );
-        g.drawString( "Total Defence: " + this.player.getOverallDefence(), 345, 155 );
-        g.drawString( "Total Health: " + (int)this.player.getMaxHealth(), 345, 175 );
-        g.drawString( "Total Stamina: " + (int)this.player.getMaxStamina(), 345, 195 );
+        g.drawString( "Base Attack: " + this.player.getBaseAttack(), 360, 95 );
+        g.drawString( "Base Defence: " + this.player.getBaseDefence(), 360, 115 );
+
+        g.drawString( "Total Attack: " + this.player.getOverallAttack(), 360, 135 );
+        g.drawString( "Total Defence: " + this.player.getOverallDefence(), 360, 155 );
+
+        g.drawString( "Total Health: " + (int)this.player.getMaxHealth(), 360, 175 );
+        g.drawString( "Total Stamina: " + (int)this.player.getMaxStamina(), 360, 195 );
+
+        this.player.drawPlayerInfoPlayerScreen( g );
+
 
         if( this.player.getPerkPoints() != 0 ) {
-            this.plus.draw( 525, 95 );
-            this.plus.draw( 525, 115 );
-            this.plus.draw( 525, 175 );
-            this.plus.draw( 525, 195);
+            this.plus.draw( 540, 95 );
+            this.plus.draw( 540, 115 );
+            this.plus.draw( 540, 175 );
+            this.plus.draw( 540, 195);
        }
         if( this.player.getMovePoints() != 0 ) {
             this.plus.draw( 118, 560 );
@@ -69,7 +74,6 @@ public class PlayerScreen extends BasicGameState {
             this.plus.draw( 374, 560 );
             this.plus.draw( 502, 560);
         }
-
 
         int startX = 112;
         int startY = 496;

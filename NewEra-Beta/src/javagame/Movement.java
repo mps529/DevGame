@@ -363,13 +363,23 @@ public class Movement {
         }
 
     }
-    public void updateProjectile( int delta, boolean shot, Map map, boolean spin  )  {
+    public void updateProjectile( int delta, boolean shot, Map map, int move  )  {
 
             // Increases time since last shot
         this.lastShot += delta;
-            // Checks if the time is good to shoot again and if the player shot an projectile
-        if( this.lastShot > this.FIRE_RATE && shot) {
 
+        boolean spin = false;
+
+        if( ( this.playerClass == 0 && ( move == 0 || move == 3 ) )  ||
+                (this.playerClass == 2 && move == 0) ||
+                (this.playerClass == 3 && move == 1) ) {
+
+            if( this.playerClass == 3 ) {
+                spin = true;
+            }
+
+            // Checks if the time is good to shoot again and if the player shot an projectile
+            if (this.lastShot > this.FIRE_RATE && shot) {
             /*
                 This section checks which direction the player is looking then creates a new projectile in that direcetion.
                   The first vector is where the projectile will be drawn on the screen
@@ -378,25 +388,22 @@ public class Movement {
                   There needs to be two vectors passed in for the players position because of how the Vector2f works
             */
 
-            if( this.attackingPlayer == this.attackingUp ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 ,300 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 0, spin );
-            }
-            else if( this.attackingPlayer == this.attackingRight ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 340, 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 1, spin );
-            }
-            else if( this.attackingPlayer == this.attackingDown ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 320 , 338 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 2, spin );
-            }
-            else if( this.attackingPlayer == this.attackingLeft ) {
-                this.projectiles[ this.currentIndex++ ] = new Projectile( new Vector2f( 300 , 325 ), new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ), 3, spin );
-            }
+                if (this.attackingPlayer == this.attackingUp) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 300), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 0, spin);
+                } else if (this.attackingPlayer == this.attackingRight) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(340, 325), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 1, spin);
+                } else if (this.attackingPlayer == this.attackingDown) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 338), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 2, spin);
+                } else if (this.attackingPlayer == this.attackingLeft) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(300, 325), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 3, spin);
+                }
 
-            if( this.currentIndex >= this.projectiles.length ) {
-                this.currentIndex = 0;
+                if (this.currentIndex >= this.projectiles.length) {
+                    this.currentIndex = 0;
+                }
+                this.lastShot = 0;
             }
-            this.lastShot = 0;
         }
-
         for (Projectile p : this.projectiles) {
             p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
         }
