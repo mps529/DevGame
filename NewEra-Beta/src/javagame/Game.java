@@ -83,6 +83,9 @@ public class Game extends BasicGameState {
             // render current map
         this.maps.elementAt(this.currentMap).drawMap();
 
+        // Drawing traps if set
+        this.player.renderTraps( gc, g );
+
             // Switches to attack animation if true
         if( this.playerAttack.getIsAttacking() ) {
             this.playerAttack.drawPlayerAttacking(this.halfScreenWidth, this.halfScreenHeight);
@@ -100,6 +103,8 @@ public class Game extends BasicGameState {
 
             // Drawing arrows if he has them
         this.player.renderProjectile( gc, g );
+
+
             // Drawing Health/Stamina etc.
         this.player.drawPlayerInfo( g );
 

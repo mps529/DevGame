@@ -190,7 +190,7 @@ public class Player extends Movement {
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/projectiles/Double-Arrow-Right.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = -1;
+        this.attacksKnown[1] = 1;
         this.attacksKnown[2] = 1;
         this.attacksKnown[3] = 1;
 
@@ -489,6 +489,7 @@ public class Player extends Movement {
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
         updateProjectile(delta, attacked, map, getMoveSelected() );
+        updateTrap( delta, attacked, getMoveSelected() );
     }
 
     public void usedHealthPotion() {
