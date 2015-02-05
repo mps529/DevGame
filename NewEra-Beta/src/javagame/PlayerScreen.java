@@ -102,6 +102,11 @@ public class PlayerScreen extends BasicGameState {
         this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence() );
     }
 
+    public void leave( GameContainer gc, StateBasedGame sbg ) {
+        this.player.getInventory().setBaseAttack( this.player.getBaseAttack() );
+        this.player.getInventory().setBaseDefence( this.player.getBaseDefence() );
+    }
+
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException{
 
         Input input = gc.getInput();

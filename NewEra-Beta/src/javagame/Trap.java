@@ -29,8 +29,6 @@ public class Trap {
             // Setting Player position
         this.playerPos = playerPos;
 
-        System.out.println("In New Trap ");
-
         try {
             trap = new Image("NewEra-Beta/res/moves/trap.png");
         }

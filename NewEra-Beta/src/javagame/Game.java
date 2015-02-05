@@ -140,15 +140,24 @@ public class Game extends BasicGameState {
                   3) If space is not a collision move the hunter and the map
                   4) If the player is running, decrease stamina.
             */
-            if ( !this.playerAttack.getIsAttacking() ) {
+            if ( !this.playerAttack.getIsAttacking() || this.playerAttack.isSneaking() ) {
 
-                if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
+                // Enter Inventory
+                if (input.isKeyPressed(Input.KEY_I)) {
+                    input.clearKeyPressedRecord();
+                    sbg.enterState(2);
+                }
+                // Enter Movement Screen
+                else if (input.isKeyPressed(Input.KEY_P)) {
+                    input.clearKeyPressedRecord();
+                    sbg.enterState(3);
+                } else if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP)) {
                     this.player.startAnimationWalking();
                     this.player.setPlayerDirection(0);
                     if (this.maps.elementAt(this.currentMap).isSpaceTaken((int) this.player.getPlayerX(), (int) this.player.getPlayerY() - 12) == 0) {
                         this.player.decrementPlayerY();
                         this.maps.elementAt(this.currentMap).incrementMapCoordY();
-                            // Checking for map switch
+                        // Checking for map switch
                         this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.player.getPlayerX(), (int) this.player.getPlayerY());
                         if (this.mapName != null) {
                             changeMap(this.mapName);
@@ -164,7 +173,7 @@ public class Game extends BasicGameState {
                     if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.player.getPlayerX() + 12, this.player.getPlayerY()) == 0) {
                         this.player.incrementPlayerX();
                         this.maps.elementAt(this.currentMap).decrementMapCoordX();
-                            // Checking for map switch
+                        // Checking for map switch
                         this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.player.getPlayerX(), (int) this.player.getPlayerY());
                         if (this.mapName != null) {
                             changeMap(this.mapName);
@@ -182,7 +191,7 @@ public class Game extends BasicGameState {
                     if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.player.getPlayerX(), this.player.getPlayerY() + 24) == 0) {
                         this.player.incrementPlayerY();
                         this.maps.elementAt(this.currentMap).decrementMapCoordY();
-                            // Checking for map switch
+                        // Checking for map switch
                         this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.player.getPlayerX(), (int) this.player.getPlayerY());
                         if (this.mapName != null) {
                             changeMap(this.mapName);
@@ -198,7 +207,7 @@ public class Game extends BasicGameState {
                     if (this.maps.elementAt(this.currentMap).isSpaceTaken(this.player.getPlayerX() - 12, this.player.getPlayerY()) == 0) {
                         this.player.decrementPlayerX();
                         this.maps.elementAt(this.currentMap).incrementMapCoordX();
-                            // Checking for map switch
+                        // Checking for map switch
                         this.mapName = this.maps.elementAt(this.currentMap).isOnObjectLayer((int) this.player.getPlayerX(), (int) this.player.getPlayerY());
                         if (this.mapName != null) {
                             changeMap(this.mapName);
@@ -214,76 +223,64 @@ public class Game extends BasicGameState {
                     this.player.stopAnimationWalking();
                 }
 
-                if( input.isKeyDown( Input.KEY_1 ) ) {
-                    if( this.player.isMoveKnown( 0 ) ) {
-                        this.player.setMoveSelected( 0 );
-                    }
-                }
-                if( input.isKeyDown( Input.KEY_2 ) ) {
-                    if( this.player.isMoveKnown( 1 ) ) {
-                        this.player.setMoveSelected( 1 );
-                    }
-                }
-                if( input.isKeyDown( Input.KEY_3 ) ) {
-                    if( this.player.isMoveKnown( 2 ) ) {
-                        this.player.setMoveSelected( 2 );
-                    }
-                }
-                if( input.isKeyDown( Input.KEY_4 ) ) {
-                    if( this.player.isMoveKnown( 3 ) ) {
-                        this.player.setMoveSelected( 3 );
-                    }
-                }
-                if (input.isKeyPressed( Input.KEY_9 ) ) {
-                    input.clearKeyPressedRecord();
-                    this.player.usedHealthPotion();
-                }
-                if( input.isKeyPressed( Input.KEY_0 ) ) {
-                    input.clearKeyPressedRecord();
-                    this.player.usedStaminaPotion();
-                }
-
-                if( input.isKeyDown( Input.KEY_V ) ) {
-                    this.player.increaseExp( 10 );
-                }
-
                 // If player attacks and the player has stamina to attack
-                if (input.isKeyDown(Input.KEY_SPACE) && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped()) {
-                    //input.clearKeyPressedRecord();
+                if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
                     this.playerAttack.attack();
                     this.playerAttack.startAnimationAttacking();
                     this.playerAttack.stopAnimationAttacking();
                 }
-                // If the player moves and did not run, he gains stamina
-                if (!movedWhileRunning) {
+
+                if (!this.playerAttack.isSneaking() ) {
+                    if (input.isKeyDown(Input.KEY_1)) {
+                        if (this.player.isMoveKnown(0)) {
+                            this.player.setMoveSelected(0);
+                        }
+                    } else if (input.isKeyDown(Input.KEY_2)) {
+                        if (this.player.isMoveKnown(1)) {
+                            this.player.setMoveSelected(1);
+                        }
+                    } else if (input.isKeyDown(Input.KEY_3)) {
+                        if (this.player.isMoveKnown(2)) {
+                            this.player.setMoveSelected(2);
+                        }
+                    } else if (input.isKeyDown(Input.KEY_4)) {
+                        if (this.player.isMoveKnown(3)) {
+                            this.player.setMoveSelected(3);
+                        }
+                    }
+                }
+
+                if (input.isKeyPressed( Input.KEY_9 ) ) {
+                    input.clearKeyPressedRecord();
+                    this.player.usedHealthPotion();
+                }
+                else if( input.isKeyPressed( Input.KEY_0 ) ) {
+                    input.clearKeyPressedRecord();
+                    this.player.usedStaminaPotion();
+                }
+
+                if ( input.isKeyPressed( Input.KEY_V ) ) {
+                    this.player.increaseExp( 10 );
+                }
+
+                    // If the player moves and did not run, he gains stamina
+                if (!movedWhileRunning  && !this.playerAttack.isSneaking() ) {
                     this.player.increaseStamina(delta * .003f);
                 }
             } // End of not attacking
 
-
-            if( this.playerAttack.isDoneAttacking( input, delta ) && this.playerAttack.getIsAttacking()  ) {
+            if( this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking( input, delta )  ) {
                 attacked = true;
                 this.playerAttack.setIsAttacking( false );
-            }
-
-            // Enter Inventory
-            if (input.isKeyPressed(Input.KEY_I)) {
                 input.clearKeyPressedRecord();
-                sbg.enterState( 2 );
-            }
-            // Enter Movement Screen
-            if( input.isKeyPressed( Input.KEY_P ) ) {
-                input.clearKeyPressedRecord();
-                sbg.enterState( 3 );
             }
 
             // Start Running
             if (input.isKeyPressed(Input.KEY_LSHIFT) && this.player.getStamina() > this.player.getMinRunningStamina()) {
                 this.running = !this.running;
             }
-
             // If player has stamina to run
-            if (this.player.getStamina() <= this.player.getMinRunningStamina()) {
+           else if (this.player.getStamina() <= this.player.getMinRunningStamina()) {
                 this.running = false;
             }
 
