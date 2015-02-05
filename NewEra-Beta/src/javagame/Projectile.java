@@ -10,7 +10,7 @@ public class Projectile {
 
         // Position of projectile
     private Vector2f pos;
-        // Speed of projectile
+        // Position of player
     private Vector2f playerPos;
         // Location of where trhe projectile is in relation to the map
     private Vector2f projectilePos;

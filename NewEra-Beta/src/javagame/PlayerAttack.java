@@ -159,7 +159,19 @@ public class PlayerAttack {
         }
             // Trap
         else if( moveSelected == 1 ) {
-
+            if( direction == 0 ) {
+                currentAttack = thrustAttackUp;
+            }
+            else if( direction == 1 ) {
+                currentAttack = thrustAttackRight;
+            }
+            else if( direction == 2 ) {
+                currentAttack = thrustAttackDown;
+            }
+            else {
+                currentAttack = thrustAttackLeft;
+            }
+            this.frameStop = 7;
         }
             // hide in bush
         else if( moveSelected == 2 ) {
@@ -392,7 +404,9 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
-
+            if( this.currentAttack.isStopped() ) {
+                return true;
+            }
         }
         else if( moveSelected == 2 ) {
             if (!input.isKeyDown(Input.KEY_SPACE) ) {
