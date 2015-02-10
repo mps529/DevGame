@@ -15,7 +15,7 @@ public class Trap {
         // How long the projectile has been alive for
     private int lived = 0;
         // If the trap is active
-    boolean active = true;
+    private boolean active = true;
 
     private Image trap;
 
@@ -72,4 +72,7 @@ public class Trap {
         }
     }
 
+    public void killTrap() {
+        this.active = false;
+    }
 }

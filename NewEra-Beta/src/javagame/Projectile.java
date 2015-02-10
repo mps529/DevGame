@@ -96,6 +96,9 @@ public class Projectile {
         }
     }
 
+    public void killProjectile() {
+        this.active = false;
+    }
 
     public void render( GameContainer gc, Graphics g, Image[] projectile ) throws SlickException {
         if( this.active ) {

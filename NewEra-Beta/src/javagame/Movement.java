@@ -254,6 +254,16 @@ public class Movement {
         return this.playingDeath.isStopped();
     }
 
+    public void clearMoves() {
+        for(  Trap trap: traps ) {
+            trap.killTrap();
+        }
+
+        for(  Projectile projectile: projectiles ) {
+            projectile.killProjectile();
+        }
+    }
+
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
         for (Projectile p : this.projectiles) {
             p.render(gc, g, this.projectileImage);

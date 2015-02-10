@@ -402,6 +402,7 @@ public class PlayerAttack {
         }
     }
 
+
     private boolean isHunterDone( Input input, int delta ) {
         int moveSelected = this.player.getMoveSelected();
 
