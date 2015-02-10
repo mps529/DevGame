@@ -14,6 +14,15 @@
    H4sIAAAAAAAAA2thZWBoGcWjeBSP4lE8iknEAJ5UFMpABgAA
   </data>
  </layer>
+ <objectgroup name="objectDoorway" width="20" height="20">
+  <object name="house1Exit" x="416" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-57"/>
+    <property name="destY" value="-77"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer name="doorway" width="20" height="20">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA2NgGAWjYBSMglEwCrADMVYIxgYAhbRGgEAGAAA=

@@ -165,6 +165,7 @@ public class Items {
     public int getDefencePower() { return this.defencePower; }
 
     public int getItemsCount() { return this.ItemsCount; }
+    public void setItemsCount( int ic ) {this.ItemsCount = ic;}
 
     private void assignRarity(  Random randomNumber ) {
         int rarity = randomNumber.nextInt(101);

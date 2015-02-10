@@ -131,7 +131,7 @@ public class Map {
         float tileY = y/32;
 
         float decimalX = tileX - (int)Math.floor( tileX );
-        float decimalY = tileY - (int)Math.floor( tileY );;
+        float decimalY = tileY - (int)Math.floor( tileY );
 
         if( decimalX >= 0.5 ) {
             tileX++;

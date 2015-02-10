@@ -20,6 +20,9 @@ public class Game extends BasicGameState {
         // Movement Class
     private Player player;
 
+    //Save class
+    private SaveGame save;
+
     private Vector<Map> maps;
 
         // Is Attacking animation playing
@@ -47,13 +50,14 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
+
         this.player = this.player.getInstance();
         this.playerAttack = new PlayerAttack();
 
             // Starting tile
         this.player.setPlayerX(94);
         this.player.setPlayerY(96);
-
+        this.save = this.save.getInstance();
 
         maps = new Vector<Map>();
 
@@ -62,6 +66,9 @@ public class Game extends BasicGameState {
         maps.addElement( new Map( "LargeMapGrasslands.tmx", -84, -86 )  );
         maps.addElement( new Map( "devGrasslandsDungeon.tmx", -15, -38 )  );
         maps.addElement( new Map( "devGrasslandsHome.tmx", 0, -8 )  );
+        maps.addElement( new Map( "house1.tmx", -3, -8 ) );
+
+
 
             // Setting starting map
         for( int x = 0; x < maps.size(); x++) {
@@ -288,6 +295,10 @@ public class Game extends BasicGameState {
             // Bring up debugging
             if (input.isKeyPressed(Input.KEY_ESCAPE)) {
                 this.showInfo = !showInfo;
+            }
+
+            if(input.isKeyPressed(input.KEY_COMMA)) {
+                this.save.save(this.maps.elementAt(this.currentMap), this.currentMap, 1);
             }
 
             // If he is not in combat increase health

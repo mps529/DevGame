@@ -32,8 +32,9 @@ public class MainMenu extends BasicGameState {
     private SpriteSheet hunter, warrior, rogue, wizard;
     private TextField characterName;
 
-    ///////
+    /////// player save and save slot
     private SaveGame sg = new SaveGame();
+    private int slot;
     //////
 
     private String playerName;
