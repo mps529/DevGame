@@ -98,6 +98,8 @@ public class Player extends Movement {
         // If the player is in combat
     private boolean inCombat;
 
+    private int saveSlot;
+
     private static Player playerClass = null;
 
     public Player() {
@@ -481,6 +483,9 @@ public class Player extends Movement {
 
     public int getMovePoints() { return this.movePoints; }
     public void decrementMovePoints() { this.movePoints--; }
+
+    public int getSaveSlot() { return this.saveSlot; }
+    public void setSaveSlot( int slot ) { this.saveSlot = slot; }
 
     public boolean isWeaponEqiupped () {
         return this.inventory.isWeaponEquipped();
