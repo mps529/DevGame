@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 
 public class PlayerAttack {
@@ -11,6 +12,7 @@ public class PlayerAttack {
 
         // Did the player Attack
     private boolean isAttacking;
+    private boolean isSneaking = false;
 
     private Animation currentAttack;
     private Animation spellAttackUp, spellAttackDown, spellAttackLeft, spellAttackRight;
@@ -19,6 +21,7 @@ public class PlayerAttack {
     private Animation swipeAttackUp, swipeAttackDown, swipeAttackLeft, swipeAttackRight;
 
     public Animation bush;
+    public Animation shadow;
         // Indicates which frame to stop at
     private int frameStop = 0;
 
@@ -87,7 +90,9 @@ public class PlayerAttack {
 
         try {
             Image[] bushImage = {new Image("NewEra-Beta/res/moves/bush.png"), new Image("NewEra-Beta/res/moves/bushLeft.png")};
+            Image[] shadowImage = { new Image( "NewEra-Beta/res/moves/shadow.png" ),  new Image( "NewEra-Beta/res/moves/shadow.png" ) };
             this.bush = new Animation( bushImage, durationBush, true );
+            this.shadow = new Animation( shadowImage, durationBush, true );
         }
         catch ( SlickException e ) {
             e.printStackTrace();
@@ -97,6 +102,8 @@ public class PlayerAttack {
     }
     public boolean getIsAttacking() { return this.isAttacking; }
     public void setIsAttacking( boolean attacking ) { this.isAttacking = attacking; }
+
+    public boolean isSneaking() { return this.isSneaking; }
 
     public boolean isDoneAttacking( Input input, int delta ) {
 
@@ -395,6 +402,7 @@ public class PlayerAttack {
         }
     }
 
+
     private boolean isHunterDone( Input input, int delta ) {
         int moveSelected = this.player.getMoveSelected();
 
@@ -409,7 +417,7 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 2 ) {
-            if (!input.isKeyDown(Input.KEY_SPACE) ) {
+            if (!input.isKeyPressed(Input.KEY_SPACE) ) {
                 return true;
             }
             else if( this.player.getStamina() >= 2 ) {
@@ -494,9 +502,23 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 2 ) {
-            if( this.currentAttack.isStopped() ) {
-                return true;
+            if( this.isSneaking == true ) {
+                if( input.isKeyDown( Input.KEY_SPACE ) || this.player.getStamina() <= 2 ) {
+                    this.isSneaking = false;
+                    return true;
+                }
+                else {
+                    this.player.decreaseStamina(delta * .01f);
+                    return false;
+                }
             }
+            else if( this.currentAttack.isStopped() ) {
+                this.currentAttack = this.shadow;
+                this.isSneaking = true;
+                input.clearKeyPressedRecord();
+                return false;
+            }
+
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {

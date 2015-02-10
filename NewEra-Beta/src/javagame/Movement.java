@@ -254,6 +254,16 @@ public class Movement {
         return this.playingDeath.isStopped();
     }
 
+    public void clearMoves() {
+        for(  Trap trap: traps ) {
+            trap.killTrap();
+        }
+
+        for(  Projectile projectile: projectiles ) {
+            projectile.killProjectile();
+        }
+    }
+
     public void renderProjectile(  GameContainer gc, Graphics g ) throws SlickException {
         for (Projectile p : this.projectiles) {
             p.render(gc, g, this.projectileImage);
@@ -319,7 +329,6 @@ public class Movement {
 
         if( this.playerClass == 0 && move == 1 ) {
             if(  layed ) {
-                System.out.println( "In here" );
                 this.traps[ this.currentTrapIndex++ ] = new Trap(  new Vector2f( 320, 320 ),  new Vector2f( getPlayerX(), getPlayerY() ) );
             }
             if (this.currentTrapIndex >= this.traps.length) {

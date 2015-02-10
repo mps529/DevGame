@@ -285,8 +285,8 @@ public class Player extends Movement {
 
         this.attacksKnown[0] = 1;
         this.attacksKnown[1] = 1;
-        this.attacksKnown[2] = -1;
-        this.attacksKnown[3] = -1;
+        this.attacksKnown[2] = 1;
+        this.attacksKnown[3] = 1;
 
         this.MAX_HEALTH = 100;
         this.MAX_STAMINA = 100;
@@ -340,11 +340,17 @@ public class Player extends Movement {
     public void setOverallDefence( int defence ) { this.OVERALL_DEFENCE = defence; }
 
     public void setBaseAttack( int attack ) { this.BASE_ATTACK = attack; }
-    public void increaseBaseAttack( int increase ) { this.BASE_ATTACK += increase; }
+    public void increaseBaseAttack( int increase ) {
+        this.BASE_ATTACK += increase;
+        this.OVERALL_ATTACK += increase;
+    }
     public int getBaseAttack() { return this.BASE_ATTACK; }
 
     public void setBaseDefence( int attack ) { this.BASE_DEFENCE = attack; }
-    public void increaseBaseDefence( int increase ) { this.BASE_DEFENCE += increase; }
+    public void increaseBaseDefence( int increase ) {
+        this.BASE_DEFENCE += increase;
+        this.OVERALL_ATTACK += increase;
+    }
     public int getBaseDefence() { return this.BASE_DEFENCE; }
 
     public void setHealth( double health ) {
