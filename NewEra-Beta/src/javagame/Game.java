@@ -135,7 +135,7 @@ public class Game extends BasicGameState {
 
 
         // If player is ded
-        if (!dead) {
+        if ( !dead ) {
             boolean attacked = false;
 
             // Checking if the player has moved with running, will change if the player does
@@ -231,13 +231,13 @@ public class Game extends BasicGameState {
                 }
 
                 // If player attacks and the player has stamina to attack
-                if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
+                if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && !this.playerAttack.isBeserk() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
                     this.playerAttack.attack();
                     this.playerAttack.startAnimationAttacking();
                     this.playerAttack.stopAnimationAttacking();
                 }
 
-                if (!this.playerAttack.isSneaking() ) {
+                if (!this.playerAttack.isSneaking() || !this.playerAttack.isBeserk() ) {
                     if (input.isKeyDown(Input.KEY_1)) {
                         if (this.player.isMoveKnown(0)) {
                             this.player.setMoveSelected(0);
@@ -271,7 +271,7 @@ public class Game extends BasicGameState {
                 }
 
                     // If the player moves and did not run, he gains stamina
-                if (!movedWhileRunning  && !this.playerAttack.isSneaking() ) {
+                if ( !movedWhileRunning  && !this.playerAttack.isSneaking() && !this.playerAttack.isBeserk() ) {
                     this.player.increaseStamina(delta * .003f);
                 }
             } // End of not attacking
