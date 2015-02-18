@@ -77,25 +77,25 @@ public class Map {
     }
 
         // Send in TileX
-    public void setMapCoordX( float x ) { mapCoordX = x*32; }
-    public float getMapCoordX() { return mapCoordX; }
+    public void setMapCoordX( float x ) { this.mapCoordX = x*32; }
+    public float getMapCoordX() { return this.mapCoordX; }
 
     public void incrementMapCoordX( ) {
-        mapCoordX += speed;
+        this.mapCoordX += this.speed;
     }
-    public void decrementMapCoordX( ) { mapCoordX -= speed; }
+    public void decrementMapCoordX( ) { this.mapCoordX -= this.speed; }
 
         // Send in TileY
-    public void setMapCoordY( float y ) { mapCoordY = y*32; }
-    public float getMapCoordY( ) { return mapCoordY; }
-    public void incrementMapCoordY( ) { mapCoordY += speed; }
-    public void decrementMapCoordY( ) { mapCoordY -= speed; }
+    public void setMapCoordY( float y ) { this.mapCoordY = y*32; }
+    public float getMapCoordY( ) { return this.mapCoordY; }
+    public void incrementMapCoordY( ) { this.mapCoordY += this.speed; }
+    public void decrementMapCoordY( ) { this.mapCoordY -= this.speed; }
 
-    public void setMapHeight( int height ) { mapHeight = height; }
-    public int getMapHeight() { return mapHeight; }
+    public void setMapHeight( int height ) { this.mapHeight = height; }
+    public int getMapHeight() { return this.mapHeight; }
 
-    public void setMapWidth( int width ) { mapWidth = width; }
-    public int getMapWidth() { return mapWidth; }
+    public void setMapWidth( int width ) { this.mapWidth = width; }
+    public int getMapWidth() { return this.mapWidth; }
 
     public void drawMap( ) {
             // This is rendering portions but is glitchy, maybe will get to

@@ -96,6 +96,10 @@ public class Game extends BasicGameState {
             // Switches to attack animation if true
         if( this.playerAttack.getIsAttacking() ) {
             this.playerAttack.drawPlayerAttacking(this.halfScreenWidth, this.halfScreenHeight);
+            if( this.playerAttack.renderFire() ) {
+                this.playerAttack.drawFire( this.halfScreenWidth, this.halfScreenHeight );
+            }
+
         }
             // If dead
         else if( this.dead ) {
