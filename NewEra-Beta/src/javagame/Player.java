@@ -263,9 +263,9 @@ public class Player extends Movement {
         currentAttack =this.attackImages[0];
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = -1;
-        this.attacksKnown[2] = -1;
-        this.attacksKnown[3] = -1;
+        this.attacksKnown[1] = 1;
+        this.attacksKnown[2] = 1;
+        this.attacksKnown[3] = 1;
 
         this.MAX_HEALTH = 120;
         this.MAX_STAMINA = 110;
@@ -295,9 +295,9 @@ public class Player extends Movement {
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/immulate.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = -1;
-        this.attacksKnown[2] = -1;
-        this.attacksKnown[3] = -1;
+        this.attacksKnown[1] = 1;
+        this.attacksKnown[2] = 1;
+        this.attacksKnown[3] = 1;
 
         this.MAX_HEALTH = 90;
         this.MAX_STAMINA = 110;
@@ -618,7 +618,6 @@ public class Player extends Movement {
         g.drawString( ""+this.inventory.getStaminaPotions(), xPos + 32, 580 );
 
     }
-
 
     public void drawPlayerInfoPlayerScreen( Graphics g ) {
 

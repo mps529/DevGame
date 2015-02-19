@@ -14,6 +14,9 @@ public class Map {
     // These are for rendering the area around the player
     private float mapCoordX, mapCoordY;
 
+    private float x, y;
+    private float mapSkewX, mapSkewY;
+
         // This is the collision layer
     private int collisionsLayer;
         // This is the layer that will store passages to new maps
@@ -46,7 +49,7 @@ public class Map {
 
             // We will only have one object group
         this.objectGroupCount = this.map.getObjectGroupCount();
-        this.objectGroupCount --;
+        this.objectGroupCount--;
             // the number of groups in our objects layer
         this.objectCount = this.map.getObjectCount( objectGroupCount );
             // Setting map size by tiles
@@ -64,6 +67,10 @@ public class Map {
             // This will be where the map will start rendering
         setMapCoordX( x );
         setMapCoordY( y );
+        this.mapSkewX = Math.abs( x );
+        this.mapSkewY = Math.abs( y );
+        this.x=0;
+        this.y=0;
 
             // Fills the 2D array with collisions
         fillMapObjects();
@@ -82,31 +89,76 @@ public class Map {
     public float getMapCoordX() { return mapCoordX; }
 
     public void incrementMapCoordX( ) {
-        mapCoordX += speed;
+        this.mapCoordX += this.speed;
+
+        int skewX =  (int)this.mapSkewX * 32;
+
+        this.x = skewX + (int)this.mapCoordX;
+
+        if( this.x >= 32 ) {
+            this.mapSkewX--;
+            this.x = 0;
+        }
+
     }
-    public void decrementMapCoordX( ) { mapCoordX -= speed; }
+    public void decrementMapCoordX( ) {
+        this.mapCoordX -= this.speed;
+
+        int skewX = (int)this.mapSkewX * 32;
+
+        this.x = skewX + (int)this.mapCoordX;
+
+        if( this.x <= 0 ) {
+            this.mapSkewX++;
+            this.x = 32;
+        }
+    }
 
         // Send in TileY
     public void setMapCoordY( float y ) { mapCoordY = y*32; }
     public void setMapCoordYInPixels( float y ) { mapCoordY = y; }
-    public float getMapCoordY( ) { return mapCoordY; }
+    public float getMapCoordY( ) { return this.mapCoordY; }
+    
+    public void incrementMapCoordY( ) {
+        this.mapCoordY += this.speed;
+        int skewY =  (int)this.mapSkewY * 32;
 
-    public void incrementMapCoordY( ) { mapCoordY += speed; }
-    public void decrementMapCoordY( ) { mapCoordY -= speed; }
+        this.y = skewY + (int)this.mapCoordY;
 
-    public void setMapHeight( int height ) { mapHeight = height; }
-    public int getMapHeight() { return mapHeight; }
+        if( this.y >= 32 ) {
+            this.mapSkewY--;
+            this.y = 0;
+        }
+    }
+    public void decrementMapCoordY( ) {
+        this.mapCoordY -= this.speed;
 
-    public void setMapWidth( int width ) { mapWidth = width; }
-    public int getMapWidth() { return mapWidth; }
+        int skewY = (int)this.mapSkewY * 32;
+
+        this.y = skewY + (int)this.mapCoordY;
+
+        if( this.y <= 0 ) {
+            this.mapSkewY++;
+            this.y = 32;
+        }
+    }
+
+    public void setMapHeight( int height ) { this.mapHeight = height; }
+    public int getMapHeight() { return this.mapHeight; }
+
+    public void setMapWidth( int width ) { this.mapWidth = width; }
+    public int getMapWidth() { return this.mapWidth; }
 
     public void drawMap( ) {
             // This is rendering portions but is glitchy, maybe will get to
         //map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
-        map.render( (int)mapCoordX, (int)mapCoordY );
+        //map.render( (int)mapCoordX, (int)mapCoordY, -84, -86, 20 , 20);
+        map.render( (int)this.x-32, (int)this.y-32, (int)this.mapSkewX-1, (int)this.mapSkewY-1 , 21, 21);
+        //map.render( (int)mapCoordX, (int)mapCoordY );
     }
     public void drawMapAbove() {
         this.map.render( (int)mapCoordX, (int)mapCoordY, this.aboveLayer );
+        //this.map.render( (int)this.mapSkewX*32, (int)this.mapSkewY*32, this.aboveLayer );
     }
 
     private void fillMapObjects() {

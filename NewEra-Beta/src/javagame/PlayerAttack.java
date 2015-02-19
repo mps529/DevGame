@@ -13,12 +13,16 @@ public class PlayerAttack {
         // Did the player Attack
     private boolean isAttacking;
     private boolean isSneaking = false;
+    private boolean isBeserk = false;
+    private boolean renderFire = false;
 
     private Animation currentAttack;
     private Animation spellAttackUp, spellAttackDown, spellAttackLeft, spellAttackRight;
     private Animation arrowAttackUp, arrowAttackDown, arrowAttackLeft, arrowAttackRight;
     private Animation thrustAttackUp, thrustAttackDown, thrustAttackLeft, thrustAttackRight;
     private Animation swipeAttackUp, swipeAttackDown, swipeAttackLeft, swipeAttackRight;
+
+    private Animation fire;
 
     public Animation bush;
     public Animation shadow;
@@ -30,7 +34,7 @@ public class PlayerAttack {
     private int[] durationSwipeSpeed = { 60,60,60,60,60,60  };
     private int[] durationThrustSpeed = { 60,60,60,60,60,60,60,60 };
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
-
+    private int[] durationfire = { 150, 150 };
     private int[] durationBush = { 500, 500 };
     // Constructor
     public PlayerAttack( ) {
@@ -93,6 +97,9 @@ public class PlayerAttack {
             Image[] shadowImage = { new Image( "NewEra-Beta/res/moves/shadow.png" ),  new Image( "NewEra-Beta/res/moves/shadow.png" ) };
             this.bush = new Animation( bushImage, durationBush, true );
             this.shadow = new Animation( shadowImage, durationBush, true );
+
+            Image[] fireImage = {new Image("NewEra-Beta/res/moves/fireOne.png"), new Image("NewEra-Beta/res/moves/fireTwo.png")};
+            this.fire = new Animation( fireImage, durationfire, true );
         }
         catch ( SlickException e ) {
             e.printStackTrace();
@@ -103,7 +110,9 @@ public class PlayerAttack {
     public boolean getIsAttacking() { return this.isAttacking; }
     public void setIsAttacking( boolean attacking ) { this.isAttacking = attacking; }
 
+    public boolean renderFire() { return this.renderFire; }
     public boolean isSneaking() { return this.isSneaking; }
+    public boolean isBeserk() { return this.isBeserk; }
 
     public boolean isDoneAttacking( Input input, int delta ) {
 
@@ -227,6 +236,19 @@ public class PlayerAttack {
         // Battle Cry
         else if( moveSelected == 1 ) {
             // Battle Cry
+            if( direction == 0 ) {
+                currentAttack = spellAttackUp;
+            }
+            else if( direction == 1 ) {
+                currentAttack = spellAttackRight;
+            }
+            else if( direction == 2 ) {
+                currentAttack = spellAttackDown;
+            }
+            else {
+                currentAttack = spellAttackLeft;
+            }
+            this.frameStop = 6;
         }
         // Stun
         else if( moveSelected == 2 ) {
@@ -301,18 +323,18 @@ public class PlayerAttack {
         // Summon
         else if( moveSelected == 2 ) {
             if( direction == 0 ) {
-                currentAttack = spellAttackUp;
+                currentAttack = swipeAttackUp;
             }
             else if( direction == 1 ) {
-                currentAttack = spellAttackRight;
+                currentAttack = swipeAttackRight;
             }
             else if( direction == 2 ) {
-                currentAttack = spellAttackDown;
+                currentAttack = swipeAttackDown;
             }
             else {
-                currentAttack = spellAttackLeft;
+                currentAttack = swipeAttackLeft;
             }
-            this.frameStop = 6;
+            this.frameStop = 5;
         }
         // Immulate
         else if( moveSelected == 3 ) {
@@ -402,7 +424,6 @@ public class PlayerAttack {
         }
     }
 
-
     private boolean isHunterDone( Input input, int delta ) {
         int moveSelected = this.player.getMoveSelected();
 
@@ -417,7 +438,7 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 2 ) {
-            if (!input.isKeyPressed(Input.KEY_SPACE) ) {
+            if (!input.isKeyDown(Input.KEY_SPACE) ) {
                 return true;
             }
             else if( this.player.getStamina() >= 2 ) {
@@ -445,6 +466,7 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
+                // Everyone around him will flee
             if( this.currentAttack.isStopped() ) {
                 return true;
             }
@@ -455,7 +477,19 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 3 ) {
-            if( this.currentAttack.isStopped() ) {
+            if( this.isBeserk == true ) {
+                if( input.isKeyDown( Input.KEY_SPACE ) || this.player.getStamina() <= 2 ) {
+                    this.isBeserk = false;
+                    return true;
+                }
+                else {
+                    this.player.decreaseStamina(delta * .03f);
+                    return false;
+                }
+            }
+            else if( this.currentAttack.isStopped() ) {
+                this.isBeserk = true;
+                input.clearKeyPressedRecord();
                 return true;
             }
         }
@@ -471,20 +505,46 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
-            if( this.currentAttack.isStopped() ) {
+            if( input.isKeyDown( Input.KEY_SPACE ) && this.player.getStamina() >= 2 && this.player.getHealth() < this.player.getMaxHealth() ) {
+                this.currentAttack.stopAt( 4 );
+                this.player.decreaseStamina(delta * .03f);
+                this.player.increaseHealth( delta * .03f );
+                return false;
+            }
+            else if( this.currentAttack.isStopped() ) {
+                this.renderFire = false;
                 return true;
+            }
+            else {
+
+                return false;
             }
         }
         else if( moveSelected == 2 ) {
             if( this.currentAttack.isStopped() ) {
+                // Summon Guy
                 return true;
             }
         }
         else if( moveSelected == 3 ) {
-            if( this.currentAttack.isStopped() ) {
+
+            if( input.isKeyDown( Input.KEY_SPACE ) && this.player.getStamina() >= 2 ) {
+                this.currentAttack.stopAt( 4 );
+                this.player.decreaseStamina(delta * .03f);
+                this.renderFire = true;
+                this.fire.start();
+                return false;
+            }
+            else if( this.currentAttack.isStopped() ) {
+                this.renderFire = false;
                 return true;
             }
-        }
+            else {
+
+                return false;
+            }
+
+         }
         return false;
 
     }
@@ -527,6 +587,17 @@ public class PlayerAttack {
         }
         return false;
 
+    }
+
+    public void drawFire( int x, int y) {
+        this.fire.draw( x+32, y+32 );
+        this.fire.draw( x, y+32 );
+        this.fire.draw( x-32, y+32 );
+        this.fire.draw( x+32, y );
+        this.fire.draw( x-32, y );
+        this.fire.draw( x+32, y-32 );
+        this.fire.draw( x, y-32 );
+        this.fire.draw( x-32, y-32 );
     }
 
     public void startAnimationAttacking() {
