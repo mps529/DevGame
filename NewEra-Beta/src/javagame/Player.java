@@ -100,10 +100,46 @@ public class Player extends Movement {
 
     private int saveSlot;
 
+    // 0=hunter 1=warrior 2=wizard 3=rogue
+    private int characterClassChosen;
+
     private static Player playerClass = null;
 
     public Player() {
         super();
+    }
+
+    public void playerCopy(Player other) {
+        this.MAX_HEALTH = other.MAX_HEALTH;
+        this.MAX_STAMINA = other.MAX_STAMINA;
+        this.BASE_ATTACK = other.BASE_ATTACK;
+        this.BASE_DEFENCE = other.BASE_DEFENCE;
+        this.OVERALL_ATTACK = other.OVERALL_ATTACK;
+        this.OVERALL_DEFENCE = other.OVERALL_DEFENCE;
+
+        this.minRunningStamina = 10;
+        this.expToLevelUp = other.expToLevelUp;
+        this.exp = other.exp;
+        this.health = other.health;
+        this.stamina = other.stamina;
+        this.level = other.level;
+        this.perkPoints = other.perkPoints;
+        this.movePoints = other.movePoints;
+        this.inventory = other.inventory;
+        this.FIRE_RATE = other.FIRE_RATE;
+        this.currentIndex = other.currentIndex;
+        this.lastShot = other.lastShot;
+        this.healthPotion = other.healthPotion;
+        this.staminaPotion = other.staminaPotion;
+        this.inCombat = other.inCombat;
+        this.saveSlot = other.saveSlot;
+
+        // Movement
+        setCurrentMapIndex(other.getCurrentMapIndex() );
+        setPlayerDirection(other.getDirection() );
+        setPlayerXinPixels( other.getPlayerX() );
+        setPlayerYinPixels( other.getPlayerY() );
+
     }
 
 
@@ -166,7 +202,10 @@ public class Player extends Movement {
         return playerClass;
     }
 
+
+
     private void setHunter() throws SlickException {
+        this.characterClassChosen = 0;
         // Setting arrow animations
         projectileImageOne = new Image[4];
         projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/Arrow-Up.png");
@@ -213,8 +252,9 @@ public class Player extends Movement {
 
     }
     private void setWarrior() throws SlickException {
-            // This sets the display image for which attack is chosen
+        this.characterClassChosen = 1;
 
+            // This sets the display image for which attack is chosen
         this.attackImages[0] =  new Image("NewEra-Beta/res/items/spear.png");
         this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/battleCry.png" );
         this.attackImages[2] = new Image( "NEwEra-Beta/res/moves/stun.png" );
@@ -238,6 +278,8 @@ public class Player extends Movement {
         this.attackFourStamina = 40;
     }
     private void setWizard() throws SlickException {
+        this.characterClassChosen = 2;
+
         // Setting projectileImage animations
         projectileImageOne = new Image[4];
         projectileImageOne[0] = new Image("NewEra-Beta/res/projectiles/FireBall-Up.png");
@@ -269,6 +311,7 @@ public class Player extends Movement {
 
     }
     private void setRouge() throws SlickException {
+        this.characterClassChosen = 3;
 
         projectileImageOne = new Image[4];
         projectileImageOne[0] = new Image("NewEra-Beta/res/moves/ninjaStar.png");
@@ -486,6 +529,8 @@ public class Player extends Movement {
 
     public int getPerkPoints() { return this.perkPoints; }
     public void decrementPerkPoints() { this.perkPoints--; }
+
+    public int getCharacterClassChosen() {return this.characterClassChosen;}
 
     public int getMovePoints() { return this.movePoints; }
     public void decrementMovePoints() { this.movePoints--; }

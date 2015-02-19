@@ -84,8 +84,9 @@ public class Map {
     }
 
         // Send in TileX
-    public void setMapCoordX( float x ) { this.mapCoordX = (x*32); }
-    public float getMapCoordX() { return this.mapCoordX; }
+    public void setMapCoordX( float x ) { mapCoordX = x*32; }
+    public void setMapCoordXInPixels( float x ) { mapCoordX = x; }
+    public float getMapCoordX() { return mapCoordX; }
 
     public void incrementMapCoordX( ) {
         this.mapCoordX += this.speed;
@@ -114,8 +115,10 @@ public class Map {
     }
 
         // Send in TileY
-    public void setMapCoordY( float y ) { this.mapCoordY = (y*32); }
+    public void setMapCoordY( float y ) { mapCoordY = y*32; }
+    public void setMapCoordYInPixels( float y ) { mapCoordY = y; }
     public float getMapCoordY( ) { return this.mapCoordY; }
+    
     public void incrementMapCoordY( ) {
         this.mapCoordY += this.speed;
         int skewY =  (int)this.mapSkewY * 32;

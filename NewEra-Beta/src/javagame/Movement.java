@@ -61,6 +61,9 @@ public class Movement {
         //
     private int currentTrapIndex = 0;
 
+        // This is for storing what map you are in
+    private int currentMapIndex;
+
     public Movement() {
 
     }
@@ -184,6 +187,13 @@ public class Movement {
 
     public int getDirection() { return this.direction; }
 
+    public void setCurrentMapIndex( int index ) {
+        this.currentMapIndex = index;
+    }
+    public int getCurrentMapIndex() {
+        return this.currentMapIndex;
+    }
+
     // 0-Up, 1-Right, 2-Down, 3-Left
     public void setPlayerDirection( int newDirection ) {
         this.direction = newDirection;
@@ -215,12 +225,17 @@ public class Movement {
     public float getPlayerX() {
         return this.playerX;
     }
+    public float getPlayerXForMap() { return ( this.playerX - 320 )*-1; }
+
     public void setPlayerX( float x ) {
         this.playerX = x*32;
     }
     public void setPlayerXinPixels( float x ) {
         this.playerX = x;
     }
+
+    public String getSpriteSheetName() {return this.spriteSheetName;}
+
 
     public void incrementPlayerX() {
         this.playerX += this.playerSpeed;
@@ -230,6 +245,7 @@ public class Movement {
     }
 
     public float getPlayerY() { return this.playerY; }
+    public float getPlayerYForMap() { return ( this.playerY - 320 )*-1; }
     public void setPlayerY( float y ) { this.playerY = y*32; }
     public void setPlayerYinPixels( float y ) {
         this.playerY = y;

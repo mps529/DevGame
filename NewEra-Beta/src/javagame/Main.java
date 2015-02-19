@@ -35,7 +35,7 @@ public class Main extends StateBasedGame {
             appgc = new AppGameContainer( new Main( gameName ) ); /*{
                 protected void updateAndRender(int delta) throws SlickException {
                     super.updateAndRender(delta);
-                    try { Thread.sleep(10); } catch (InterruptedException e) {}
+                    //try { Thread.sleep(10); } catch (InterruptedException e) {}
                 }
             };*/
             appgc.setDisplayMode( 640, 640, false );

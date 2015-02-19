@@ -10,6 +10,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
+import java.io.File;
 import java.util.Random;
 
 
@@ -33,8 +34,11 @@ public class MainMenu extends BasicGameState {
     private TextField characterName;
 
     /////// player save and save slot
-    private SaveGame sg = new SaveGame();
-    private int slot;
+    private File folder;
+    private File[] listOfFiles;
+    private SaveGame sg;
+    private int slotNo;
+    private File slot1File, slot2File, slot3File, slot4File;
     //////
 
     private String playerName;
@@ -55,8 +59,10 @@ public class MainMenu extends BasicGameState {
     private boolean editingName;
     private boolean warriorSelected, wizardSelected, rogueSelected, hunterSelected, classSelected;
     private boolean sprite1Selected, sprite2Selected, sprite3Selected, sprite4Selected, spriteSelected;
+    private boolean loadSlot1Selected, loadSlot2Selected, loadSlot3Selected, loadSlot4Selected;
     private int selectedX, selectedY;
     private int spriteSelectedX, spriteSelectedY;
+    private int slotSelectedX, slotSelectedY, slotWidth, slotHeight;
 
     public MainMenu( int state ) {
         this.gameState = state;
@@ -68,6 +74,11 @@ public class MainMenu extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
+
+        //load files from save folder
+        folder = new File("NewEra-Beta/res/saves/");
+        listOfFiles = folder.listFiles();
+        sg = SaveGame.getInstance();
 
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
@@ -91,6 +102,10 @@ public class MainMenu extends BasicGameState {
         this.map = new TiledMap("NewEra-Beta/res/map/LargeMapGrasslands.tmx");
         this.mapX = -2688;
         this.mapY = -2752;
+
+        //init slot width and height
+        this.slotWidth = 320;
+        this.slotHeight = 64;
 
         //init menus
         this.newMenu = new TiledMap("NewEra-Beta/res/map/ClassSelectMenu.tmx");
@@ -159,8 +174,8 @@ public class MainMenu extends BasicGameState {
         rogue2Sprite = this.rogue.getSprite(1,2);
         this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue3.png", 32 ,32);
         rogue3Sprite = this.rogue.getSprite(1,2);
-        //this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue4.png", 32 ,32);
-        //rogue4Sprite = this.rogue.getSprite(1,2);
+        this.rogue = new SpriteSheet("NewEra-Beta/res/players/rogue4.png", 32 ,32);
+        rogue4Sprite = this.rogue.getSprite(1,2);
         this.rogue = new SpriteSheet("NewEra-Beta/res/players/rouge.png", 32 ,32);
 
         this.hunter = new SpriteSheet("NewEra-Beta/res/players/hunter.png", 32 ,32);
@@ -283,7 +298,7 @@ public class MainMenu extends BasicGameState {
                 rogueSprite.draw(112, 400);
                 rogue2Sprite.draw(240, 400);
                 rogue3Sprite.draw(368, 400);
-                //rogue4Sprite.draw(496, 400);
+                rogue4Sprite.draw(496, 400);
                 g.setColor(new Color(0, 0, 0, .3f));
                 if(spriteSelected) {
                     g.fillRect(spriteSelectedX, spriteSelectedY, 32, 32);
@@ -366,8 +381,8 @@ public class MainMenu extends BasicGameState {
                             this.player.setUpInstance("rogue3.png", playerName, 3);
                             sbg.enterState(1);
                         } else if(sprite4Selected) {
-                            //this.player.setUpInstance("rogue4.png", playerName, 3);
-                            //sbg.enterState(1);
+                            this.player.setUpInstance("rogue4.png", playerName, 3);
+                            sbg.enterState(1);
                         }
 
                     } else if (hunterSelected) {
@@ -395,9 +410,35 @@ public class MainMenu extends BasicGameState {
             }
         } else if (!newGameStarted && loadGameStarted) {
 
-            this.loadMenu.render(0,0);
 
+            this.sg.load(1);
+            sbg.enterState(1);
+
+           /* this.loadMenu.render(0,0);
             this.goBack.draw(10,10);
+            g.setColor(Color.black);
+            g.drawString("Slot 1",165, 72);
+            g.drawString("Slot 2", 165, 200);
+            g.drawString("Slot 3", 165, 328);
+            g.drawString("Slot 4", 165, 456);
+
+            if(loadSlot1Selected) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(slotSelectedX, slotSelectedY, slotWidth, slotHeight);
+
+            } else if(loadSlot2Selected) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(slotSelectedX, slotSelectedY, slotWidth, slotHeight);
+
+            } else if(loadSlot3Selected) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(slotSelectedX, slotSelectedY, slotWidth, slotHeight);
+
+            } else if(loadSlot4Selected) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(slotSelectedX, slotSelectedY, slotWidth, slotHeight);
+            }
+            */
         }
 
 
@@ -507,6 +548,9 @@ public class MainMenu extends BasicGameState {
             else {
                 loadPressed = false;
             }
+
+
+
 
         }
         else if(newGameStarted && !loadGameStarted) {
@@ -666,6 +710,65 @@ public class MainMenu extends BasicGameState {
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
                     loadGameStarted = false;
                     gameStarted = false;
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+
+
+                }
+            }
+            if ((mouseX >= 32 && mouseX <= 336) && (mouseY >= 96 && mouseY <= 160)) {
+                //click on slot 1
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    slotSelectedX = 32;
+                    slotSelectedY = 96;
+
+                    slotNo = 1;
+                    loadSlot1Selected = true;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+
+
+                }
+            }else if ((mouseX >= 32 && mouseX <= 336) && (mouseY >= 224 && mouseY <= 288)) {
+                //click on slot 2
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    slotSelectedX = 32;
+                    slotSelectedY = 224;
+
+                    slotNo = 2;
+                    loadSlot2Selected = true;
+                    loadSlot1Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+
+                }
+            } else if ((mouseX >= 32 && mouseX <= 336) && (mouseY >= 352 && mouseY <= 416)) {
+                //click on slot 3
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    slotSelectedX = 32;
+                    slotSelectedY = 352;
+
+                    slotNo = 3;
+                    loadSlot3Selected = true;
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot4Selected = false;
+
+                }
+            } else if ((mouseX >= 32 && mouseX <= 336) && (mouseY >= 480 && mouseY <= 544)) {
+                //click on slot 4
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    slotSelectedX = 32;
+                    slotSelectedY = 480;
+
+                    slotNo = 4;
+                    loadSlot4Selected = true;
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
 
                 }
             }
