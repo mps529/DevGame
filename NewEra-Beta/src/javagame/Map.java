@@ -78,6 +78,7 @@ public class Map {
 
         // Send in TileX
     public void setMapCoordX( float x ) { mapCoordX = x*32; }
+    public void setMapCoordXInPixels( float x ) { mapCoordX = x; }
     public float getMapCoordX() { return mapCoordX; }
 
     public void incrementMapCoordX( ) {
@@ -87,7 +88,9 @@ public class Map {
 
         // Send in TileY
     public void setMapCoordY( float y ) { mapCoordY = y*32; }
+    public void setMapCoordYInPixels( float y ) { mapCoordY = y; }
     public float getMapCoordY( ) { return mapCoordY; }
+
     public void incrementMapCoordY( ) { mapCoordY += speed; }
     public void decrementMapCoordY( ) { mapCoordY -= speed; }
 

@@ -84,6 +84,9 @@ public class Game extends BasicGameState {
     public void enter( GameContainer gc, StateBasedGame sbg ) {
         this.playerAttack.setPlayerSpriteSheet( this.player.getPlayerSpriteSheet() );
         this.playerAttack.setAttackSprite();
+        this.currentMap = this.player.getCurrentMapIndex();
+        this.maps.elementAt( this.currentMap ).setMapCoordXInPixels( this.player.getPlayerXForMap() );
+        this.maps.elementAt( this.currentMap ).setMapCoordYInPixels( this.player.getPlayerYForMap() );
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
@@ -132,6 +135,11 @@ public class Game extends BasicGameState {
 
         // Checks if the player is dead
         dead = player.checkDeath();
+
+        if (input.isKeyPressed(Input.KEY_BACKSLASH)) {
+            this.player.setHealth( 10 );
+
+        }
 
 
         // If player is ded
@@ -308,9 +316,11 @@ public class Game extends BasicGameState {
                 this.showInfo = !showInfo;
             }
 
+            //save game
             if(input.isKeyPressed(input.KEY_COMMA)) {
-                this.save.save(this.maps.elementAt(this.currentMap), this.currentMap, 1);
+                this.save.save(this.currentMap, 1);
             }
+
 
             // If he is not in combat increase health
             if (!player.getInCombat()) {
@@ -345,6 +355,7 @@ public class Game extends BasicGameState {
                 this.maps.elementAt( x ).setMapCoordY( this.maps.elementAt(this.currentMap).getObjectY() );
                 // Setting the current map
                 this.currentMap = x;
+                this.player.setCurrentMapIndex( x );
 
                 return;
             }
