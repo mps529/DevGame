@@ -49,7 +49,7 @@ public class Inventory {
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
 
-    private static Vector<Items> itemList;
+    private Vector<Items> itemList;
 
     public Inventory( ) {
 
@@ -66,6 +66,35 @@ public class Inventory {
         this.playerWeapon = -1;
 
     }
+
+    public Inventory(Inventory other) {
+
+        this.currentInventoryCount = other.currentInventoryCount;
+        this.money = other.money;
+
+        this.playerLevel = other.playerLevel;
+        this.playerOverallAttack = other.playerOverallAttack;
+        this.playerOverallDefence = other.playerOverallDefence;
+        this.playerHelmet = other.playerHelmet;
+        this.playerBody = other.playerBody;
+        this.playerGloves = other.playerGloves;
+        this.playerPants = other.playerPants;
+        this.playerBoots = other.playerBoots;
+        this.playerRing = other.playerRing;
+        this.playerNecklaces = other.playerNecklaces;
+        this.playerWeapon = other.playerWeapon;
+        this.healthPotions = other.healthPotions;
+        this.staminaPotions = other.staminaPotions;
+        this.classID = other.classID;
+        this.itemList = new Vector<Items>();
+        for(int i= 0; i<other.itemList.size(); i++) {
+            this.itemList.add(new Items(other.itemList.elementAt(i)));
+
+        }
+    }
+
+
+
         /*
             Call this function to get a copy of the class between states.
             Do NOT make a new Inventory, this function handles if it needs
@@ -78,6 +107,7 @@ public class Inventory {
         return playerInvintory;
     }
     */
+
 
 
     public void setBaseAttack( int attack ) { this.baseAttack = attack;}
@@ -517,5 +547,19 @@ public class Inventory {
         System.out.println("Necklaces: " + this.playerNecklaces);
 
     }
+     public boolean clearInventory() {
+
+         //if inventory contains anything
+         if(this.itemList.isEmpty()) {
+             return false;
+             //already empty
+         } else {
+             //clear inventory
+             this.itemList.removeAllElements();
+             return true;
+         }
+
+     }
+
 }
 
