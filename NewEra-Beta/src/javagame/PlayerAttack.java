@@ -114,25 +114,25 @@ public class PlayerAttack {
     public boolean isSneaking() { return this.isSneaking; }
     public boolean isBeserk() { return this.isBeserk; }
 
-    public boolean isDoneAttacking( Input input, int delta ) {
+    public boolean isDoneAttacking( Input input, int delta, NPC[] enemies ) {
 
         if( this.player.getPlayerClass() == 0 ) {
             return isHunterDone( input, delta );
         }
         else if( this.player.getPlayerClass() == 1 ) {
-            return isWarriorDone(input, delta);
+            return isWarriorDone(input, delta, enemies);
         }
         else if( this.player.getPlayerClass() == 2 ) {
-            return isWizardDone(input, delta);
+            return isWizardDone(input, delta, enemies);
         }
         else if( this.player.getPlayerClass() == 3 ) {
-            return isRougeDone(input, delta);
+            return isRougeDone(input, delta,enemies);
         }
 
         return false;
     }
 
-    public void attack( ) {
+    public void attack(  ) {
         setIsAttacking( true );
 
         this.player.decreaseStamina();
@@ -141,13 +141,13 @@ public class PlayerAttack {
             hunterAttacks( );
         }
         else if( this.player.getPlayerClass() == 1 ) {
-            warriorAttacks();
+            warriorAttacks(  );
         }
         else if( this.player.getPlayerClass() == 2 ) {
-            wizardAttacks();
+            wizardAttacks(  );
         }
         else if( this.player.getPlayerClass() == 3 ) {
-            rogueAttacks();
+            rogueAttacks(  );
         }
 
         //startAnimationAttacking();
@@ -353,7 +353,7 @@ public class PlayerAttack {
             this.frameStop = 6;
         }
     }
-    private void rogueAttacks(  ) {
+    private void rogueAttacks( ) {
         int moveSelected = this.player.getMoveSelected();
         // 0-Up, 1-Right, 2-Down, 3-Left
         int direction = this.player.getDirection();
@@ -424,6 +424,21 @@ public class PlayerAttack {
         }
     }
 
+    private void checkSpaceAhead( NPC[] enemies ) {
+
+        float x = this.player.getPlayerX();
+        float y = this.player.getPlayerY();
+
+        for( NPC enemy : enemies ) {
+            if( enemy.getIsAlive() ) {
+                if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24)) {
+                    enemy.takeDamage();
+                    break;
+                }
+            }
+        }
+    }
+
     private boolean isHunterDone( Input input, int delta ) {
         int moveSelected = this.player.getMoveSelected();
 
@@ -457,11 +472,12 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isWarriorDone( Input input, int delta ) {
+    private boolean isWarriorDone( Input input, int delta, NPC[] enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
             if( this.currentAttack.isStopped() ) {
+                checkSpaceAhead( enemies );
                 return true;
             }
         }
@@ -473,6 +489,7 @@ public class PlayerAttack {
         }
         else if( moveSelected == 2 ) {
             if( this.currentAttack.isStopped() ) {
+                checkSpaceAhead( enemies );
                 return true;
             }
         }
@@ -496,7 +513,7 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isWizardDone( Input input, int delta ) {
+    private boolean isWizardDone( Input input, int delta, NPC[] enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
@@ -548,11 +565,12 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isRougeDone( Input input, int delta ) {
+    private boolean isRougeDone( Input input, int delta, NPC[] enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
             if( this.currentAttack.isStopped() ) {
+                checkSpaceAhead( enemies );
                 return true;
             }
         }
@@ -582,6 +600,7 @@ public class PlayerAttack {
         }
         else if( moveSelected == 3 ) {
             if( this.currentAttack.isStopped() ) {
+                checkSpaceAhead( enemies );
                 return true;
             }
         }

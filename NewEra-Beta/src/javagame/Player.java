@@ -57,11 +57,11 @@ public class Player extends Movement {
     // Amount of experience player has
     private double exp;
 
-    // Movement Health
+    // Player Health
     private double health;
-    // Movement Stamina
+    // Player Stamina
     private double stamina;
-    // Movement level
+    // Player level
     private int level;
 
     private int perkPoints;
@@ -202,8 +202,6 @@ public class Player extends Movement {
         return playerClass;
     }
 
-
-
     private void setHunter() throws SlickException {
         this.characterClassChosen = 0;
         // Setting arrow animations
@@ -246,9 +244,9 @@ public class Player extends Movement {
         this.attackFourStamina = 40;
 
         this.attackOneDamage = 10;
-        this.attackTwoDamage = 10;
-        this.attackThreeDamage = 10;
-        this.attackFourDamage = 10;
+        this.attackTwoDamage = 20;
+        this.attackThreeDamage = 20;
+        this.attackFourDamage = 30;
 
     }
     private void setWarrior() throws SlickException {
@@ -274,8 +272,13 @@ public class Player extends Movement {
 
         this.attackOneStamina = 10;
         this.attackTwoStamina = 20;
-        this.attackThreeStamina = 30;
+        this.attackThreeStamina = 2;
         this.attackFourStamina = 40;
+
+        this.attackOneDamage = 10;
+        this.attackTwoDamage = 20;
+        this.attackThreeDamage = 30;
+        this.attackFourDamage = 40;
     }
     private void setWizard() throws SlickException {
         this.characterClassChosen = 2;
@@ -309,6 +312,11 @@ public class Player extends Movement {
         this.attackThreeStamina = 30;
         this.attackFourStamina = 40;
 
+        this.attackOneDamage = 10;
+        this.attackTwoDamage = 20;
+        this.attackThreeDamage = 30;
+        this.attackFourDamage = 40;
+
     }
     private void setRouge() throws SlickException {
         this.characterClassChosen = 3;
@@ -338,8 +346,13 @@ public class Player extends Movement {
 
         this.attackOneStamina = 10;
         this.attackTwoStamina = 20;
-        this.attackThreeStamina = 30;
+        this.attackThreeStamina = 2;
         this.attackFourStamina = 40;
+
+        this.attackOneDamage = 10;
+        this.attackTwoDamage = 20;
+        this.attackThreeDamage = 30;
+        this.attackFourDamage = 40;
     }
 
     public Image[] getAttackImages() { return this.attackImages; }
@@ -364,6 +377,21 @@ public class Player extends Movement {
 
     public int getAttackFourDamage() { return this.attackFourDamage; }
     public void incrementAttackFourDamage() { this.attackFourDamage += 2; }
+
+    public int getAttackOfCurrentAttack() {
+        switch ( this.moveSelected ) {
+            case 0:
+                return this.attackOneDamage;
+            case 1:
+                return this.attackTwoDamage;
+            case 2:
+                return this.attackThreeDamage;
+            case 3:
+                return this.attackFourDamage;
+            default:
+                return -110;
+        }
+    }
 
     public boolean getInCombat() { return this.inCombat; }
     public void setInCombat( boolean inCombat ) { this.inCombat = inCombat; }

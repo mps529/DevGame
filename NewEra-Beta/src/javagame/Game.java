@@ -85,13 +85,13 @@ public class Game extends BasicGameState {
         this.playerAttack.setPlayerSpriteSheet( this.player.getPlayerSpriteSheet() );
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
-        this.maps.elementAt( this.currentMap ).setMapCoordXInPixels( this.player.getPlayerXForMap() );
-        this.maps.elementAt( this.currentMap ).setMapCoordYInPixels( this.player.getPlayerYForMap() );
+        this.maps.elementAt( this.currentMap ).setMapCoordXInPixels(this.player.getPlayerXForMap());
+        this.maps.elementAt( this.currentMap ).setMapCoordYInPixels(this.player.getPlayerYForMap());
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
             // render current map
-        this.maps.elementAt(this.currentMap).drawMap();
+        this.maps.elementAt(this.currentMap).drawMap( g );
 
         // Drawing traps if set
         this.player.renderTraps( gc, g );
@@ -244,7 +244,7 @@ public class Game extends BasicGameState {
 
                 // If player attacks and the player has stamina to attack
                 if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && !this.playerAttack.isBeserk() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
-                    this.playerAttack.attack();
+                    this.playerAttack.attack( );
                     this.playerAttack.startAnimationAttacking();
                     this.playerAttack.stopAnimationAttacking();
                 }
@@ -288,7 +288,7 @@ public class Game extends BasicGameState {
                 }
             } // End of not attacking
 
-            if( this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking( input, delta )  ) {
+            if( this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking( input, delta, this.maps.elementAt( this.currentMap ).getEnemies()  )  ) {
                 attacked = true;
                 this.playerAttack.setIsAttacking( false );
                 input.clearKeyPressedRecord();
@@ -359,6 +359,7 @@ public class Game extends BasicGameState {
                 this.maps.elementAt( x ).setMapCoordY( this.maps.elementAt(this.currentMap).getObjectY() );
                 // Setting the current map
                 this.currentMap = x;
+                this.maps.elementAt( x ).resetSkewAndCoords();
                 this.player.setCurrentMapIndex( x );
 
                 return;

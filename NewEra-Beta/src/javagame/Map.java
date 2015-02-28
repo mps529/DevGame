@@ -1,5 +1,6 @@
 package javagame;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
@@ -38,6 +39,8 @@ public class Map {
         // How many pixels to move
     private static int speed = 2;
 
+    private NPC[] enemies;
+
         // 0-walkable area, 1-collisions, 2-doors
     private int[][] mapObjects;
 
@@ -71,6 +74,11 @@ public class Map {
         this.mapSkewY = Math.abs( y );
         this.x=0;
         this.y=0;
+
+        enemies = new NPC[1];
+
+        enemies[0] = new NPC( 3, 3 );
+        enemies[0].stopAnimationWalking();
 
             // Fills the 2D array with collisions
         fillMapObjects();
@@ -143,22 +151,35 @@ public class Map {
         }
     }
 
+    public void resetSkewAndCoords() {
+        this.mapSkewX = Math.abs( this.mapCoordX ) / 32;
+        this.mapSkewY = Math.abs( this.mapCoordY ) / 32;
+        this.x = 0;
+        this.y = 0;
+    }
+
     public void setMapHeight( int height ) { this.mapHeight = height; }
     public int getMapHeight() { return this.mapHeight; }
 
     public void setMapWidth( int width ) { this.mapWidth = width; }
     public int getMapWidth() { return this.mapWidth; }
 
-    public void drawMap( ) {
+    public void drawMap( Graphics g ) {
             // This is rendering portions but is glitchy, maybe will get to
         //map.render( (mapCoordX-1)*32, (mapCoordY-1)*32, mapSkewX, mapSkewY, mapSkewX+25, mapSkewY+25 );
         //map.render( (int)mapCoordX, (int)mapCoordY, -84, -86, 20 , 20);
         map.render( (int)this.x-32, (int)this.y-32, (int)this.mapSkewX-1, (int)this.mapSkewY-1 , 21, 21);
         //map.render( (int)mapCoordX, (int)mapCoordY );
+
+        for( int x =0; x < this.enemies.length; x++ ) {
+            this.enemies[x].drawNPC( g );
+        }
     }
     public void drawMapAbove() {
         this.map.render( (int)mapCoordX, (int)mapCoordY, this.aboveLayer );
         //this.map.render( (int)this.mapSkewX*32, (int)this.mapSkewY*32, this.aboveLayer );
+
+
     }
 
     private void fillMapObjects() {
@@ -197,6 +218,20 @@ public class Map {
         return this.mapObjects[ (int)tileX ][ (int)tileY ];
 
     }
+    public boolean isSpaceEnemy( float x, float y ) {
+
+        for( NPC enemy : enemies ) {
+            if( enemy.getIsAlive() ) {
+                if ((enemy.getNPCX() >= x - 12 && enemy.getNPCX() <= x + 12) && (enemy.getNPCY() >= y - 12 && enemy.getNPCY() <= y + 12)) {
+                    enemy.takeDamage();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public NPC[] getEnemies() { return this.enemies; }
 
     public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
     public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }

@@ -4,6 +4,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+
+import java.util.Random;
 import java.util.Vector;
 
 public class Inventory {
@@ -25,7 +27,7 @@ public class Inventory {
     private static int baseAttack;
     private static int baseDefence;
 
-        // Class
+        // Level
     private int playerLevel;
 
     private int playerOverallAttack;
@@ -66,19 +68,6 @@ public class Inventory {
         this.playerWeapon = -1;
 
     }
-        /*
-            Call this function to get a copy of the class between states.
-            Do NOT make a new Inventory, this function handles if it needs
-            to be created or not.
-
-    public static Inventory getPlayerInvintory( ) {
-        if( playerInvintory == null ) {
-            playerInvintory = new Inventory( );
-        }
-        return playerInvintory;
-    }
-    */
-
 
     public void setBaseAttack( int attack ) { this.baseAttack = attack;}
     public int getPlayerOverallAttack() { return this.playerOverallAttack; }
@@ -253,8 +242,63 @@ public class Inventory {
             addItem( basic[x] );
             equipItem( basic[x].getID() );
         }
+    }
+
+    public void addEnemyNPCArmor( int level ) {
+        Items[] basic = new Items[6];
+        Random rand = new Random();
+
+        // Assigning basic Items
+        basic[ 0 ] = new Items( 2, this.classID, -1 , level );
+        basic[ 1 ] = new Items( 3, this.classID, -1, level );
+        basic[ 2 ] = new Items( 4, this.classID, -1, level );
+        basic[ 3 ] = new Items( 5, this.classID, -1, level );
+        basic[ 4 ] = new Items( 6, this.classID, -1, level );
+
+        // Check class to give correct weapon
+        if( this.classID == 0 ) {
+            basic[ 5 ] = new Items( 10, this.classID, -1, level );
+        }
+        else if( this.classID == 1 ) {
+            basic[ 5 ] = new Items( 9, this.classID, -1, level );
+        }
+        else if( this.classID == 2 ) {
+            basic[ 5 ] = new Items( 12, this.classID, -1, level );
+        }
+        else if( this.classID == 3 ) {
+            basic[ 5 ] = new Items( 11, this.classID, -1, level );
+        }
+
+        for( int x=0; x < basic.length; x++ ) {
+            addItem( basic[x] );
+            equipItem( basic[x].getID() );
+        }
+
+            // Necklaces
+        int willHaveItem = rand.nextInt( 100 );
+        if( willHaveItem > 40 && willHaveItem < 60 ) {
+            Items necklace = new Items( 8, this.classID, -1, level );
+            addItem( necklace );
+        }
+            // Ring
+        willHaveItem = rand.nextInt( 100 );
+        if( willHaveItem > 20 && willHaveItem < 40 ) {
+            Items ring = new Items( 7, this.classID, -1, level );
+            addItem( ring );
+        }
+            // Adds monies
+        this.addMoney( rand.nextInt( level + 3 ) * ( rand.nextInt( 3 ) +  1 ) );
+
+            // Extra inventory items
+        Items[] extra = new Items[ 7 ];
+        int itemCount = rand.nextInt( 7 );
+
+        for( int x = 0; x < itemCount; x++ ) {
+            extra[x] = new Items( rand.nextInt( level ) + 1 );
+        }
 
     }
+
     // Return 1 for successful equip, 2 for unable to equip
     public int equipItem ( int ID ) {
 
