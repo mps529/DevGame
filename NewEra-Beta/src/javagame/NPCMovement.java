@@ -1,15 +1,12 @@
 package javagame;
 
-import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
-public class Movement {
+public class NPCMovement {
 
-    // This will be the name of the sprite sheet the user choose
+        // Npc Skin
     private String spriteSheetName;
-    // Movement Name
-    private String playerName;
 
     // This is the sheet that holds all the characters sprites
     private SpriteSheet playerSpriteSheet;
@@ -22,63 +19,49 @@ public class Movement {
 
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
 
-        // Walking animations
-    private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
-        // Fighting animations
-    private Animation attackingPlayer, attackingUp, attackingRight, attackingDown, attackingLeft;
-        // Death
-    private Animation playingDeath;
+    // Walking animations
+    private Animation movingNPC, movingUp, movingRight, movingDown, movingLeft;
+    // Fighting animations
+    private Animation attackingNPC, attackingUp, attackingRight, attackingDown, attackingLeft;
+    // Death
+    private Animation npcDeath;
 
     private int direction;
 
-        // Pixels to move
-    private int playerSpeed = 2;
+    // Pixels to move
+    private int npcSpeed = 2;
 
-    private int playerClass;
+    private int npcClass;
 
-        // Players position in pixels of map
-    private float playerX, playerY;
+    // Players position in pixels of map
+    private float npcX, npcY;
 
-        // For Projectiles if player has them
+    // For Projectiles if player has them
     private Projectile[] projectiles;
-        // How long till another arrow can be shot
+    // How long till another arrow can be shot
     private static int FIRE_RATE = 250;
-        // Index of the projectile array
+    // Index of the projectile array
     private int currentIndex = 0;
-        // Time since last shot
+    // Time since last shot
     private int lastShot = 0;
 
     // projectile Animations
     private Image[] projectileImage;
 
-    private Image trap;
 
-    private Trap[] traps;
-        // How long the trap will stay for
-    private static int TRAP_RATE = 250;
-        // Time since last shot
-    private int lastLayed = 0;
-        //
-    private int currentTrapIndex = 0;
-
-        // This is for storing what map you are in
-    private int currentMapIndex;
-
-    public Movement() {
+    public NPCMovement() {
 
     }
 
-    public void setPlayerClass( String sheetName, String name, int classID ) {
+    public void setNPCClass( String sheetName, int classID ) {
         // Sets name and spriteSheet
         this.spriteSheetName = sheetName;
-        this.playerName = name;
 
-        this.playerClass = classID;
+        this.npcClass = classID;
 
         // Creates new sprite sheet
         try {
-            this.playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/players/" + sheetName, 32, 32);
-            this.trap = new Image("NewEra-Beta/res/moves/trap.png");
+            this.playerSpriteSheet = new SpriteSheet("NewEra-Beta/res/enemies/" + sheetName, 32, 32);
 
         }
         catch ( SlickException e ){
@@ -99,7 +82,6 @@ public class Movement {
 
         // Hunter
         if( classID == 0 ) {
-
             // Sets images for attacking animations
             // Moves One and Four
             Image[] upAttack = {playerSpriteSheet.getSubImage(0, 16), playerSpriteSheet.getSubImage(1, 16), playerSpriteSheet.getSubImage(2, 16), playerSpriteSheet.getSubImage(3, 16), playerSpriteSheet.getSubImage(4, 16), playerSpriteSheet.getSubImage(5, 16), playerSpriteSheet.getSubImage(6, 16), playerSpriteSheet.getSubImage(7, 16), playerSpriteSheet.getSubImage(8, 16), playerSpriteSheet.getSubImage(9, 16), playerSpriteSheet.getSubImage(10, 16), playerSpriteSheet.getSubImage(11, 16), playerSpriteSheet.getSubImage(12, 16)};
@@ -153,7 +135,7 @@ public class Movement {
 
         // Death Animation
         Image[] death = { playerSpriteSheet.getSubImage(0, 20), playerSpriteSheet.getSubImage(1, 20), playerSpriteSheet.getSubImage(2, 20),playerSpriteSheet.getSubImage(3, 20), playerSpriteSheet.getSubImage(4, 20), playerSpriteSheet.getSubImage(5, 20) };
-        this.playingDeath = new Animation( death, durationSpeedDeath, true );
+        this.npcDeath = new Animation( death, durationSpeedDeath, true );
 
         // Setting walking animation
         setPlayerDirection( 2 );
@@ -164,34 +146,6 @@ public class Movement {
             this.projectiles[ x ] = new Projectile();
         }
 
-        this.traps = new Trap[ 3 ];
-        for( int x = 0; x < this.traps.length; x++ ){
-            this.traps[ x ] = new Trap();
-        }
-    }
-
-    public void setProjectileImage( Image[] projectileImage ) {
-        this.projectileImage = projectileImage;
-    }
-
-    public Animation getMovingPlayer(){
-        return this.movingPlayer;
-    }
-
-    public SpriteSheet getPlayerSpriteSheet() { return this.playerSpriteSheet; }
-
-    public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
-    public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
-
-    public String getPlayerName() { return this.playerName; }
-
-    public int getDirection() { return this.direction; }
-
-    public void setCurrentMapIndex( int index ) {
-        this.currentMapIndex = index;
-    }
-    public int getCurrentMapIndex() {
-        return this.currentMapIndex;
     }
 
     // 0-Up, 1-Right, 2-Down, 3-Left
@@ -199,81 +153,87 @@ public class Movement {
         this.direction = newDirection;
         switch ( newDirection ) {
             case 0:
-                this.movingPlayer = this.movingUp;
-                this.attackingPlayer = this.attackingUp;
+                this.movingNPC = this.movingUp;
+                this.attackingNPC = this.attackingUp;
                 break;
             case 1:
-                this.movingPlayer = this.movingRight;
-                this.attackingPlayer = this.attackingRight;
+                this.movingNPC = this.movingRight;
+                this.attackingNPC = this.attackingRight;
                 break;
             case 2:
-                this.movingPlayer = this.movingDown;
-                this.attackingPlayer = this.attackingDown;
+                this.movingNPC = this.movingDown;
+                this.attackingNPC = this.attackingDown;
                 break;
             case 3:
-                this.movingPlayer = this.movingLeft;
-                this.attackingPlayer = this.attackingLeft;
+                this.movingNPC = this.movingLeft;
+                this.attackingNPC = this.attackingLeft;
                 break;
             default:
-                this.movingPlayer = this.movingDown;
-                this.attackingPlayer = this.attackingDown;
+                this.movingNPC = this.movingDown;
+                this.attackingNPC = this.attackingDown;
         }
     }
+    public int getDirection() { return this.direction; }
 
-    public int getPlayerClass() { return this.playerClass; }
-
-    public float getPlayerX() {
-        return this.playerX;
+    public void setProjectileImage( Image[] projectileImage ) {
+        this.projectileImage = projectileImage;
     }
-    public float getPlayerXForMap() { return ( this.playerX - 320 )*-1; }
 
-    public void setPlayerX( float x ) {
-        this.playerX = x*32;
+    public Animation getMovingNPC(){
+        return this.movingNPC;
     }
-    public void setPlayerXinPixels( float x ) {
-        this.playerX = x;
+    public Animation getDieingNPC(){
+        return this.npcDeath;
+    }
+
+    public float getNPCX() {
+        return this.npcX;
+    }
+    public float getNPCXForMap() { return ( this.npcX - 320 )*-1; }
+
+    public void setNPCX( float x ) {
+        this.npcX = x*32;
+    }
+    public void setNPCXinPixels( float x ) {
+        this.npcX = x;
     }
 
     public String getSpriteSheetName() {return this.spriteSheetName;}
 
-    public void incrementPlayerX() {
-        this.playerX += this.playerSpeed;
+    public void incrementNPCX() {
+        this.npcX += this.npcSpeed;
     }
-    public void decrementPlayerX() {
-        this.playerX -= this.playerSpeed;
-    }
-
-    public float getPlayerY() { return this.playerY; }
-    public float getPlayerYForMap() { return ( this.playerY - 320 )*-1; }
-    public void setPlayerY( float y ) { this.playerY = y*32; }
-    public void setPlayerYinPixels( float y ) {
-        this.playerY = y;
+    public void decrementNPCX() {
+        this.npcX -= this.npcSpeed;
     }
 
-    public void incrementPlayerY() {
-        this.playerY += this.playerSpeed;
-    }
-    public void decrementPlayerY() {
-        this.playerY -= this.playerSpeed;
+    public float getNPCY() { return this.npcY; }
+    public float getNPCYForMap() { return ( this.npcY - 320 )*-1; }
+    public void setNPCY( float y ) { this.npcY = y*32; }
+    public void setNPCYinPixels( float y ) {
+        this.npcY = y;
     }
 
-    public void startAnimationWalking() { this.movingPlayer.start(); }
-    public void stopAnimationWalking() { this.movingPlayer.stop(); }
+    public void incrementNPCY() {
+        this.npcY += this.npcSpeed;
+    }
+    public void decrementNPCY() {
+        this.npcY -= this.npcSpeed;
+    }
+
+    public void startAnimationWalking() { this.movingNPC.start(); }
+    public void stopAnimationWalking() { this.movingNPC.stop(); }
 
     public void startAnimationDeath() {
-        this.playingDeath.start();
+        this.npcDeath.start();
     }
-    public void stopAnimationDeath() { this.playingDeath.stopAt(5); }
-    
+    public void stopAnimationDeath() { this.npcDeath.stopAt(5); }
+
     public boolean isStoppedDead() {
-        return this.playingDeath.isStopped();
+        return this.npcDeath.isStopped();
     }
 
     public void clearMoves() {
-        for(  Trap trap: traps ) {
-            trap.killTrap();
-        }
-
         for(  Projectile projectile: projectiles ) {
             projectile.killProjectile();
         }
@@ -285,20 +245,12 @@ public class Movement {
         }
     }
 
-    public void updateProjectile( int delta, boolean shot, Map map, int move  )  {
+    public void updateProjectile( int delta, boolean shot, Map map, int playerX, int playerY  )  {
 
-            // Increases time since last shot
+        // Increases time since last shot
         this.lastShot += delta;
 
-        boolean spin = false;
-
-        if( ( this.playerClass == 0 && ( move == 0 || move == 3 ) )  ||
-                (this.playerClass == 2 && move == 0) ||
-                (this.playerClass == 3 && move == 1) ) {
-
-            if( this.playerClass == 3 ) {
-                spin = true;
-            }
+        if( ( this.npcClass == 0 )  || (this.npcClass == 2 ) ) {
 
             // Checks if the time is good to shoot again and if the player shot an projectile
             if (this.lastShot > this.FIRE_RATE && shot) {
@@ -310,14 +262,14 @@ public class Movement {
                   There needs to be two vectors passed in for the players position because of how the Vector2f works
             */
 
-                if (this.attackingPlayer == this.attackingUp) {
-                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 300), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 0, spin);
-                } else if (this.attackingPlayer == this.attackingRight) {
-                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(340, 325), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 1, spin);
-                } else if (this.attackingPlayer == this.attackingDown) {
-                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 338), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 2, spin);
-                } else if (this.attackingPlayer == this.attackingLeft) {
-                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(300, 325), new Vector2f(getPlayerX(), getPlayerY()), new Vector2f(getPlayerX(), getPlayerY()), 3, spin);
+                if (this.attackingNPC == this.attackingUp) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 300), new Vector2f(playerX, playerY), new Vector2f(getNPCX(), getNPCY()), 0,false);
+                } else if (this.attackingNPC == this.attackingRight) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(340, 325), new Vector2f( playerX, playerY), new Vector2f(getNPCX(), getNPCY()), 1,false);
+                } else if (this.attackingNPC == this.attackingDown) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(320, 338), new Vector2f(playerX, playerY), new Vector2f(getNPCX(), getNPCY()), 2,false);
+                } else if (this.attackingNPC == this.attackingLeft) {
+                    this.projectiles[this.currentIndex++] = new Projectile(new Vector2f(300, 325), new Vector2f(playerX, playerY), new Vector2f(getNPCX(), getNPCY()), 3, false);
                 }
 
                 if (this.currentIndex >= this.projectiles.length) {
@@ -327,41 +279,8 @@ public class Movement {
             }
         }
         for (Projectile p : this.projectiles) {
-            p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
+            p.update( delta, (int)getNPCX(), (int)getNPCY(), map );
         }
 
     }
-
-    public void renderTraps( GameContainer gc, Graphics g ) throws SlickException {
-        for ( Trap t : this.traps ) {
-            t.render( gc, g );
-        }
-    }
-
-    public void updateTrap( int delta, boolean layed, int move ) {
-        // Increases time since last shot
-        this.lastLayed += delta;
-
-        if( this.playerClass == 0 && move == 1 ) {
-            if(  layed ) {
-                this.traps[ this.currentTrapIndex++ ] = new Trap(  new Vector2f( 320, 320 ),  new Vector2f( getPlayerX(), getPlayerY() ) );
-            }
-            if (this.currentTrapIndex >= this.traps.length) {
-                this.currentTrapIndex = 0;
-            }
-            this.lastLayed = 0;
-        }
-
-        for (Trap t : this.traps) {
-            t.update( delta, (int)getPlayerX(), (int)getPlayerY()  );
-        }
-    }
-    
-    public void isRunning() {
-        this.playerSpeed = 3;
-    }
-    public void isNotRunning() {
-        this.playerSpeed = 2;
-    }
-
 }
