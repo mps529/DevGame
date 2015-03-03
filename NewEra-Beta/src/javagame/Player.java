@@ -100,6 +100,11 @@ public class Player extends Movement {
 
     private int saveSlot;
 
+    // needed to set the map to player location when game loads
+    private float mapX, mapY;
+    private float skewX, skewY;
+    private boolean isNewGame;
+
     // 0=hunter 1=warrior 2=wizard 3=rogue
     private int characterClassChosen;
 
@@ -110,12 +115,7 @@ public class Player extends Movement {
     }
 
     public void playerCopy(Player other) {
-        this.MAX_HEALTH = other.MAX_HEALTH;
-        this.MAX_STAMINA = other.MAX_STAMINA;
-        this.BASE_ATTACK = other.BASE_ATTACK;
-        this.BASE_DEFENCE = other.BASE_DEFENCE;
-        this.OVERALL_ATTACK = other.OVERALL_ATTACK;
-        this.OVERALL_DEFENCE = other.OVERALL_DEFENCE;
+
 
         this.minRunningStamina = 10;
         this.expToLevelUp = other.expToLevelUp;
@@ -125,14 +125,17 @@ public class Player extends Movement {
         this.level = other.level;
         this.perkPoints = other.perkPoints;
         this.movePoints = other.movePoints;
-        this.inventory = other.inventory;
+        this.inventory = new Inventory(other.getInventory());
         this.FIRE_RATE = other.FIRE_RATE;
         this.currentIndex = other.currentIndex;
         this.lastShot = other.lastShot;
-        this.healthPotion = other.healthPotion;
-        this.staminaPotion = other.staminaPotion;
         this.inCombat = other.inCombat;
         this.saveSlot = other.saveSlot;
+        this.mapX = other.mapX;
+        this.mapY = other.mapY;
+        this.skewX = other.skewX;
+        this.skewY = other.skewY;
+        this.isNewGame = other.isNewGame;
 
         // Movement
         setCurrentMapIndex(other.getCurrentMapIndex() );
@@ -146,6 +149,7 @@ public class Player extends Movement {
     public void setUpInstance( String sheetName, String name, int classID ) throws SlickException {
         // Call Movement constructor
         setPlayerClass(sheetName, name, classID);
+        this.isNewGame = true;
 
         this.attackImages = new Image[4];
         this.attacksKnown = new int[4];
@@ -180,10 +184,63 @@ public class Player extends Movement {
         this.moveSelected = 0;
 
         // Set up player Inventory/ give default items
-        inventory = new Inventory( );
-        inventory.setBaseAttack( this.BASE_ATTACK );
-        inventory.setBaseDefence( this.BASE_DEFENCE );
-        inventory.setClassID( classID );
+        if(this.getInventory() != null) {
+            this.inventory = new Inventory();
+            this.inventory.setBaseAttack(this.BASE_ATTACK);
+            this.inventory.setBaseDefence(this.BASE_DEFENCE);
+            this.inventory.setClassID(classID);
+        }
+
+        this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
+
+        this.emptyHealth = new Image( "NewEra-Beta/res/dash/EmptyBar.png" );
+        this.emptyExpBar = new Image( "NewEra-Beta/res/dash/EmptyBarLong.png" );
+
+        this.healthPotion = new Image( "NewEra-Beta/res/items/health.png" );
+        this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
+
+    }
+
+    public void setUpLoadInstance( String sheetName, String name, int classID ) throws SlickException {
+        // Call Movement constructor
+        setPlayerClass(sheetName, name, classID);
+
+        this.attackImages = new Image[4];
+        this.attacksKnown = new int[4];
+
+        if( classID == 0 ) {
+            setHunter();
+        }
+        else if( classID == 1 ){
+            setWarrior();
+        }
+        else if( classID == 2 ) {
+            setWizard();
+        }
+        else if( classID == 3 ) {
+            setRouge();
+        }
+
+        // Set the color
+        red = new Color( 225, 0, 0, .7f );
+        green = new Color( 0,128,0, .7f );
+        blue = new Color( 0,206,209 );
+        black = new Color( 0,0,0, .7f );
+        grey = new Color( 0, 0, 0, .3f );
+
+        // Set Movement starting attributes
+        //setLevel( 1 );
+       // calculateExpToLevelUp();
+       // setHealth( 80 );
+       // setStamina( MAX_STAMINA );
+       // setExp( 0 );
+
+        this.moveSelected = 0;
+
+           /* this.inventory = new Inventory();
+            this.inventory.setBaseAttack(this.BASE_ATTACK);
+            this.inventory.setBaseDefence(this.BASE_DEFENCE);
+            this.inventory.setClassID(classID);*/
 
         this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
 
@@ -362,9 +419,7 @@ public class Player extends Movement {
     public Inventory getInventory() {
         return inventory;
     }
-    public void setInventory( Inventory inventory) {
-        this.inventory = inventory;
-    }
+    public void setInventory( Inventory inventory) {this.inventory = new Inventory(inventory);}
 
     public int getAttackOneDamage() { return this.attackOneDamage; }
     public void incrementAttackOneDamage() { this.attackOneDamage += 2; }
@@ -565,6 +620,21 @@ public class Player extends Movement {
 
     public int getSaveSlot() { return this.saveSlot; }
     public void setSaveSlot( int slot ) { this.saveSlot = slot; }
+
+    public float getMapX() {return this.mapX;}
+    public void setMapX(float x) {this.mapX = x;}
+
+    public float getMapY() {return this.mapY;}
+    public void setMapY(float y) {this.mapY = y;}
+
+    public float getSkewX() {return this.skewX;}
+    public void setSkewX(float sx) {this.skewX = sx;}
+
+    public float getSkewY() {return this.skewY;}
+    public void setSkewY(float sy) {this.skewY = sy;}
+
+    public boolean getIsNewGame() {return this.isNewGame;}
+    public void setIsNewGame(boolean ing) {this.isNewGame = ing;}
 
     public boolean isWeaponEqiupped () {
         return this.inventory.isWeaponEquipped();

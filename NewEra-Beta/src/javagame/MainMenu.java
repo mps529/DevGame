@@ -1,5 +1,6 @@
 package javagame;
 
+import com.thoughtworks.xstream.XStream;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -23,6 +24,7 @@ public class MainMenu extends BasicGameState {
     private Image newGame, newGamePressed;
     private Image loadGame, loadGamePressed;
     private Image playGame, playGamePressed;
+    private Image deleteSave, deleteSavePressed;
     private Image goBack;
 
     private Image warriorSprite, warrior2Sprite, warrior3Sprite, warrior4Sprite;
@@ -34,11 +36,14 @@ public class MainMenu extends BasicGameState {
     private TextField characterName;
 
     /////// player save and save slot
-    private File folder;
-    private File[] listOfFiles;
     private SaveGame sg;
     private int slotNo;
-    private File slot1File, slot2File, slot3File, slot4File;
+
+    private boolean slot1DidLoad, slot2DidLoad, slot3DidLoad, slot4DidLoad;
+
+    private int slot1ClassId, slot2ClassId, slot3ClassId, slot4ClassId;
+    private int slot1Level, slot2Level, slot3Level, slot4Level;
+    private String slot1Name, slot2Name, slot3Name, slot4Name;
     //////
 
     private String playerName;
@@ -55,11 +60,11 @@ public class MainMenu extends BasicGameState {
 
     //menu logic
     private boolean newGameStarted, loadGameStarted, gameStarted;
-    private boolean loadPressed, newPressed, playPressed;
+    private boolean loadPressed, newPressed, playPressed, deletePressed;
     private boolean editingName;
     private boolean warriorSelected, wizardSelected, rogueSelected, hunterSelected, classSelected;
     private boolean sprite1Selected, sprite2Selected, sprite3Selected, sprite4Selected, spriteSelected;
-    private boolean loadSlot1Selected, loadSlot2Selected, loadSlot3Selected, loadSlot4Selected;
+    private boolean loadSlot1Selected, loadSlot2Selected, loadSlot3Selected, loadSlot4Selected, loadSlotSelected;
     private int selectedX, selectedY;
     private int spriteSelectedX, spriteSelectedY;
     private int slotSelectedX, slotSelectedY, slotWidth, slotHeight;
@@ -76,9 +81,35 @@ public class MainMenu extends BasicGameState {
 
 
         //load files from save folder
-        folder = new File("NewEra-Beta/res/saves/");
-        listOfFiles = folder.listFiles();
         sg = SaveGame.getInstance();
+
+        slot1DidLoad = sg.load(1);
+        if(slot1DidLoad) {
+            slot1Name = sg.getSaveName();
+            slot1ClassId = sg.getClassID();
+            slot1Level = sg.getPlayerLvl();
+        }
+        slot2DidLoad = sg.load(2);
+        if(slot2DidLoad) {
+            slot2Name = sg.getSaveName();
+            slot2ClassId = sg.getClassID();
+            slot2Level = sg.getPlayerLvl();
+        }
+        slot3DidLoad = sg.load(3);
+        if(slot3DidLoad) {
+            slot3Name = sg.getSaveName();
+            slot3ClassId = sg.getClassID();
+            slot3Level = sg.getPlayerLvl();
+        }
+        slot4DidLoad = sg.load(4);
+        if(slot4DidLoad) {
+            slot4Name = sg.getSaveName();
+            slot4ClassId = sg.getClassID();
+            slot4Level = sg.getPlayerLvl();
+        }
+
+
+
 
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
@@ -92,6 +123,11 @@ public class MainMenu extends BasicGameState {
         this.loadGame = new Image("NewEra-Beta/res/buttons/LoadButton.png");
         this.loadGamePressed = new Image("NewEra-Beta/res/buttons/LoadButtonPressed.png");
         this.loadPressed = false;
+
+        // init delete button in load menu
+        this.deleteSave = new Image("NewEra-Beta/res/buttons/DeleteButton.png");
+        this.deleteSavePressed = new Image("NewEra-Beta/res/buttons/DeleteButtonPressed.png");
+        this.deletePressed = false;
 
         //init play game button
         this.playGame = new Image("NewEra-Beta/res/buttons/PlayButton.png");
@@ -140,6 +176,12 @@ public class MainMenu extends BasicGameState {
         this.sprite2Selected = false;
         this.sprite3Selected = false;
         this.sprite4Selected = false;
+
+        this.loadSlot1Selected = false;
+        this.loadSlot2Selected = false;
+        this.loadSlot3Selected = false;
+        this.loadSlot4Selected = false;
+        this.loadSlotSelected = false;
 
         //logic to allow gameplay
         this.classSelected = false;
@@ -331,96 +373,124 @@ public class MainMenu extends BasicGameState {
             this.rogue.getSprite(2, 20).draw(336, 240);
             this.hunter.getSprite(7,17).draw(400, 240);
 
-            if( gameStarted ) {
-                //PLAYER STARTED GAME
-                if(newGameStarted) {
-                    playerName = characterName.getText();
 
-                    if (warriorSelected) {
-
-                        if(sprite1Selected) {
-                            this.player.setUpInstance("warrior.png", playerName, 1);
-                            sbg.enterState(1);
-                        } else if(sprite2Selected) {
-                            this.player.setUpInstance("warrior2.png", playerName, 1);
-                            sbg.enterState(1);
-                        } else if(sprite3Selected) {
-                            this.player.setUpInstance("warrior3.png", playerName, 1);
-                            sbg.enterState(1);
-                        } else if(sprite4Selected) {
-                            this.player.setUpInstance("warrior4.png", playerName, 1);
-                            sbg.enterState(1);
-                        }
-
-
-                    } else if (wizardSelected) {
-
-                        if (sprite1Selected) {
-                            this.player.setUpInstance("wizard.png", playerName, 2);
-                            sbg.enterState(1);
-                        } else if(sprite2Selected) {
-                            this.player.setUpInstance("wizard2.png", playerName, 2);
-                            sbg.enterState(1);
-                        } else if(sprite3Selected) {
-                            this.player.setUpInstance("wizard3.png", playerName, 2);
-                            sbg.enterState(1);
-                        } else if(sprite4Selected) {
-                            this.player.setUpInstance("wizard4.png", playerName, 2);
-                            sbg.enterState(1);
-                        }
-
-                    } else if (rogueSelected) {
-
-                        if (sprite1Selected) {
-                            this.player.setUpInstance("rouge.png", playerName, 3);
-                            sbg.enterState(1);
-                        } else if(sprite2Selected) {
-                            this.player.setUpInstance("rogue2.png", playerName, 3);
-                            sbg.enterState(1);
-                        } else if(sprite3Selected) {
-                            this.player.setUpInstance("rogue3.png", playerName, 3);
-                            sbg.enterState(1);
-                        } else if(sprite4Selected) {
-                            this.player.setUpInstance("rogue4.png", playerName, 3);
-                            sbg.enterState(1);
-                        }
-
-                    } else if (hunterSelected) {
-
-                        if (sprite1Selected) {
-                            this.player.setUpInstance("hunter.png", playerName, 0);
-                            sbg.enterState(1);
-                        } else if(sprite2Selected) {
-                            this.player.setUpInstance("hunter2.png", playerName, 0);
-                            sbg.enterState(1);
-                        } else if(sprite3Selected) {
-                            this.player.setUpInstance("hunter3.png", playerName, 0);
-                            sbg.enterState(1);
-                        } else if(sprite4Selected) {
-                            this.player.setUpInstance("hunter4.png", playerName, 0);
-                            sbg.enterState(1);
-                        }
-
-                    }
-                } else if(loadGameStarted && !newGameStarted) {
-
-
-                }
-
-            }
         } else if (!newGameStarted && loadGameStarted) {
 
 
-            this.sg.load(1);
-            sbg.enterState(1);
+           // this.sg.load(1);
+           // sbg.enterState(1);
+            //this.sg.getInstance();
+            int slotToLoad = 0; // no slot selected
 
-           /* this.loadMenu.render(0,0);
+            int slotNo, slotIndex;
+
+            this.loadMenu.render(0,0);
             this.goBack.draw(10,10);
+            if(!deletePressed) {
+                this.deleteSave.draw(416, 192);
+            } else {
+                this.deleteSavePressed.draw(416, 192);
+            }
+            if (!loadPressed) {
+                this.loadGame.draw(416, 300);
+            } else {
+                this.loadGamePressed.draw(416, 300);
+            }
+
             g.setColor(Color.black);
             g.drawString("Slot 1",165, 72);
             g.drawString("Slot 2", 165, 200);
             g.drawString("Slot 3", 165, 328);
             g.drawString("Slot 4", 165, 456);
+
+            //slot 1 display information
+            if(this.slot1DidLoad) {
+                if(this.slot1Name.equals("") || this.slot1Name.equals(null)) {
+                    g.drawString("Name: [No Name Set]", 40, 100);
+                } else {
+                    g.drawString("Name: "+this.slot1Name, 40, 100);
+                }
+
+                if( this.slot1ClassId == 0 ) {
+                    g.drawString("Class: Hunter", 40, 120);
+                } else if( this.slot1ClassId == 1 ) {
+                    g.drawString("Class: Warrior", 40, 120);
+                } else if( this.slot1ClassId == 2 ) {
+                    g.drawString("Class: Wizard", 40, 120);
+                } else if( this.slot1ClassId == 3 ) {
+                    g.drawString("Class: Rogue", 40, 120);
+                }
+                g.drawString("Level: "+this.slot1Level, 40, 140);
+
+            } else {
+                g.drawString("[Empty Save Slot]", 115, 118);
+            }
+
+            //slot 2 display information
+            if(this.slot2DidLoad) {
+                if(this.slot2Name.equals("") || this.slot2Name.equals(null)) {
+                    g.drawString("Name: [No Name Set]", 40, 228);
+                } else {
+                    g.drawString("Name: "+this.sg.getSaveName(), 40, 228);
+                }
+                if( this.slot2ClassId == 0 ) {
+                    g.drawString("Class: Hunter", 40, 248);
+                } else if( this.slot2ClassId == 1 ) {
+                    g.drawString("Class: Warrior", 40, 248);
+                } else if( this.slot2ClassId == 2 ) {
+                    g.drawString("Class: Wizard", 40, 248);
+                } else if( this.slot2ClassId == 3 ) {
+                    g.drawString("Class: Rogue", 40, 248);
+                }
+                g.drawString("Level: "+this.slot2Level, 40, 268);
+            } else {
+                g.drawString("[Empty Save Slot]", 115, 246);
+            }
+
+            //slot 3 display information
+            if(this.slot3DidLoad) {
+                if(this.slot3Name.equals("") || this.slot3Name.equals(null)) {
+                    g.drawString("Name: [No Name Set]", 40, 356);
+                } else {
+                    g.drawString("Name: "+this.slot3Name, 40, 356);
+                }
+                if( this.slot3ClassId == 0 ) {
+                    g.drawString("Class: Hunter", 40, 376);
+                } else if( this.slot3ClassId == 1 ) {
+                    g.drawString("Class: Warrior", 40, 376);
+                } else if( this.slot3ClassId == 2 ) {
+                    g.drawString("Class: Wizard", 40, 376);
+                } else if( this.slot3ClassId == 3 ) {
+                    g.drawString("Class: Rogue", 40, 376);
+                }
+                g.drawString("Level: "+this.slot3Level, 40, 396);
+            } else {
+                g.drawString("[Empty Save Slot]", 115, 374);
+            }
+
+            //slot 4 display information
+            if(this.slot4DidLoad) {
+                if(this.slot4Name.equals("") || this.slot4Name.equals(null)) {
+                    g.drawString("Name: [No Name Set]", 40, 484);
+                } else {
+                    g.drawString("Name: "+this.slot4Name, 40, 484);
+                }
+                if( this.slot4ClassId == 0 ) {
+                    g.drawString("Class: Hunter", 40, 504);
+                } else if( this.slot4ClassId == 1 ) {
+                    g.drawString("Class: Warrior", 40, 504);
+                } else if( this.slot4ClassId == 2 ) {
+                    g.drawString("Class: Wizard", 40, 504);
+                } else if( this.slot4ClassId == 3 ) {
+                    g.drawString("Class: Rogue", 40, 504);
+                }
+                g.drawString("Level: "+this.slot4Level, 40, 524);
+            } else {
+                g.drawString("[Empty Save Slot]", 115, 502);
+            }
+
+
+            //slot one name coordinates
 
             if(loadSlot1Selected) {
                 g.setColor(new Color(0, 0, 0, .3f));
@@ -438,7 +508,94 @@ public class MainMenu extends BasicGameState {
                 g.setColor(new Color(0, 0, 0, .3f));
                 g.fillRect(slotSelectedX, slotSelectedY, slotWidth, slotHeight);
             }
-            */
+
+        }
+        if( gameStarted ) {
+            //PLAYER STARTED GAME
+            if(newGameStarted) {
+                playerName = characterName.getText();
+
+                if (warriorSelected) {
+
+                    if(sprite1Selected) {
+                        this.player.setUpInstance("warrior.png", playerName, 1);
+                        sbg.enterState(1);
+                    } else if(sprite2Selected) {
+                        this.player.setUpInstance("warrior2.png", playerName, 1);
+                        sbg.enterState(1);
+                    } else if(sprite3Selected) {
+                        this.player.setUpInstance("warrior3.png", playerName, 1);
+                        sbg.enterState(1);
+                    } else if(sprite4Selected) {
+                        this.player.setUpInstance("warrior4.png", playerName, 1);
+                        sbg.enterState(1);
+                    }
+
+
+                } else if (wizardSelected) {
+
+                    if (sprite1Selected) {
+                        this.player.setUpInstance("wizard.png", playerName, 2);
+                        sbg.enterState(1);
+                    } else if(sprite2Selected) {
+                        this.player.setUpInstance("wizard2.png", playerName, 2);
+                        sbg.enterState(1);
+                    } else if(sprite3Selected) {
+                        this.player.setUpInstance("wizard3.png", playerName, 2);
+                        sbg.enterState(1);
+                    } else if(sprite4Selected) {
+                        this.player.setUpInstance("wizard4.png", playerName, 2);
+                        sbg.enterState(1);
+                    }
+
+                } else if (rogueSelected) {
+
+                    if (sprite1Selected) {
+                        this.player.setUpInstance("rouge.png", playerName, 3);
+                        sbg.enterState(1);
+                    } else if(sprite2Selected) {
+                        this.player.setUpInstance("rogue2.png", playerName, 3);
+                        sbg.enterState(1);
+                    } else if(sprite3Selected) {
+                        this.player.setUpInstance("rogue3.png", playerName, 3);
+                        sbg.enterState(1);
+                    } else if(sprite4Selected) {
+                        this.player.setUpInstance("rogue4.png", playerName, 3);
+                        sbg.enterState(1);
+                    }
+
+                } else if (hunterSelected) {
+
+                    if (sprite1Selected) {
+                        this.player.setUpInstance("hunter.png", playerName, 0);
+                        sbg.enterState(1);
+                    } else if(sprite2Selected) {
+                        this.player.setUpInstance("hunter2.png", playerName, 0);
+                        sbg.enterState(1);
+                    } else if(sprite3Selected) {
+                        this.player.setUpInstance("hunter3.png", playerName, 0);
+                        sbg.enterState(1);
+                    } else if(sprite4Selected) {
+                        this.player.setUpInstance("hunter4.png", playerName, 0);
+                        sbg.enterState(1);
+                    }
+
+                }
+            } else if(loadGameStarted) {
+
+                if(this.slotNo == 1) {
+                    sg.load(1);
+                } else if( slotNo == 2) {
+                    sg.load(2);
+                } else if( slotNo == 3) {
+                    sg.load(3);
+                } else {
+                    sg.load(4);
+                }
+                sbg.enterState(1);
+
+            }
+
         }
 
 
@@ -714,10 +871,29 @@ public class MainMenu extends BasicGameState {
                     loadSlot2Selected = false;
                     loadSlot3Selected = false;
                     loadSlot4Selected = false;
+                    loadSlotSelected = false;
 
 
                 }
             }
+            if ((mouseX >= 416 && mouseX <= 608) && (mouseY >= 192 && mouseY <= 256) && loadSlotSelected) {
+                this.deletePressed = true;
+            } else {
+                this.deletePressed = false;
+            }
+            if ((mouseX >= 416 && mouseX <= 610) && (mouseY >= 300 && mouseY <= 364) && loadSlotSelected) {
+                loadPressed = true;
+
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && loadSlotSelected) {
+                    input.clearKeyPressedRecord();
+                    gameStarted = true;
+                }
+            }
+            else {
+                loadPressed = false;
+            }
+
+
             if ((mouseX >= 32 && mouseX <= 336) && (mouseY >= 96 && mouseY <= 160)) {
                 //click on slot 1
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -725,6 +901,11 @@ public class MainMenu extends BasicGameState {
                     slotSelectedY = 96;
 
                     slotNo = 1;
+                    if(slot1DidLoad) {
+                        loadSlotSelected = true;
+                    } else {
+                        loadSlotSelected = false;
+                    }
                     loadSlot1Selected = true;
                     loadSlot2Selected = false;
                     loadSlot3Selected = false;
@@ -739,6 +920,11 @@ public class MainMenu extends BasicGameState {
                     slotSelectedY = 224;
 
                     slotNo = 2;
+                    if(slot2DidLoad) {
+                        loadSlotSelected = true;
+                    } else {
+                        loadSlotSelected = false;
+                    }
                     loadSlot2Selected = true;
                     loadSlot1Selected = false;
                     loadSlot3Selected = false;
@@ -752,6 +938,11 @@ public class MainMenu extends BasicGameState {
                     slotSelectedY = 352;
 
                     slotNo = 3;
+                    if(slot3DidLoad) {
+                        loadSlotSelected = true;
+                    } else {
+                        loadSlotSelected = false;
+                    }
                     loadSlot3Selected = true;
                     loadSlot1Selected = false;
                     loadSlot2Selected = false;
@@ -765,6 +956,11 @@ public class MainMenu extends BasicGameState {
                     slotSelectedY = 480;
 
                     slotNo = 4;
+                    if(slot1DidLoad) {
+                        loadSlotSelected = true;
+                    } else {
+                        loadSlotSelected = false;
+                    }
                     loadSlot4Selected = true;
                     loadSlot1Selected = false;
                     loadSlot2Selected = false;

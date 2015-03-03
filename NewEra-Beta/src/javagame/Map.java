@@ -284,4 +284,17 @@ public class Map {
     public void isNotRunning() {
         this.speed = 2;
     }
+
+    public void setX(float newX) {this.x = newX;}
+    public float getX() {return this.x;}
+
+    public void setY(float newY) {this.y = newY;}
+    public float getY() {return this.y;}
+
+    public float getMapSkewX() {return this.mapSkewX;}
+    public void setMapSkewX(float msx) {this.mapSkewX = msx;}
+
+    public float getMapSkewY() {return this.mapSkewY;}
+    public void setMapSkewY(float msy) {this.mapSkewY = msy;}
+
 }
