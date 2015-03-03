@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.ImageData;
 
