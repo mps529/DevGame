@@ -42,6 +42,8 @@ public class Game extends BasicGameState {
         // Temp map name to see if there needs to be a map change
     private String mapName;
 
+    private boolean isActing;
+
         // Is player Running
     private boolean running = false;
         // Screen sizes cut in half for character rendering
@@ -58,6 +60,7 @@ public class Game extends BasicGameState {
         this.resumeButton = false;
         this.saveButton = false;
         this.quitButton = false;
+        this.isActing = false;
 
         this.player = this.player.getInstance();
         this.playerAttack = new PlayerAttack();
@@ -134,6 +137,12 @@ public class Game extends BasicGameState {
             // Drawing arrows if he has them
             this.player.renderProjectile(gc, g);
 
+            if(isActing){
+                player.getAction().getLootableEnemies(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
+                        this.maps.elementAt(this.currentMap).getEnemies());
+                isActing = false;
+            }
+
 
             // Drawing Health/Stamina etc.
             this.player.drawPlayerInfo(g);
@@ -159,6 +168,9 @@ public class Game extends BasicGameState {
                     g.setColor(new Color(0, 0, 0, .3f));
                     g.fillRect(250, 220, 140, 50);
                 }
+                if(resumeButtonPressed) {
+                    resumeButtonPressed = false;
+                }
 
                 g.setColor(Color.lightGray);
                 g.drawRect(250, 280, 140, 50);
@@ -167,6 +179,15 @@ public class Game extends BasicGameState {
                 if(saveButton) {
                     g.setColor(new Color(0, 0, 0, .3f));
                     g.fillRect(250, 280, 140, 50);
+                }
+                if(saveButtonPressed) {
+                    player.setMapX(maps.elementAt(currentMap).getX());
+                    player.setMapY(maps.elementAt(currentMap).getY());
+                    player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
+                    player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
+                    this.player.setIsNewGame(false);
+                    this.save.save(this.currentMap, player.getSaveSlot());
+                    saveButtonPressed = false;
                 }
 
                 g.setColor(Color.lightGray);
@@ -177,7 +198,13 @@ public class Game extends BasicGameState {
                     g.setColor(new Color(0, 0, 0, .3f));
                     g.fillRect(250, 340, 140, 50);
                 }
+                if(quitButtonPressed) {
+                    System.exit(0);
+                }
+
             }
+
+
             // FPS show, also for debugging
             gc.setShowFPS(this.showInfo);
     }
@@ -346,9 +373,14 @@ public class Game extends BasicGameState {
                     }
                 } // End of not attacking
 
-                if (this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking(input, delta)) {
+                if (this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking(input, delta, this.maps.elementAt(this.currentMap).getEnemies())) {
                     attacked = true;
                     this.playerAttack.setIsAttacking(false);
+                    input.clearKeyPressedRecord();
+                }
+
+                if(input.isKeyPressed(Input.KEY_E)) {
+                    this.isActing = true;
                     input.clearKeyPressedRecord();
                 }
 
@@ -385,7 +417,7 @@ public class Game extends BasicGameState {
                     player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
                     player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
                     this.player.setIsNewGame(false);
-                    this.save.save(this.currentMap, 1);
+                    this.save.save(this.currentMap, player.getSaveSlot());
                 }
 
 
@@ -418,18 +450,31 @@ public class Game extends BasicGameState {
 
             if ((mouseX >= 250 && mouseX <= 390) && (mouseY >= 220 && mouseY <= 270)) {
                 this.resumeButton = true;
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    this.resumeButtonPressed = true;
+                    this.showInfo = !showInfo;
+                    this.PAUSED = false;
+                }
             } else {
                 this.resumeButton = false;
             }
 
             if ((mouseX >= 250 && mouseX <= 390) && (mouseY >= 280 && mouseY <= 330)) {
                 this.saveButton = true;
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    this.saveButtonPressed = true;
+
+                }
             } else {
                 this.saveButton = false;
             }
 
             if ((mouseX >= 250 && mouseX <= 390) && (mouseY >= 340 && mouseY <= 390)) {
                 this.quitButton = true;
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    this.quitButtonPressed = true;
+
+                }
             } else {
                 this.quitButton = false;
             }
