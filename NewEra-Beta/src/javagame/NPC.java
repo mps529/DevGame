@@ -393,6 +393,7 @@ public class NPC extends NPCMovement {
                 blockCheck = x - viewSpan/2;
                 while( viewSpan >= 0 ) {
                     if ( blockCheck == playerX && i == playerY ) {
+                        System.out.println("Found");
                         return true;
                     }
                     viewSpan--;
@@ -415,7 +416,7 @@ public class NPC extends NPCMovement {
                 blockCheck = y - viewSpan/2;
                 while( viewSpan >= 0 ) {
                     if ( i == playerX && blockCheck == playerY ) {
-                        //System.out.println("Found");
+                        System.out.println("Found");
                         return true;
                     }
                     viewSpan--;
@@ -439,7 +440,7 @@ public class NPC extends NPCMovement {
                 blockCheck = x - viewSpan/2;
                 while( viewSpan >= 0 ) {
                     if ( blockCheck == playerX && i == playerY ) {
-                        //System.out.println("Found");
+                        System.out.println("Found");
                         return true;
                     }
                     viewSpan--;
@@ -463,7 +464,7 @@ public class NPC extends NPCMovement {
                 blockCheck = y - viewSpan/2;
                 while( viewSpan >= 0 ) {
                     if ( i == playerX && blockCheck == playerY ) {
-                        //System.out.println("Found");
+                        System.out.println("Found");
                         return true;
                     }
                     viewSpan--;
