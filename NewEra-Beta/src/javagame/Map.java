@@ -82,6 +82,10 @@ public class Map implements TileBasedMap{
         enemies[0] = new NPC( 3, 3 );
         enemies[0].stopAnimationWalking();
 
+        for( NPC enemy : enemies ) {
+            enemy.setMapPath(this);
+        }
+
             // Fills the 2D array with collisions
         fillMapObjects();
 
@@ -219,6 +223,8 @@ public class Map implements TileBasedMap{
         return this.mapObjects[ (int)tileX ][ (int)tileY ];
 
     }
+
+
     public boolean isSpaceEnemy( float x, float y ) {
 
         for( NPC enemy : enemies ) {
@@ -240,13 +246,15 @@ public class Map implements TileBasedMap{
             if( enemy.getStunned() > 0 ) {
                 enemy.decreaseStunned( delta );
             }
-
             if( !enemy.getIsAlive() && enemy.getDeathTime() > 0 ) {
                 enemy.decreaseTimeLeftOnEarth( delta );
             }
             else if( enemy.getIsAlive() ) {
                 if( enemy.isGoodInSight( this.mapObjects ) ) {
-
+                    enemy.goToGood( );
+                }
+                else {
+                    enemy.lookAround( delta );
                 }
             }
 

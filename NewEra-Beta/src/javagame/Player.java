@@ -758,4 +758,16 @@ public class Player extends Movement {
 
 
     }
+
+    public int findCurrentTile( float coord ) {
+        float tile = coord/32;
+
+        float decimalCoord = tile - (int)Math.floor( tile );
+
+        if( decimalCoord >= 0.5 ) {
+            tile++;
+        }
+
+        return (int)tile;
+    }
 }

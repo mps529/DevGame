@@ -2,6 +2,8 @@ package javagame;
 
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+import org.newdawn.slick.util.pathfinding.Path;
 
 import java.util.Random;
 
@@ -74,6 +76,13 @@ public class NPC extends NPCMovement {
         location for attacking/rendering/level/location
          */
     private Player player;
+
+        // Path Finding
+    private AStarPathFinder pathFinder;
+    private Path path;
+
+    private int sinceLastTurn = 0;
+    private int TIME_TO_TURN = 5000;
 
     public NPC () {
         super();
@@ -209,6 +218,11 @@ public class NPC extends NPCMovement {
         this.setPlayerDirection(3);
 
     }
+
+    public void setMapPath( Map map ) {
+        pathFinder = new AStarPathFinder( map, 15, false );
+    }
+
         // Class set stats
     private void setClassStat() throws SlickException{
         switch ( this.npcClass ) {
@@ -369,14 +383,14 @@ public class NPC extends NPCMovement {
     public long getDeathTime( ) { return this.deadTime; }
 
     public boolean isGoodInSight( int[][] mapObjects ) {
-        int x = (int)getNPCX()/32;
-        int y = (int)getNPCY()/32;
+        int x = findCurrentTile( getNPCX() );
+        int y = findCurrentTile( getNPCY() );
         int direction = getDirection();
         int viewSpan;
         int blockCheck;
 
-        int playerX = (int)this.player.getPlayerX()/32;
-        int playerY = (int)this.player.getPlayerY()/32;
+        int playerX = findCurrentTile( this.player.getPlayerX()  );
+        int playerY = findCurrentTile( this.player.getPlayerY()  );
 
         if( direction == 0 ) {
             for( int i = y; i > y-6; i-- ) {
@@ -402,7 +416,7 @@ public class NPC extends NPCMovement {
             }
         }
         else if( direction == 1 ) {
-            for( int i = x; i < x+5; i++ ) {
+            for( int i = x; i < x+6; i++ ) {
                 if( i >= x+2) {
                     viewSpan = 7;
                 }
@@ -426,7 +440,7 @@ public class NPC extends NPCMovement {
         }
         else if( direction == 2 ) {
 
-            for( int i = y; i < y+5; i++ ) {
+            for( int i = y; i < y+6; i++ ) {
                 if( i >= y+2) {
                     viewSpan = 7;
                 }
@@ -450,7 +464,7 @@ public class NPC extends NPCMovement {
 
         }
         else if( direction == 3 ) {
-            for( int i = x; i > x-5; i-- ) {
+            for( int i = x; i > x-6; i-- ) {
                 if( i <= x-2) {
                     viewSpan = 7;
                 }
@@ -474,6 +488,34 @@ public class NPC extends NPCMovement {
         }
 
         return false;
+    }
+
+    public void goToGood() {
+        this.path = this.pathFinder.findPath( null, findCurrentTile( getNPCX() ), findCurrentTile( getNPCY() ) , findCurrentTile( this.player.getPlayerX() ) , findCurrentTile(  this.player.getPlayerY() ) );
+
+    }
+
+    public void lookAround( int delta ) {
+        Random rand = new Random();
+
+        this.sinceLastTurn += delta * .07f;
+
+        if( this.sinceLastTurn > this.TIME_TO_TURN * rand.nextInt(3) +  1 ) {
+            this.setPlayerDirection(rand.nextInt(3));
+            this.sinceLastTurn = 0;
+        }
+    }
+
+    public int findCurrentTile( float coord ) {
+        float tile = coord/32;
+
+        float decimalCoord = tile - (int)Math.floor( tile );
+
+        if( decimalCoord >= 0.5 ) {
+            tile++;
+        }
+
+        return (int)tile;
     }
 
     public void drawNPC( Graphics g ) {
