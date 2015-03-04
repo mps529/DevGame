@@ -333,6 +333,8 @@ public class Game extends BasicGameState {
             // Update projectiles position
             this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
 
+            this.maps.elementAt( this.currentMap ).enemyMove( delta );
+
         } else {
             if (!this.startDed) {
                 this.player.startAnimationDeath();

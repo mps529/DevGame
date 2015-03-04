@@ -3,8 +3,10 @@ package javagame;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.util.pathfinding.PathFindingContext;
+import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
-public class Map {
+public class Map implements TileBasedMap{
 
         // This is the map
     private TiledMap map;
@@ -82,7 +84,8 @@ public class Map {
 
             // Fills the 2D array with collisions
         fillMapObjects();
-    }
+
+     }
 
     public void setMapName( String name ) {
         this.mapName = name;
@@ -178,8 +181,6 @@ public class Map {
     public void drawMapAbove() {
         this.map.render( (int)mapCoordX, (int)mapCoordY, this.aboveLayer );
         //this.map.render( (int)this.mapSkewX*32, (int)this.mapSkewY*32, this.aboveLayer );
-
-
     }
 
     private void fillMapObjects() {
@@ -233,6 +234,26 @@ public class Map {
 
     public NPC[] getEnemies() { return this.enemies; }
 
+    public void enemyMove( int delta ) {
+
+        for( NPC enemy : enemies ) {
+            if( enemy.getStunned() > 0 ) {
+                enemy.decreaseStunned( delta );
+            }
+
+            if( !enemy.getIsAlive() && enemy.getDeathTime() > 0 ) {
+                enemy.decreaseTimeLeftOnEarth( delta );
+            }
+            else if( enemy.getIsAlive() ) {
+                if( enemy.isGoodInSight( this.mapObjects ) ) {
+
+                }
+            }
+
+        }
+
+    }
+
     public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
     public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }
 
@@ -284,4 +305,31 @@ public class Map {
     public void isNotRunning() {
         this.speed = 2;
     }
+
+    @Override
+    public boolean blocked(PathFindingContext ctx, int x, int y) {
+        if( this.mapObjects[ x ][ y ] == 1 ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public float getCost(PathFindingContext ctx, int x, int y) {
+        return 1.0f;
+    }
+
+    @Override
+    public int getHeightInTiles() {
+        return this.mapHeight;
+    }
+
+    @Override
+    public int getWidthInTiles() {
+        return this.mapWidth;
+    }
+
+    @Override
+    public void pathFinderVisited(int x, int y) {}
+
 }

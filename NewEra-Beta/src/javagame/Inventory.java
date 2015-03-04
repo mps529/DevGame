@@ -51,7 +51,7 @@ public class Inventory {
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
 
-    private static Vector<Items> itemList;
+    private Vector<Items> itemList;
 
     public Inventory( ) {
 

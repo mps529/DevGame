@@ -1,11 +1,7 @@
 package javagame;
 
 
-import org.lwjgl.Sys;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 import java.util.Random;
 
@@ -50,6 +46,8 @@ public class NPC extends NPCMovement {
 
         // If NPC is alive;
     private boolean isAlive;
+                         // 1,000,000
+    private long deadTime = 1000000;
 
         // If should bge rendered
     private boolean willRender;
@@ -58,6 +56,10 @@ public class NPC extends NPCMovement {
 
         // This is what skin the character has
     private int npcRace;
+
+        //  npc stunned
+    private int stunned = 0;
+    private Animation stunnedAnimation;
 
         // This is the class that the npc is
         // 0=hunter 1=warrior 2=wizard 3=rogue
@@ -136,8 +138,10 @@ public class NPC extends NPCMovement {
         this.isAlive = true;
         this.willRender = false;
 
-        setNPCX( 93 );
-        setNPCY( 96 );
+        setNPCX( 89 );
+        setNPCY( 99 );
+
+        this.setPlayerDirection( 0 );
     }
 
         // NPC Enemy with race and class
@@ -199,8 +203,10 @@ public class NPC extends NPCMovement {
         this.isAlive = true;
         this.willRender = false;
 
-        setNPCX( 93 );
-        setNPCY( 96 );
+        setNPCX( 80 );
+        setNPCY( 99 );
+
+        this.setPlayerDirection(3);
 
     }
         // Class set stats
@@ -248,6 +254,13 @@ public class NPC extends NPCMovement {
     private void setImages( int race ) throws SlickException {
 
         this.healthBar = new Image( "NewEra-Beta/res/enemies/EnemyHealth.png" );
+
+        Image[] stunnedImages = new Image[2];
+        stunnedImages[0] =  new Image( "NewEra-Beta/res/moves/stun.png" );
+        stunnedImages[1] =  new Image( "NewEra-Beta/res/moves/stunFlipped.png" );
+        int[] duration = { 400, 400 };
+        this.stunnedAnimation = new Animation( stunnedImages, duration, true );
+
         this.red = new Color( 225, 0, 0, .7f );
     }
         // Inventory
@@ -285,6 +298,8 @@ public class NPC extends NPCMovement {
         if( getHealth() <= 0 ) {
             this.health = 0;
             this.isAlive = false;
+            Random rand  = new Random();
+            this.player.increaseExp( ( this.npcLevel * 3 ) + rand.nextInt( 10 ) + 1 );
             return true;
         }
         return false;
@@ -295,6 +310,20 @@ public class NPC extends NPCMovement {
         return this.stamina;
     }
     public void decreaseStamina( ) { this.stamina -= 10;  }
+
+    public int getStunned() { return this.stunned; }
+    public void setStunned() {
+        this.stunned = 100;
+    }
+    public void setStunned( int stunned ) {
+        this.stunned = stunned;
+    }
+    public void decreaseStunned( int delta ) {
+        this.stunned -= delta;
+        if( this.stunned < 0 ) {
+            this.stunned = 0;
+        }
+    }
 
         // Exp
     public int getExp() {
@@ -316,57 +345,168 @@ public class NPC extends NPCMovement {
         }
     }
 
-  /*  public void drawPlayer( Graphics g ) {
-        double healthPercent = getHealth() / MAX_HEALTH;
-
-        g.setColor( red );
-    }
-*/
     public void takeDamage() {
         Random rand = new Random();
-        double test ;
-        test = ( ( (this.player.getOverallAttack() * rand.nextInt( 20 ) + 1) * 30  ) / ( this.OVERALL_DEFENCE ) )+ player.getAttackOfCurrentAttack();
 
-        System.out.println( "Damage: " + (int)test + ", Defence: " + this.getOverallDefence() );
+        int defence  = getOverallDefence();
 
-        this.health -= (int)test;
+        if( this.player.getOverallDefence() + 20 > defence ) {
+            defence = getOverallDefence() + 20;
+        }
 
+        this.health -= (  (this.player.getOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack();
 
-         if ( checkDeath() ) {
-             startAnimationDeath();
-             stopAnimationDeath();
-         }
+        if ( checkDeath() ) {
+            startAnimationDeath();
+            stopAnimationDeath();
+        }
+    }
 
+    public void decreaseTimeLeftOnEarth ( int delta ) {
+        this.deadTime -= delta;
+    }
 
+    public long getDeathTime( ) { return this.deadTime; }
+
+    public boolean isGoodInSight( int[][] mapObjects ) {
+        int x = (int)getNPCX()/32;
+        int y = (int)getNPCY()/32;
+        int direction = getDirection();
+        int viewSpan;
+        int blockCheck;
+
+        int playerX = (int)this.player.getPlayerX()/32;
+        int playerY = (int)this.player.getPlayerY()/32;
+
+        if( direction == 0 ) {
+            for( int i = y; i > y-6; i-- ) {
+                if( i >= y-2) {
+                    viewSpan = 7;
+                }
+                else if( i == y ) {
+                    viewSpan = 3;
+                }
+                else {
+                    viewSpan = 5;
+                }
+
+                blockCheck = x - viewSpan/2;
+                while( viewSpan >= 0 ) {
+                    if ( blockCheck == playerX && i == playerY ) {
+                        return true;
+                    }
+                    viewSpan--;
+                    blockCheck++;
+                }
+            }
+        }
+        else if( direction == 1 ) {
+            for( int i = x; i < x+5; i++ ) {
+                if( i >= x+2) {
+                    viewSpan = 7;
+                }
+                else if( i == x ) {
+                    viewSpan = 3;
+                }
+                else {
+                    viewSpan = 5;
+                }
+
+                blockCheck = y - viewSpan/2;
+                while( viewSpan >= 0 ) {
+                    if ( i == playerX && blockCheck == playerY ) {
+                        //System.out.println("Found");
+                        return true;
+                    }
+                    viewSpan--;
+                    blockCheck++;
+                }
+            }
+        }
+        else if( direction == 2 ) {
+
+            for( int i = y; i < y+5; i++ ) {
+                if( i >= y+2) {
+                    viewSpan = 7;
+                }
+                else if( i == y ) {
+                    viewSpan = 3;
+                }
+                else {
+                    viewSpan = 5;
+                }
+
+                blockCheck = x - viewSpan/2;
+                while( viewSpan >= 0 ) {
+                    if ( blockCheck == playerX && i == playerY ) {
+                        //System.out.println("Found");
+                        return true;
+                    }
+                    viewSpan--;
+                    blockCheck++;
+                }
+            }
+
+        }
+        else if( direction == 3 ) {
+            for( int i = x; i > x-5; i-- ) {
+                if( i <= x-2) {
+                    viewSpan = 7;
+                }
+                else if( i == x ) {
+                    viewSpan = 3;
+                }
+                else {
+                    viewSpan = 5;
+                }
+
+                blockCheck = y - viewSpan/2;
+                while( viewSpan >= 0 ) {
+                    if ( i == playerX && blockCheck == playerY ) {
+                        //System.out.println("Found");
+                        return true;
+                    }
+                    viewSpan--;
+                    blockCheck++;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void drawNPC( Graphics g ) {
 
-        int npcX = (int)getNPCX();
-        int npcY = (int)getNPCY();
-        int playerX = (int)this.player.getPlayerX();
-        int playerY = (int)this.player.getPlayerY();
-        int x, y;
+        if( this.deadTime > 0 ) {
+            int npcX = (int)getNPCX();
+            int npcY = (int)getNPCY();
+            int playerX = (int)this.player.getPlayerX();
+            int playerY = (int)this.player.getPlayerY();
+            int x, y;
 
-        x = npcX - playerX;
-        y = npcY - playerY;
+            x = npcX - playerX;
+            y = npcY - playerY;
 
-        if( ( ( 352 + x ) >= 0 && (352 + x ) <= 672 ) &&
-                ( ( 352 + y ) >= 0 && (352 + y ) <= 672 ) ) {
+            if( ( ( 352 + x ) >= 0 && (352 + x ) <= 672 ) &&
+                    ( ( 352 + y ) >= 0 && (352 + y ) <= 672 ) ) {
 
-            double healthPercent = getHealth() / MAX_HEALTH;
-            g.setColor( red );
+                double healthPercent = getHealth() / MAX_HEALTH;
+                g.setColor(red);
 
-            g.fillRect(328 + x, 319 + y, 16 * (float)healthPercent, 6  );
-            this.healthBar.draw( 328+x, 319+y );
+                g.fillRect(328 + x, 319 + y, 16 * (float) healthPercent, 6);
+                this.healthBar.draw(328 + x, 319 + y);
 
-            if( this.isAlive ) {
-                getMovingNPC().draw( 320 + x, 320 + y);
+                if (this.isAlive) {
+                    if( this.stunned > 0 ) {
+                        this.stunnedAnimation.start();
+                        this.stunnedAnimation.draw( 320 + x, 310 + y );
+                    }
+                    getMovingNPC().draw(320 + x, 320 + y);
+                } else {
+                    getDieingNPC().draw(320 + x, 320 + y);
+
+                }
             }
-            else {
-                getDieingNPC().draw( 320 + x, 320 + y);
-            }
-
         }
     }
    // public void drawPlayerDieing( float x, float y ) { npcDeath.draw( x, y );  }

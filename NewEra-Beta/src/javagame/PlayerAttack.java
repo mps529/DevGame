@@ -429,11 +429,63 @@ public class PlayerAttack {
         float x = this.player.getPlayerX();
         float y = this.player.getPlayerY();
 
+        boolean stun = false;
+        if( this.player.getCharacterClassChosen() == 1 && this.player.getMoveSelected() == 2 ) {
+            stun = true;
+        }
+
         for( NPC enemy : enemies ) {
             if( enemy.getIsAlive() ) {
-                if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24)) {
+                if( this.player.getDirection() == 0 ) {
+                    if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y )) {
+                        enemy.takeDamage();
+                        if( stun ) {
+                            enemy.setStunned( 5000 );
+                        }
+                        break;
+                    }
+                }
+                else if( this.player.getDirection() == 1 ) {
+                    if ((enemy.getNPCX() >= x  && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24 )) {
+                        enemy.takeDamage();
+                        if( stun ) {
+                            enemy.setStunned( 5000 );
+                        }
+                        break;
+                    }
+                }
+                else if( this.player.getDirection() == 2 ) {
+                    if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y && enemy.getNPCY() <= y + 24 )) {
+                        enemy.takeDamage();
+                        if( stun ) {
+                            enemy.setStunned( 5000 );
+                        }
+                        break;
+                    }
+                }
+                else if( this.player.getDirection() == 3 ) {
+                    if ((enemy.getNPCX() >= x - 24  && enemy.getNPCX() <= x) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24 )) {
+                        enemy.takeDamage();
+                        if( stun ) {
+                            enemy.setStunned( 5000 );
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkSpaceAround( NPC[] enemies ) {
+
+        float x = this.player.getPlayerX();
+        float y = this.player.getPlayerY();
+
+        for( NPC enemy : enemies ) {
+            if( enemy.getIsAlive() ) {
+                if ((enemy.getNPCX() >= x - 44 && enemy.getNPCX() <= x + 44) && (enemy.getNPCY() >= y - 44 && enemy.getNPCY() <= y + 44)) {
                     enemy.takeDamage();
-                    break;
+                    enemy.setStunned();
                 }
             }
         }
@@ -550,6 +602,7 @@ public class PlayerAttack {
                 this.player.decreaseStamina(delta * .03f);
                 this.renderFire = true;
                 this.fire.start();
+                checkSpaceAround(enemies);
                 return false;
             }
             else if( this.currentAttack.isStopped() ) {
@@ -557,7 +610,6 @@ public class PlayerAttack {
                 return true;
             }
             else {
-
                 return false;
             }
 

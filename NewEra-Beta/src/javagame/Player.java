@@ -173,7 +173,7 @@ public class Player extends Movement {
         // Set Movement starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( 80 );
+        setHealth( 10 );
         setStamina( MAX_STAMINA );
         setExp( 0 );
 
@@ -184,6 +184,9 @@ public class Player extends Movement {
         inventory.setBaseAttack( this.BASE_ATTACK );
         inventory.setBaseDefence( this.BASE_DEFENCE );
         inventory.setClassID( classID );
+
+        this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack();
+        this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence();
 
         this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
 
@@ -378,7 +381,7 @@ public class Player extends Movement {
     public int getAttackFourDamage() { return this.attackFourDamage; }
     public void incrementAttackFourDamage() { this.attackFourDamage += 2; }
 
-    public int getAttackOfCurrentAttack() {
+    public int getDamageOfCurrentAttack() {
         switch ( this.moveSelected ) {
             case 0:
                 return this.attackOneDamage;
@@ -550,8 +553,8 @@ public class Player extends Movement {
     public int getLevel() { return this.level; }
     public void levelUp() {
         this.level++;
-        this.perkPoints = 2;
-        this.movePoints = 1;
+        this.perkPoints += 2;
+        this.movePoints += 1;
         calculateExpToLevelUp();
     }
 
