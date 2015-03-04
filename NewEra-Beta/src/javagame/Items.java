@@ -32,6 +32,9 @@ public class Items {
     private int attackPower;
     private int defencePower;
 
+    private int spritePosX = 0;
+    private int spritePosY = 0;
+
         // Sprite image
     private Image imageItem;
 
@@ -162,11 +165,35 @@ public class Items {
 
     }
 
+    public Items(Items other) {
+        this.itemID = other.itemID;
+        this.ItemsCount = other.ItemsCount;
+        this.ID = other.ID;
+        this.classID = other.classID;
+        this.worth = other.worth;
+        this.attackPower = other.attackPower;
+        this.defencePower = other.defencePower;
+        this.spritePosX = other.spritePosX;
+        this.spritePosY = other.spritePosY;
+        this.setImage(this.spritePosX, this.spritePosY);
+        this.name = other.name;
+        this.rarity = other.rarity;
+        this.itemRarityColor = other.itemRarityColor;
+        this.itemRarityColorNoAlpha = other.itemRarityColorNoAlpha;
+    }
+
+
     public int getAttackPower() { return  this.attackPower; }
     public int getDefencePower() { return this.defencePower; }
 
     public int getItemsCount() { return this.ItemsCount; }
     public void setItemsCount( int ic ) {this.ItemsCount = ic;}
+
+    public int getSpritePosX() {return this.spritePosX;}
+    public void setSpritePosX(int x) {this.spritePosX = x;}
+
+    public int getSpritePosY() {return this.spritePosY;}
+    public void setSpritePosY(int y) {this.spritePosY = y;}
 
     private void assignRarity(  Random randomNumber ) {
         int rarity = randomNumber.nextInt(101);
@@ -1055,55 +1082,135 @@ public class Items {
                     break;
                     // Helmet
                 case 2:
-                    this.imageItem = armor.getSubImage( randomPicture.nextInt(10) , 1).copy();
+                    this.spritePosX = randomPicture.nextInt(10);
+                    this.imageItem = armor.getSubImage( this.spritePosX , 1).copy();
 
                     break;
                     // Body
                 case 3:
                     if( this.classID == 0 ) {
-                        armor.startUse();
-                        this.imageItem = armor.getSubImage( randomPicture.nextInt(10), 3).copy();
-                        armor.endUse();
+                        this.spritePosX = randomPicture.nextInt(10);
+                        this.imageItem = armor.getSubImage( spritePosX, 3).copy();
                     }
                     else if( this.classID == 1 ) {
-                        armor.startUse();
-                        this.imageItem = armor.getSubImage(randomPicture.nextInt(10), 5).copy();
-                        armor.endUse();
+                        this.spritePosX = randomPicture.nextInt(10);
+                        this.imageItem = armor.getSubImage(spritePosX, 5).copy();
+
                     }
                     else if( this.classID == 2 ) {
-                        armor.startUse();
-                        this.imageItem = armor.getSubImage(randomPicture.nextInt(9), 0).copy();
-                        armor.endUse();
+                        this.spritePosX = randomPicture.nextInt(9);
+                        this.imageItem = armor.getSubImage(spritePosX, 0).copy();
+
                     }
                     else if( this.classID == 3 ) {
-                        armor.startUse();
-                        this.imageItem = armor.getSubImage( randomPicture.nextInt(9), 4).copy();
-                        armor.endUse();
+                        this.spritePosX = randomPicture.nextInt(9);
+                        this.imageItem = armor.getSubImage( spritePosX, 4).copy();
+
                     }
                     else if( this.classID == 4 ) {
-                        armor.startUse();
-                        this.imageItem = armor.getSubImage( randomPicture.nextInt(9), classID[randomPicture.nextInt(3)] ).copy();
-                        armor.endUse();
+                        this.spritePosX = randomPicture.nextInt(9);
+                        this.spritePosY = randomPicture.nextInt(3);
+                        this.imageItem = armor.getSubImage( spritePosX, classID[spritePosY] ).copy();
+
                     }
                     break;
                 case 4:
                     this.imageItem = new Image("NewEra-Beta/res/items/template.png");
                     break;
                 case 5:
-                    armor.startUse();
-                    this.imageItem = armor.getSubImage( randomPicture.nextInt(6), 6 ).copy();
-                    armor.endUse();
+                    this.spritePosX = randomPicture.nextInt(6);
+                    this.imageItem = armor.getSubImage( spritePosX, 6 ).copy();
                     break;
                 case 6:
-                    armor.startUse();
-                    this.imageItem = armor.getSubImage(randomPicture.nextInt(5), 2).copy();
-                    armor.endUse();
+                    this.spritePosX = randomPicture.nextInt(5);
+                    this.imageItem = armor.getSubImage(spritePosX, 2).copy();
+
                     break;
                 case 7:
-                    this.imageItem = ringAndNecklace.getSubImage( randomPicture.nextInt( 8 ), 0 ).copy();
+                    this.spritePosX = randomPicture.nextInt(8);
+                    this.imageItem = ringAndNecklace.getSubImage( spritePosX, 0 ).copy();
                     break;
                 case 8:
-                    this.imageItem = ringAndNecklace.getSubImage( randomPicture.nextInt( 8 ), 1 ).copy();
+                    this.spritePosX = randomPicture.nextInt(8);
+                    this.imageItem = ringAndNecklace.getSubImage( spritePosX, 1 ).copy();
+                    break;
+                case 9:
+                    this.imageItem = new Image("NewEra-Beta/res/items/spear.png");
+                    break;
+                case 10:
+                    this.imageItem = new Image("NewEra-Beta/res/items/bow.png");
+                    break;
+                case 11:
+                    this.imageItem = new Image("NewEra-Beta/res/items/dagger.png");
+                    break;
+                case 12:
+                    this.imageItem = new Image("NewEra-Beta/res/items/wand.png");
+                    break;
+            }
+        }
+        catch( SlickException e ) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void setImage(int x, int y)  {
+
+        int[] classID = { 3, 5, 0, 9 };
+
+        try {
+            SpriteSheet armor = new SpriteSheet("NewEra-Beta/res/items/armorSprite.png", 32, 32);
+            SpriteSheet ringAndNecklace = new SpriteSheet("NewEra-Beta/res/items/RingAndNeck.png", 32, 32);
+
+            switch ( getItemID() ) {
+                case 0:
+                    this.imageItem = null;
+                    break;
+                case 1:
+                    this.imageItem = null;
+                    break;
+                // Helmet
+                case 2:
+                    this.imageItem = armor.getSubImage( x , 1).copy();
+
+                    break;
+                // Body
+                case 3:
+                    if( this.classID == 0 ) {
+                        this.imageItem = armor.getSubImage( x, 3).copy();
+                    }
+                    else if( this.classID == 1 ) {
+                        this.imageItem = armor.getSubImage(x, 5).copy();
+
+                    }
+                    else if( this.classID == 2 ) {
+                        this.imageItem = armor.getSubImage(x, 0).copy();
+
+                    }
+                    else if( this.classID == 3 ) {
+                        this.imageItem = armor.getSubImage( x, 4).copy();
+
+                    }
+                    else if( this.classID == 4 ) {
+                        this.imageItem = armor.getSubImage( x, classID[y] ).copy();
+
+                    }
+                    break;
+                case 4:
+                    this.imageItem = new Image("NewEra-Beta/res/items/template.png");
+                    break;
+                case 5:
+                    this.imageItem = armor.getSubImage( x, 6 ).copy();
+                    break;
+                case 6:
+                    this.imageItem = armor.getSubImage(x, 2).copy();
+
+                    break;
+                case 7:
+                    this.imageItem = ringAndNecklace.getSubImage( x, 0 ).copy();
+                    break;
+                case 8:
+                    this.imageItem = ringAndNecklace.getSubImage( x, 1 ).copy();
                     break;
                 case 9:
                     this.imageItem = new Image("NewEra-Beta/res/items/spear.png");

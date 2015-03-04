@@ -69,6 +69,35 @@ public class Inventory {
 
     }
 
+    public Inventory(Inventory other) {
+
+        this.currentInventoryCount = other.currentInventoryCount;
+        this.money = other.money;
+
+        this.playerLevel = other.playerLevel;
+        this.playerOverallAttack = other.playerOverallAttack;
+        this.playerOverallDefence = other.playerOverallDefence;
+        this.playerHelmet = other.playerHelmet;
+        this.playerBody = other.playerBody;
+        this.playerGloves = other.playerGloves;
+        this.playerPants = other.playerPants;
+        this.playerBoots = other.playerBoots;
+        this.playerRing = other.playerRing;
+        this.playerNecklaces = other.playerNecklaces;
+        this.playerWeapon = other.playerWeapon;
+        this.healthPotions = other.healthPotions;
+        this.staminaPotions = other.staminaPotions;
+        this.classID = other.classID;
+        this.itemList = new Vector<Items>();
+        for(int i= 0; i<other.itemList.size(); i++) {
+            this.itemList.add(new Items(other.itemList.elementAt(i)));
+
+        }
+    }
+
+
+
+       
     public void setBaseAttack( int attack ) { this.baseAttack = attack;}
     public int getPlayerOverallAttack() { return this.playerOverallAttack; }
 
@@ -249,56 +278,52 @@ public class Inventory {
         Random rand = new Random();
 
         // Assigning basic Items
-        basic[ 0 ] = new Items( 2, this.classID, -1 , level );
-        basic[ 1 ] = new Items( 3, this.classID, -1, level );
-        basic[ 2 ] = new Items( 4, this.classID, -1, level );
-        basic[ 3 ] = new Items( 5, this.classID, -1, level );
-        basic[ 4 ] = new Items( 6, this.classID, -1, level );
+        basic[0] = new Items(2, this.classID, -1, level);
+        basic[1] = new Items(3, this.classID, -1, level);
+        basic[2] = new Items(4, this.classID, -1, level);
+        basic[3] = new Items(5, this.classID, -1, level);
+        basic[4] = new Items(6, this.classID, -1, level);
 
         // Check class to give correct weapon
-        if( this.classID == 0 ) {
-            basic[ 5 ] = new Items( 10, this.classID, -1, level );
-        }
-        else if( this.classID == 1 ) {
-            basic[ 5 ] = new Items( 9, this.classID, -1, level );
-        }
-        else if( this.classID == 2 ) {
-            basic[ 5 ] = new Items( 12, this.classID, -1, level );
-        }
-        else if( this.classID == 3 ) {
-            basic[ 5 ] = new Items( 11, this.classID, -1, level );
+        if (this.classID == 0) {
+            basic[5] = new Items(10, this.classID, -1, level);
+        } else if (this.classID == 1) {
+            basic[5] = new Items(9, this.classID, -1, level);
+        } else if (this.classID == 2) {
+            basic[5] = new Items(12, this.classID, -1, level);
+        } else if (this.classID == 3) {
+            basic[5] = new Items(11, this.classID, -1, level);
         }
 
-        for( int x=0; x < basic.length; x++ ) {
-            addItem( basic[x] );
-            equipItem( basic[x].getID() );
+        for (int x = 0; x < basic.length; x++) {
+            addItem(basic[x]);
+            equipItem(basic[x].getID());
         }
 
-            // Necklaces
-        int willHaveItem = rand.nextInt( 100 );
-        if( willHaveItem > 40 && willHaveItem < 60 ) {
-            Items necklace = new Items( 8, this.classID, -1, level );
-            addItem( necklace );
+        // Necklaces
+        int willHaveItem = rand.nextInt(100);
+        if (willHaveItem > 40 && willHaveItem < 60) {
+            Items necklace = new Items(8, this.classID, -1, level);
+            addItem(necklace);
         }
-            // Ring
-        willHaveItem = rand.nextInt( 100 );
-        if( willHaveItem > 20 && willHaveItem < 40 ) {
-            Items ring = new Items( 7, this.classID, -1, level );
-            addItem( ring );
+        // Ring
+        willHaveItem = rand.nextInt(100);
+        if (willHaveItem > 20 && willHaveItem < 40) {
+            Items ring = new Items(7, this.classID, -1, level);
+            addItem(ring);
         }
-            // Adds monies
-        this.addMoney( rand.nextInt( level + 3 ) * ( rand.nextInt( 3 ) +  1 ) );
+        // Adds monies
+        this.addMoney(rand.nextInt(level + 3) * (rand.nextInt(3) + 1));
 
-            // Extra inventory items
-        Items[] extra = new Items[ 7 ];
-        int itemCount = rand.nextInt( 7 );
+        // Extra inventory items
+        Items[] extra = new Items[7];
+        int itemCount = rand.nextInt(7);
 
-        for( int x = 0; x < itemCount; x++ ) {
-            extra[x] = new Items( rand.nextInt( level ) + 1 );
+        for (int x = 0; x < itemCount; x++) {
+            extra[x] = new Items(rand.nextInt(level) + 1);
         }
-
     }
-
+    
     // Return 1 for successful equip, 2 for unable to equip
     public int equipItem ( int ID ) {
 
@@ -561,5 +586,19 @@ public class Inventory {
         System.out.println("Necklaces: " + this.playerNecklaces);
 
     }
+     public boolean clearInventory() {
+
+         //if inventory contains anything
+         if(this.itemList.isEmpty()) {
+             return false;
+             //already empty
+         } else {
+             //clear inventory
+             this.itemList.removeAllElements();
+             return true;
+         }
+
+     }
+
 }
 
