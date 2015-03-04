@@ -59,7 +59,7 @@ public class MainMenu extends BasicGameState {
     private double scrollSpeedX, scrollSpeedY;
 
     //menu logic
-    private boolean newGameStarted, loadGameStarted, gameStarted;
+    private boolean newGameStarted, loadGameStarted, gameStarted, deletingSave;
     private boolean loadPressed, newPressed, playPressed, deletePressed;
     private boolean editingName;
     private boolean warriorSelected, wizardSelected, rogueSelected, hunterSelected, classSelected;
@@ -80,34 +80,10 @@ public class MainMenu extends BasicGameState {
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
 
-        //load files from save folder
-        sg = SaveGame.getInstance();
 
-        slot1DidLoad = sg.load(1);
-        if(slot1DidLoad) {
-            slot1Name = sg.getSaveName();
-            slot1ClassId = sg.getClassID();
-            slot1Level = sg.getPlayerLvl();
-        }
-        slot2DidLoad = sg.load(2);
-        if(slot2DidLoad) {
-            slot2Name = sg.getSaveName();
-            slot2ClassId = sg.getClassID();
-            slot2Level = sg.getPlayerLvl();
-        }
-        slot3DidLoad = sg.load(3);
-        if(slot3DidLoad) {
-            slot3Name = sg.getSaveName();
-            slot3ClassId = sg.getClassID();
-            slot3Level = sg.getPlayerLvl();
-        }
-        slot4DidLoad = sg.load(4);
-        if(slot4DidLoad) {
-            slot4Name = sg.getSaveName();
-            slot4ClassId = sg.getClassID();
-            slot4Level = sg.getPlayerLvl();
-        }
 
+        //load games with helper functions to set booleans
+        this.loadGames();
 
 
 
@@ -161,9 +137,10 @@ public class MainMenu extends BasicGameState {
         this.scrollSpeedX = .1f;
         this.scrollSpeedY = .101f;
 
-        //booleans for beginning new game or loading previous save
+        //booleans for beginning new game, loading previous save, and deleting a save
         this.newGameStarted = false;
         this.loadGameStarted = false;
+        this.deletingSave = false;
 
         //booleans for new game menu items
         this.editingName = false;
@@ -268,6 +245,61 @@ public class MainMenu extends BasicGameState {
             this.newMenu.render(0, 0);
 
             this.goBack.draw(10,10);
+
+            //save slots
+            g.setColor(Color.black);
+            g.drawString("Select Save Slot", 40, 480);
+            if(!slot1DidLoad) {
+                g.setColor(Color.black);
+            } else {
+                g.setColor(Color.red);
+            }
+            g.fillRect(64, 512, 32, 32);
+            g.setColor(Color.white);
+            g.drawString("1", 76, 520);
+
+
+            if(!slot2DidLoad) {
+                g.setColor(Color.black);
+            } else {
+                g.setColor(Color.red);
+            }
+            g.fillRect(96, 512, 32, 32);
+            g.setColor(Color.white);
+            g.drawString("2", 108, 520);
+
+            if(!slot3DidLoad) {
+                g.setColor(Color.black);
+            } else {
+                g.setColor(Color.red);
+            }
+            g.fillRect(64, 544, 32, 32);
+            g.setColor(Color.white);
+            g.drawString("3", 76, 552);
+
+            if(!slot4DidLoad) {
+                g.setColor(Color.black);
+            } else {
+                g.setColor(Color.red);
+            }
+            g.fillRect(96, 544, 32, 32);
+            g.setColor(Color.white);
+            g.drawString("4", 108, 552);
+            g.setColor(Color.white);
+            if(loadSlot1Selected) {
+                g.drawRect(64, 512, 32, 32);
+            }
+            if(loadSlot2Selected) {
+                g.drawRect(96, 512, 32, 32);
+            }
+            if(loadSlot3Selected) {
+                g.drawRect(64, 544, 32, 32);
+            }
+            if(loadSlot4Selected) {
+                g.drawRect(96, 544, 32, 32);
+            }
+
+
 
             //draw play button
             if ( playPressed && classSelected && spriteSelected) {
@@ -397,6 +429,16 @@ public class MainMenu extends BasicGameState {
                 this.loadGamePressed.draw(416, 300);
             }
 
+            if(deletingSave) {
+
+                sg.getInstance();
+                sg.deleteSave(this.slotNo);
+                this.loadGames();
+                deletingSave = false;
+
+            }
+
+
             g.setColor(Color.black);
             g.drawString("Slot 1",165, 72);
             g.drawString("Slot 2", 165, 200);
@@ -515,20 +557,17 @@ public class MainMenu extends BasicGameState {
             if(newGameStarted) {
                 playerName = characterName.getText();
 
+
                 if (warriorSelected) {
 
                     if(sprite1Selected) {
                         this.player.setUpInstance("warrior.png", playerName, 1);
-                        sbg.enterState(1);
                     } else if(sprite2Selected) {
                         this.player.setUpInstance("warrior2.png", playerName, 1);
-                        sbg.enterState(1);
                     } else if(sprite3Selected) {
                         this.player.setUpInstance("warrior3.png", playerName, 1);
-                        sbg.enterState(1);
                     } else if(sprite4Selected) {
                         this.player.setUpInstance("warrior4.png", playerName, 1);
-                        sbg.enterState(1);
                     }
 
 
@@ -536,51 +575,41 @@ public class MainMenu extends BasicGameState {
 
                     if (sprite1Selected) {
                         this.player.setUpInstance("wizard.png", playerName, 2);
-                        sbg.enterState(1);
                     } else if(sprite2Selected) {
                         this.player.setUpInstance("wizard2.png", playerName, 2);
-                        sbg.enterState(1);
                     } else if(sprite3Selected) {
                         this.player.setUpInstance("wizard3.png", playerName, 2);
-                        sbg.enterState(1);
                     } else if(sprite4Selected) {
                         this.player.setUpInstance("wizard4.png", playerName, 2);
-                        sbg.enterState(1);
                     }
 
                 } else if (rogueSelected) {
 
                     if (sprite1Selected) {
                         this.player.setUpInstance("rouge.png", playerName, 3);
-                        sbg.enterState(1);
                     } else if(sprite2Selected) {
                         this.player.setUpInstance("rogue2.png", playerName, 3);
-                        sbg.enterState(1);
                     } else if(sprite3Selected) {
                         this.player.setUpInstance("rogue3.png", playerName, 3);
-                        sbg.enterState(1);
                     } else if(sprite4Selected) {
                         this.player.setUpInstance("rogue4.png", playerName, 3);
-                        sbg.enterState(1);
                     }
 
                 } else if (hunterSelected) {
 
                     if (sprite1Selected) {
                         this.player.setUpInstance("hunter.png", playerName, 0);
-                        sbg.enterState(1);
                     } else if(sprite2Selected) {
                         this.player.setUpInstance("hunter2.png", playerName, 0);
-                        sbg.enterState(1);
                     } else if(sprite3Selected) {
                         this.player.setUpInstance("hunter3.png", playerName, 0);
-                        sbg.enterState(1);
                     } else if(sprite4Selected) {
                         this.player.setUpInstance("hunter4.png", playerName, 0);
-                        sbg.enterState(1);
                     }
 
                 }
+                player.setSaveSlot(slotNo);
+                sbg.enterState(1);
             } else if(loadGameStarted) {
 
                 if(this.slotNo == 1) {
@@ -719,7 +748,7 @@ public class MainMenu extends BasicGameState {
             //play game button toggle
             if ((mouseX >= 225 && mouseX <= 417) && (mouseY >= 470 && mouseY <= 598)) {
                 playPressed = true;
-                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && classSelected && spriteSelected) {
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && classSelected && spriteSelected && loadSlotSelected) {
                     input.clearKeyPressedRecord();
                     gameStarted = true;
                 }
@@ -735,11 +764,13 @@ public class MainMenu extends BasicGameState {
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
                     newGameStarted = false;
                     classSelected = false;
+                    loadSlotSelected = false;
                     spriteSelected = false;
                     warriorSelected = false;
                     wizardSelected = false;
                     rogueSelected = false;
                     hunterSelected = false;
+
                     sprite1Selected = false;
                     sprite2Selected = false;
                     sprite3Selected = false;
@@ -747,6 +778,12 @@ public class MainMenu extends BasicGameState {
                     characterName.setText("");
                     editingName = false;
                     gameStarted = false;
+
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+
 
 
 
@@ -848,8 +885,47 @@ public class MainMenu extends BasicGameState {
                     sprite3Selected = false;
                     spriteSelected = true;
                 }
-            }
-            else { //clicking anywhere else on the screen
+            } else if((mouseX >= 64 && mouseX <= 96) && (mouseY >= 512 && mouseY <= 544)) {
+                //slot 1
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadSlot1Selected = true;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+                    this.loadSlotSelected = true;
+                    this.slotNo = 1;
+                }
+            } else if((mouseX >= 96 && mouseX <= 128) && (mouseY >= 512 && mouseY <= 544)) {
+                //slot 2
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = true;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = false;
+                    this.loadSlotSelected = true;
+                    this.slotNo = 2;
+                }
+            } else if((mouseX >= 64 && mouseX <= 96) && (mouseY >= 544 && mouseY <= 576)) {
+                //slot 3
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = true;
+                    loadSlot4Selected = false;
+                    this.loadSlotSelected = true;
+                    this.slotNo = 3;
+                }
+            } else if((mouseX >= 96 && mouseX <= 128) && (mouseY >= 544 && mouseY <= 576)) {
+                //slot 4
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    loadSlot1Selected = false;
+                    loadSlot2Selected = false;
+                    loadSlot3Selected = false;
+                    loadSlot4Selected = true;
+                    this.loadSlotSelected = true;
+                    this.slotNo = 4;
+                }
+            } else { //clicking anywhere else on the screen
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
                     editingName = false;
                 }
@@ -878,15 +954,19 @@ public class MainMenu extends BasicGameState {
             }
             if ((mouseX >= 416 && mouseX <= 608) && (mouseY >= 192 && mouseY <= 256) && loadSlotSelected) {
                 this.deletePressed = true;
+                if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && loadSlotSelected) {
+                    input.clearKeyPressedRecord();
+                    this.deletingSave = true;
+                }
             } else {
                 this.deletePressed = false;
             }
+
             if ((mouseX >= 416 && mouseX <= 610) && (mouseY >= 300 && mouseY <= 364) && loadSlotSelected) {
                 loadPressed = true;
-
                 if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && loadSlotSelected) {
                     input.clearKeyPressedRecord();
-                    gameStarted = true;
+                    this.gameStarted = true;
                 }
             }
             else {
@@ -900,7 +980,7 @@ public class MainMenu extends BasicGameState {
                     slotSelectedX = 32;
                     slotSelectedY = 96;
 
-                    slotNo = 1;
+                    this.slotNo = 1;
                     if(slot1DidLoad) {
                         loadSlotSelected = true;
                     } else {
@@ -919,7 +999,7 @@ public class MainMenu extends BasicGameState {
                     slotSelectedX = 32;
                     slotSelectedY = 224;
 
-                    slotNo = 2;
+                    this.slotNo = 2;
                     if(slot2DidLoad) {
                         loadSlotSelected = true;
                     } else {
@@ -937,7 +1017,7 @@ public class MainMenu extends BasicGameState {
                     slotSelectedX = 32;
                     slotSelectedY = 352;
 
-                    slotNo = 3;
+                    this.slotNo = 3;
                     if(slot3DidLoad) {
                         loadSlotSelected = true;
                     } else {
@@ -955,7 +1035,7 @@ public class MainMenu extends BasicGameState {
                     slotSelectedX = 32;
                     slotSelectedY = 480;
 
-                    slotNo = 4;
+                    this.slotNo = 4;
                     if(slot1DidLoad) {
                         loadSlotSelected = true;
                     } else {
@@ -970,5 +1050,34 @@ public class MainMenu extends BasicGameState {
             }
         }
 
+    }
+    public void loadGames() {
+        //load files from save folder
+        sg = SaveGame.getInstance();
+
+        slot1DidLoad = sg.load(1);
+        if(slot1DidLoad) {
+            slot1Name = sg.getSaveName();
+            slot1ClassId = sg.getClassID();
+            slot1Level = sg.getPlayerLvl();
+        }
+        slot2DidLoad = sg.load(2);
+        if(slot2DidLoad) {
+            slot2Name = sg.getSaveName();
+            slot2ClassId = sg.getClassID();
+            slot2Level = sg.getPlayerLvl();
+        }
+        slot3DidLoad = sg.load(3);
+        if(slot3DidLoad) {
+            slot3Name = sg.getSaveName();
+            slot3ClassId = sg.getClassID();
+            slot3Level = sg.getPlayerLvl();
+        }
+        slot4DidLoad = sg.load(4);
+        if(slot4DidLoad) {
+            slot4Name = sg.getSaveName();
+            slot4ClassId = sg.getClassID();
+            slot4Level = sg.getPlayerLvl();
+        }
     }
 }

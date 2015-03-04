@@ -30,11 +30,12 @@ public class SaveGame {
 
     public void saveGameCopy(SaveGame other) {
         this.saveName = other.saveName;
-        this.playerObj = new Player();
+        this.playerObj = playerObj.getInstance();
         this.playerObj.playerCopy( other.playerObj );
+        //this.playerObj = playerObj.getInstance();
         this.classID = other.classID;
         this.sheetName = other.sheetName;
-        this.inv = new Inventory(other.inv);
+        this.inv = new Inventory(other.inv, false);
         this.itemscount = other.itemscount;
         this.playerLvl = other.playerLvl;
         this.currentMap = other.currentMap;
@@ -57,26 +58,28 @@ public class SaveGame {
         XStream xstream = new XStream();
         Items items = new Items();
 
-        Player player = Player.getInstance();
+
+        playerObj = playerObj.getInstance();
         FileOutputStream fop = null;
         File save;
 
         this.slot = saveSlot;
         items = new Items();
-        this.itemscount = items.getItemsCount();
-        this.setPlayer();
-        this.playerLvl = player.getLevel();
-        this.sheetName = player.getSpriteSheetName();
-        this.classID = player.getCharacterClassChosen();
-        inv = new Inventory(player.getInventory());
+        this.itemscount = items.getItemsCount(); //will have to change later
+        this.playerLvl = playerObj.getLevel();
+        this.sheetName = playerObj.getSpriteSheetName();
+        this.classID = playerObj.getCharacterClassChosen();
+        System.out.println("\n\n\n\n Inventory: \n");
+        playerObj.getInventory().printInventory();
+        this.inv = new Inventory(playerObj.getInventory(), true);
+
+
         //map = m;
         this.currentMap = cMap;
 
-        this.saveName = player.getPlayerName();
-        //xstream.alias("save"+slot, SaveGame.class);
+        this.saveName = playerObj.getPlayerName();
 
-        String xml = xstream.toXML(saveGameClass);
-        //System.out.println(xml);
+        String xml = xstream.toXML(this);
 
         try {
 
@@ -125,7 +128,6 @@ public class SaveGame {
             if(listOfFiles[i].getName().endsWith(".xml")) {
                 String[] parsedName = listOfFiles[i].getName().split("_");
                 slotNo = Math.abs(Character.getNumericValue(parsedName[1].charAt(0)));
-                System.out.println(slotNo);
                 if (slotNo == slot) {
                     //found save
                     slotIndex = slotNo;
@@ -139,9 +141,8 @@ public class SaveGame {
                         player = Player.getInstance();
 
                         player.setUpLoadInstance(saveGameClass.sheetName, saveGameClass.saveName, saveGameClass.classID);
-                        //player.getInventory().clearInventory();
                         player.playerCopy(saveGameClass.playerObj);
-                        player.setInventory( saveGameClass.getInv() );
+                        //player.setInventory( saveGameClass.getInv() );
                         player.setSaveSlot(slotIndex);
                         foundSave = true;
                     } catch (SlickException e) {
@@ -160,6 +161,38 @@ public class SaveGame {
         }
     }
 
+    public boolean deleteSave(int slot) {
+        XStream xstream = new XStream();
+        Player player;
+        boolean foundSave = false;
+
+
+        int slotNo;
+        File folder = new File("NewEra-Beta/res/saves/");
+        File[] listOfFiles = folder.listFiles();
+
+        folder = new File("NewEra-Beta/res/saves/");
+        listOfFiles = folder.listFiles();
+
+
+        /*parses slot numbers out of save files. Will get the index of the save slot needed to load
+          and store in slotIndex
+        */
+        for(int i=0;i<listOfFiles.length;i++) {
+            //System.out.println(listOfFiles[i].getName());
+            if (listOfFiles[i].getName().endsWith(".xml")) {
+                String[] parsedName = listOfFiles[i].getName().split("_");
+                slotNo = Math.abs(Character.getNumericValue(parsedName[1].charAt(0)));
+                if (slotNo == slot) {
+                    //found save
+                    listOfFiles[i].delete();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public String getSaveName() {return this.saveName;}
     public void setSaveName(String sn) {this.saveName = sn;}
     
@@ -170,7 +203,7 @@ public class SaveGame {
     public void setPlayer() {this.playerObj = this.playerObj.getInstance();}
 
     public Inventory getInv() {return this.inv;}
-    public void setInv(Inventory i) {this.inv = new Inventory(i);}
+    public void setInv(Inventory i) {this.inv = new Inventory(i, false);}
 
     public int getItemscount() {return this.itemscount;}
     public void setItemscount(int ic) {this.itemscount = ic;}

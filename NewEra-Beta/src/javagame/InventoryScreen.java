@@ -201,9 +201,7 @@ public class InventoryScreen extends BasicGameState{
         //g.drawString( "X: " + this.mouseX + ", Y: " + this.mouseY, 500, 100 );
     }
 
-    public void enter( GameContainer gc, StateBasedGame sbg ) {
-        this.playerInventory = this.player.getInventory();
-    }
+    public void enter( GameContainer gc, StateBasedGame sbg ) {this.playerInventory = this.player.getInventory();}
 
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {

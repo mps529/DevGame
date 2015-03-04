@@ -100,6 +100,9 @@ public class Player extends Movement {
 
     private int saveSlot;
 
+    //Interaction class to handle player actions
+    private Interaction action;
+
     // needed to set the map to player location when game loads
     private float mapX, mapY;
     private float skewX, skewY;
@@ -125,7 +128,7 @@ public class Player extends Movement {
         this.level = other.level;
         this.perkPoints = other.perkPoints;
         this.movePoints = other.movePoints;
-        this.inventory = new Inventory(other.getInventory());
+        this.inventory = new Inventory(other.getInventory(), false );
         this.FIRE_RATE = other.FIRE_RATE;
         this.currentIndex = other.currentIndex;
         this.lastShot = other.lastShot;
@@ -136,6 +139,7 @@ public class Player extends Movement {
         this.skewX = other.skewX;
         this.skewY = other.skewY;
         this.isNewGame = other.isNewGame;
+        this.action = new Interaction();
 
         // Movement
         setCurrentMapIndex(other.getCurrentMapIndex() );
@@ -150,6 +154,8 @@ public class Player extends Movement {
         // Call Movement constructor
         setPlayerClass(sheetName, name, classID);
         this.isNewGame = true;
+
+        this.action = new Interaction();
 
         this.attackImages = new Image[4];
         this.attacksKnown = new int[4];
@@ -184,12 +190,12 @@ public class Player extends Movement {
         this.moveSelected = 0;
 
         // Set up player Inventory/ give default items
-        if(this.getInventory() != null) {
+
             this.inventory = new Inventory();
             this.inventory.setBaseAttack(this.BASE_ATTACK);
             this.inventory.setBaseDefence(this.BASE_DEFENCE);
             this.inventory.setClassID(classID);
-        }
+
 
         this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
 
@@ -204,6 +210,8 @@ public class Player extends Movement {
     public void setUpLoadInstance( String sheetName, String name, int classID ) throws SlickException {
         // Call Movement constructor
         setPlayerClass(sheetName, name, classID);
+
+        this.action = new Interaction();
 
         this.attackImages = new Image[4];
         this.attacksKnown = new int[4];
@@ -420,9 +428,9 @@ public class Player extends Movement {
     public Image getAttackImage( int index ) { return this.attackImages[ index ]; }
 
     public Inventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
-    public void setInventory( Inventory inventory) {this.inventory = new Inventory(inventory);}
+    public void setInventory( Inventory inventory) {this.inventory = new Inventory(inventory, false);}
 
     public int getAttackOneDamage() { return this.attackOneDamage; }
     public void incrementAttackOneDamage() { this.attackOneDamage += 2; }
@@ -633,6 +641,8 @@ public class Player extends Movement {
     public float getSkewX() {return this.skewX;}
     public void setSkewX(float sx) {this.skewX = sx;}
 
+    public Interaction getAction() {return action;}
+
     public float getSkewY() {return this.skewY;}
     public void setSkewY(float sy) {this.skewY = sy;}
 
@@ -709,6 +719,7 @@ public class Player extends Movement {
         g.fillRect(xPos, 586, 32, 32);
         this.healthPotion.draw( xPos, 586 );
         g.setColor( Color.white );
+
         g.drawString( ""+this.inventory.getHealthPotions(), xPos + 32, 580 );
 
         g.setColor( grey );

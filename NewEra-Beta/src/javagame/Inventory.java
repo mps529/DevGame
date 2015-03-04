@@ -44,8 +44,8 @@ public class Inventory {
     private int playerWeapon;
 
         // Count of potions
-    private int healthPotions;
-    private int staminaPotions;
+    private int healthPotions = 0 ;
+    private int staminaPotions = 0;
 
         // Movement Class
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
@@ -69,7 +69,7 @@ public class Inventory {
 
     }
 
-    public Inventory(Inventory other) {
+    public Inventory(Inventory other, boolean isSaving) {
 
         this.currentInventoryCount = other.currentInventoryCount;
         this.money = other.money;
@@ -77,20 +77,26 @@ public class Inventory {
         this.playerLevel = other.playerLevel;
         this.playerOverallAttack = other.playerOverallAttack;
         this.playerOverallDefence = other.playerOverallDefence;
-        this.playerHelmet = other.playerHelmet;
+        /*this.playerHelmet = other.playerHelmet;
         this.playerBody = other.playerBody;
         this.playerGloves = other.playerGloves;
         this.playerPants = other.playerPants;
         this.playerBoots = other.playerBoots;
         this.playerRing = other.playerRing;
         this.playerNecklaces = other.playerNecklaces;
-        this.playerWeapon = other.playerWeapon;
+        this.playerWeapon = other.playerWeapon;*/
         this.healthPotions = other.healthPotions;
         this.staminaPotions = other.staminaPotions;
         this.classID = other.classID;
         this.itemList = new Vector<Items>();
+
+
         for(int i= 0; i<other.itemList.size(); i++) {
-            this.itemList.add(new Items(other.itemList.elementAt(i)));
+
+            this.itemList.add(new Items( other.itemList.elementAt(i), isSaving ));
+            if(this.itemList.elementAt(i).isEquipped()) {
+                System.out.println(this.equipItem(this.itemList.elementAt(i).getID()));
+            }
 
         }
     }
@@ -331,6 +337,7 @@ public class Inventory {
         for( int x=0; x < this.itemList.size(); x++ ) {
             if( this.itemList.elementAt( x ).getID() == ID ) {
 
+                this.itemList.elementAt( x ).setEquipped(true);
                     // Checking if it is the correct class
                 switch (this.itemList.elementAt(x).getItemID()) {
                     case 2:
@@ -411,6 +418,8 @@ public class Inventory {
                             return 1;
                         }
                         break;
+
+
                 }
             }
         }
@@ -586,7 +595,7 @@ public class Inventory {
         System.out.println("Necklaces: " + this.playerNecklaces);
 
     }
-     public boolean clearInventory() {
+    /* public boolean clearInventory() {
 
          //if inventory contains anything
          if(this.itemList.isEmpty()) {
@@ -598,7 +607,7 @@ public class Inventory {
              return true;
          }
 
-     }
+     }*/
 
 }
 

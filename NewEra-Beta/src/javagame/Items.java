@@ -35,6 +35,10 @@ public class Items {
     private int spritePosX = 0;
     private int spritePosY = 0;
 
+
+
+    private boolean isEquipped;
+
         // Sprite image
     private Image imageItem;
 
@@ -52,10 +56,11 @@ public class Items {
     public Items() {
     }
 
-        // Pass -1 in if you don't want to set it
+        // Pass -1 in for each if you don't want to set them
     public Items( int itemId, int classID, int rarity, int level  ) {
 
         Random randomNumber = new Random();
+        this.isEquipped = false;
 
         if( itemId == -1 ) {
             this.itemID = randomNumber.nextInt( 13 );
@@ -119,6 +124,8 @@ public class Items {
     public Items( int level ) {
         Random randomNumber = new Random();
 
+        this.isEquipped = false;
+
         this.itemID = randomNumber.nextInt( 13 );
 
         if( this.itemID != 0 && this.itemID != 1 ) {
@@ -165,10 +172,17 @@ public class Items {
 
     }
 
-    public Items(Items other) {
+
+    public Items(Items other, boolean isSave) {
+        if(isSave) {
+
+            this.ID = other.getID();
+        }
+        else {
+            this.ID = this.ItemsCount;
+            this.ItemsCount++;
+        }
         this.itemID = other.itemID;
-        this.ItemsCount = other.ItemsCount;
-        this.ID = other.ID;
         this.classID = other.classID;
         this.worth = other.worth;
         this.attackPower = other.attackPower;
@@ -180,6 +194,7 @@ public class Items {
         this.rarity = other.rarity;
         this.itemRarityColor = other.itemRarityColor;
         this.itemRarityColorNoAlpha = other.itemRarityColorNoAlpha;
+
     }
 
 
@@ -1237,6 +1252,9 @@ public class Items {
     public void drawImageItem( int x, int y ) {
         this.imageItem.draw(x,y);
     }
+
+    public boolean isEquipped() {return isEquipped;}
+    public void setEquipped(boolean isEquipped) {this.isEquipped = isEquipped;}
 
 }
 
