@@ -14,7 +14,7 @@ public class Interaction {
         player = player.getInstance();
     }
 
-    public Vector<NPC> getLootableEnemies (float x, float y, int direction, NPC[] enemies) {
+    public Vector<NPC> getLootableEnemies (float x, float y, int direction, NPC[] enemies, Graphics g) {
 
         // 0-Up, 1-Right, 2-Down, 3-Left
 
@@ -30,14 +30,20 @@ public class Interaction {
 
             }
         }
+        this.selectOptions(g, lootableEnemies);
 
         return lootableEnemies;
     }
 
     public void selectOptions(Graphics g, Vector<NPC> enemies) {
 
+        int menuHeight = 50;
 
+        for (NPC enemy : enemies) {
+            g.setColor(Color.black);
+            g.fillRect(67, 200, 80, menuHeight);
 
+        }
 
     }
 

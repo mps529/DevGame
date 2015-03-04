@@ -139,7 +139,7 @@ public class Game extends BasicGameState {
 
             if(isActing){
                 player.getAction().getLootableEnemies(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                        this.maps.elementAt(this.currentMap).getEnemies());
+                        this.maps.elementAt(this.currentMap).getEnemies(), g);
                 isActing = false;
             }
 
@@ -401,6 +401,11 @@ public class Game extends BasicGameState {
                 // Bring up debugging
                 if (input.isKeyPressed(Input.KEY_ESCAPE)) {
                     this.showInfo = !showInfo;
+                }
+
+                if(input.isKeyPressed(Input.KEY_E)) {
+                    this.isActing = true;
+                    input.clearKeyPressedRecord();
                 }
 
                 //save game
