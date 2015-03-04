@@ -26,6 +26,7 @@ public class NPCMovement {
     // Death
     private Animation npcDeath;
 
+    // 0-Up, 1-Right, 2-Down, 3-Left
     private int direction;
 
     // Pixels to move

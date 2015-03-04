@@ -143,7 +143,6 @@ public class Game extends BasicGameState {
                 isActing = false;
             }
 
-
             // Drawing Health/Stamina etc.
             this.player.drawPlayerInfo(g);
             // Debugging information
@@ -206,7 +205,7 @@ public class Game extends BasicGameState {
 
 
             // FPS show, also for debugging
-            gc.setShowFPS(this.showInfo);
+        gc.setShowFPS( this.showInfo );
     }
 
     public void update( GameContainer gc, StateBasedGame sbg, int delta ) throws SlickException {
@@ -379,11 +378,6 @@ public class Game extends BasicGameState {
                     input.clearKeyPressedRecord();
                 }
 
-                if(input.isKeyPressed(Input.KEY_E)) {
-                    this.isActing = true;
-                    input.clearKeyPressedRecord();
-                }
-
                 // Start Running
                 if (input.isKeyPressed(Input.KEY_LSHIFT) && this.player.getStamina() > this.player.getMinRunningStamina()) {
                     this.running = !this.running;
@@ -403,7 +397,6 @@ public class Game extends BasicGameState {
                     this.player.isNotRunning();
                     this.maps.elementAt(this.currentMap).isNotRunning();
                 }
-
 
                 // Bring up debugging
                 if (input.isKeyPressed(Input.KEY_ESCAPE)) {
@@ -427,6 +420,7 @@ public class Game extends BasicGameState {
                 }
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
+                this.maps.elementAt(this.currentMap).enemyMove( delta );
 
             } else {
 
