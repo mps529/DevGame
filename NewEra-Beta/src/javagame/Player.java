@@ -183,7 +183,7 @@ public class Player extends Movement {
         // Set Movement starting attributes
         setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth( 10 );
+        setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
         setExp( 0 );
 
@@ -503,6 +503,18 @@ public class Player extends Movement {
         this.health += heal;
         if( this.health >= MAX_HEALTH ) {
             this.health = MAX_HEALTH;
+        }
+
+    }
+    public void takeDamage( int attack, int movePower ) {
+        Random rand = new Random();
+
+        int defence  = getOverallDefence() + 1;
+
+        this.health -= 10 ; // (  ( attack * ( rand.nextInt( 10 ) + 1 )   ) / defence  ) + movePower
+
+        if( this.health < 0 ) {
+            this.health = 0;
         }
 
     }

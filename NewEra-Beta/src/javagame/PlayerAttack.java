@@ -3,6 +3,8 @@ package javagame;
 import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 
+import java.util.Vector;
+
 public class PlayerAttack {
 
         // Getting Player
@@ -114,7 +116,7 @@ public class PlayerAttack {
     public boolean isSneaking() { return this.isSneaking; }
     public boolean isBeserk() { return this.isBeserk; }
 
-    public boolean isDoneAttacking( Input input, int delta, NPC[] enemies ) {
+    public boolean isDoneAttacking( Input input, int delta, Vector<NPC> enemies ) {
 
         if( this.player.getPlayerClass() == 0 ) {
             return isHunterDone( input, delta );
@@ -424,7 +426,7 @@ public class PlayerAttack {
         }
     }
 
-    private void checkSpaceAhead( NPC[] enemies ) {
+    private void checkSpaceAhead( Vector<NPC> enemies ) {
 
         float x = this.player.getPlayerX();
         float y = this.player.getPlayerY();
@@ -434,40 +436,40 @@ public class PlayerAttack {
             stun = true;
         }
 
-        for( NPC enemy : enemies ) {
-            if( enemy.getIsAlive() ) {
+        for( int i = 0; i < enemies.size(); i++ ) {
+            if( enemies.elementAt(i).getIsAlive() ) {
                 if( this.player.getDirection() == 0 ) {
-                    if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y )) {
-                        enemy.takeDamage();
+                    if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y )) {
+                        enemies.elementAt(i).takeDamage(this.player.getDirection());
                         if( stun ) {
-                            enemy.setStunned( 5000 );
+                            enemies.elementAt(i).setStunned(5000);
                         }
                         break;
                     }
                 }
                 else if( this.player.getDirection() == 1 ) {
-                    if ((enemy.getNPCX() >= x  && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24 )) {
-                        enemy.takeDamage();
+                    if ((enemies.elementAt(i).getNPCX() >= x  && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24 )) {
+                        enemies.elementAt(i).takeDamage(this.player.getDirection() );
                         if( stun ) {
-                            enemy.setStunned( 5000 );
+                            enemies.elementAt(i).setStunned(5000);
                         }
                         break;
                     }
                 }
                 else if( this.player.getDirection() == 2 ) {
-                    if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y && enemy.getNPCY() <= y + 24 )) {
-                        enemy.takeDamage();
+                    if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y && enemies.elementAt(i).getNPCY() <= y + 24 )) {
+                        enemies.elementAt(i).takeDamage(this.player.getDirection());
                         if( stun ) {
-                            enemy.setStunned( 5000 );
+                            enemies.elementAt(i).setStunned( 5000 );
                         }
                         break;
                     }
                 }
                 else if( this.player.getDirection() == 3 ) {
-                    if ((enemy.getNPCX() >= x - 24  && enemy.getNPCX() <= x) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24 )) {
-                        enemy.takeDamage();
+                    if ((enemies.elementAt(i).getNPCX() >= x - 24  && enemies.elementAt(i).getNPCX() <= x) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24 )) {
+                        enemies.elementAt(i).takeDamage(this.player.getDirection());
                         if( stun ) {
-                            enemy.setStunned( 5000 );
+                            enemies.elementAt(i).setStunned( 5000 );
                         }
                         break;
                     }
@@ -476,16 +478,16 @@ public class PlayerAttack {
         }
     }
 
-    private void checkSpaceAround( NPC[] enemies ) {
+    private void checkSpaceAround( Vector<NPC> enemies ) {
 
         float x = this.player.getPlayerX();
         float y = this.player.getPlayerY();
 
-        for( NPC enemy : enemies ) {
-            if( enemy.getIsAlive() ) {
-                if ((enemy.getNPCX() >= x - 44 && enemy.getNPCX() <= x + 44) && (enemy.getNPCY() >= y - 44 && enemy.getNPCY() <= y + 44)) {
-                    enemy.takeDamage();
-                    enemy.setStunned();
+        for( int i = 0; i < enemies.size(); i++ ) {
+            if( enemies.elementAt(i).getIsAlive() ) {
+                if ((enemies.elementAt(i).getNPCX() >= x - 44 && enemies.elementAt(i).getNPCX() <= x + 44) && (enemies.elementAt(i).getNPCY() >= y - 44 && enemies.elementAt(i).getNPCY() <= y + 44)) {
+                    enemies.elementAt(i).takeDamage(this.player.getDirection());
+                    enemies.elementAt(i).setStunned();
                 }
             }
         }
@@ -524,7 +526,7 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isWarriorDone( Input input, int delta, NPC[] enemies ) {
+    private boolean isWarriorDone( Input input, int delta, Vector<NPC> enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
@@ -565,7 +567,7 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isWizardDone( Input input, int delta, NPC[] enemies ) {
+    private boolean isWizardDone( Input input, int delta, Vector<NPC> enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
@@ -617,7 +619,7 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isRougeDone( Input input, int delta, NPC[] enemies ) {
+    private boolean isRougeDone( Input input, int delta, Vector<NPC> enemies ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
