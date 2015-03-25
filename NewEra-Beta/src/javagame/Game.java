@@ -420,7 +420,8 @@ public class Game extends BasicGameState {
                 }
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
-                this.maps.elementAt(this.currentMap).enemyMove( delta );
+                this.maps.elementAt(this.currentMap).enemyMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
+                this.maps.elementAt(this.currentMap).alliesMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
 
             } else {
 

@@ -23,6 +23,7 @@ public class NPCMovement {
     private Animation movingNPC, movingUp, movingRight, movingDown, movingLeft;
     // Fighting animations
     private Animation attackingNPC, attackingUp, attackingRight, attackingDown, attackingLeft;
+    private int frameStop = 0;
     // Death
     private Animation npcDeath;
 
@@ -94,7 +95,7 @@ public class NPCMovement {
             this.attackingRight = new Animation(rightAttack, durationHunterSpeedAttack, true);
             this.attackingDown = new Animation(downAttack, durationHunterSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationHunterSpeedAttack, true);
-
+            this.frameStop = 12;
         }
         else if( classID == 1 ) {
             // Sets images for attacking animations
@@ -107,6 +108,7 @@ public class NPCMovement {
             this.attackingRight = new Animation(rightAttack, durationWarriorSpeedAttack, true);
             this.attackingDown = new Animation(downAttack, durationWarriorSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationWarriorSpeedAttack, true);
+            this.frameStop = 7;
         }
         // Wizard
         else if( classID == 2 ) {
@@ -120,6 +122,7 @@ public class NPCMovement {
             this.attackingRight = new Animation(rightAttack, durationWizardSpeedAttack, true);
             this.attackingDown = new Animation(downAttack, durationWizardSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationWizardSpeedAttack, true);
+            this.frameStop = 5;
         }
         else if( classID == 3 ) {
             // Sets images for attacking animations
@@ -132,6 +135,7 @@ public class NPCMovement {
             this.attackingRight = new Animation(rightAttack, durationRougeSpeedAttack, true);
             this.attackingDown = new Animation(downAttack, durationRougeSpeedAttack, true);
             this.attackingLeft = new Animation(leftAttack, durationRougeSpeedAttack, true);
+            this.frameStop = 5;
         }
 
         // Death Animation
@@ -183,12 +187,16 @@ public class NPCMovement {
     public Animation getMovingNPC(){
         return this.movingNPC;
     }
+    public Animation getAttackingNPC() { return  this.attackingNPC; }
     public Animation getDieingNPC(){
         return this.npcDeath;
     }
 
     public float getNPCX() {
         return this.npcX;
+    }
+    public float getNPCXTile() {
+        return this.npcX/32;
     }
     public float getNPCXForMap() { return ( this.npcX - 320 )*-1; }
 
@@ -209,7 +217,11 @@ public class NPCMovement {
     }
 
     public float getNPCY() { return this.npcY; }
+    public float getNPCYTile() {
+        return this.npcY/32;
+    }
     public float getNPCYForMap() { return ( this.npcY - 320 )*-1; }
+
     public void setNPCY( float y ) { this.npcY = y*32; }
     public void setNPCYinPixels( float y ) {
         this.npcY = y;
@@ -229,6 +241,15 @@ public class NPCMovement {
         this.npcDeath.start();
     }
     public void stopAnimationDeath() { this.npcDeath.stopAt(5); }
+
+    public void startAnimationAttacking() {
+        this.attackingNPC.restart();
+        this.attackingNPC.start();
+    }
+    public void stopAnimationAttacking() {
+        this.attackingNPC.stopAt( this.frameStop );
+    }
+    public boolean isStoppedAttacking() { return this.attackingNPC.isStopped(); }
 
     public boolean isStoppedDead() {
         return this.npcDeath.isStopped();
