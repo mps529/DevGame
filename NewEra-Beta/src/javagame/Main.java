@@ -10,6 +10,7 @@ public class Main extends StateBasedGame {
     public static final int game = 1;
     public static final int inventoryScreen = 2;
     public static final int playerScreen = 3;
+    public static final int lootScreen = 4;
 
     public Main( String name ) {
         super( name );
@@ -18,6 +19,7 @@ public class Main extends StateBasedGame {
         this.addState( new Game( game ) );
         this.addState( new InventoryScreen( inventoryScreen) );
         this.addState( new PlayerScreen( playerScreen ) );
+        this.addState( new LootMenu( lootScreen ) );
     }
 
     public void initStatesList( GameContainer gc ) throws SlickException {
@@ -25,6 +27,7 @@ public class Main extends StateBasedGame {
         this.getState( game ).init( gc, this );
         this.getState( inventoryScreen ).init( gc, this );
         this.getState( playerScreen ).init( gc, this );
+        this.getState( lootScreen ).init( gc, this );
             // Sets menu as start screen
         this.enterState( mainMenu );
     }

@@ -76,6 +76,11 @@ public class Player extends Movement {
     // Players Inventory
     private Inventory inventory;
 
+    // enemy inventory player is looting
+        // used only when interacting with enemy bodies
+    private Inventory lootingInventory;
+    private String lootingName;
+
     // How long arrow will live for.
     private static int FIRE_RATE = 250;
     // Index of the projectile array
@@ -129,6 +134,7 @@ public class Player extends Movement {
         this.perkPoints = other.perkPoints;
         this.movePoints = other.movePoints;
         this.inventory = new Inventory(other.getInventory(), false );
+        this.lootingInventory = new Inventory(other.getLootingInventory(), false);
         this.FIRE_RATE = other.FIRE_RATE;
         this.currentIndex = other.currentIndex;
         this.lastShot = other.lastShot;
@@ -431,6 +437,17 @@ public class Player extends Movement {
         return this.inventory;
     }
     public void setInventory( Inventory inventory) {this.inventory = new Inventory(inventory, false);}
+
+    public Inventory getLootingInventory() {return lootingInventory;}
+    public void setLootingInventory(Inventory lootingInventory) {
+        if(lootingInventory != null) {
+            System.out.println("-----------");
+            lootingInventory.printInventory();
+            this.lootingInventory = new Inventory(lootingInventory, false);
+        } else {
+            this.lootingInventory = null;
+        }
+    }
 
     public int getAttackOneDamage() { return this.attackOneDamage; }
     public void incrementAttackOneDamage() { this.attackOneDamage += 2; }

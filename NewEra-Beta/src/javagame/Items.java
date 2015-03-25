@@ -126,6 +126,7 @@ public class Items {
 
         this.isEquipped = false;
 
+
         this.itemID = randomNumber.nextInt( 13 );
 
         if( this.itemID != 0 && this.itemID != 1 ) {
@@ -179,8 +180,7 @@ public class Items {
             this.ID = other.getID();
         }
         else {
-            this.ID = this.ItemsCount;
-            this.ItemsCount++;
+            increaseAndAssignID();
         }
         this.itemID = other.itemID;
         this.classID = other.classID;
@@ -302,7 +302,7 @@ public class Items {
                     break;
                 // Rough
                 case 3:
-                    this.name += "Rouges ";
+                    this.name += "Rogues ";
                     break;
             }
             switch (this.itemID) {

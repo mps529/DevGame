@@ -91,6 +91,16 @@ public class NPC extends NPCMovement {
         this.willRender = false;
     }
 
+    public NPC(NPC other) {
+        //minimal copy constructor only used when looting
+        this.inventory = new Inventory(other.getInventory(), false );
+        this.currentIndex = other.currentIndex;
+        this.isAlive = other.isAlive;
+
+
+    }
+
+
         // NPC Enemy with race
     public NPC( int race  ) {
         super();
@@ -218,6 +228,8 @@ public class NPC extends NPCMovement {
         this.setPlayerDirection(3);
 
     }
+
+
 
     public void setMapPath( Map map ) {
         pathFinder = new AStarPathFinder( map, 15, false );
@@ -371,6 +383,7 @@ public class NPC extends NPCMovement {
         this.health -= (  (this.player.getOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack();
 
         if ( checkDeath() ) {
+            this.getInventory().unEquipAllItems();
             startAnimationDeath();
             stopAnimationDeath();
         }
@@ -498,9 +511,9 @@ public class NPC extends NPCMovement {
     public void lookAround( int delta ) {
         Random rand = new Random();
 
-        this.sinceLastTurn += delta * .07f;
+        this.sinceLastTurn += delta * .1f;
 
-        if( this.sinceLastTurn > this.TIME_TO_TURN * rand.nextInt(3) +  1 ) {
+        if( this.sinceLastTurn > this.TIME_TO_TURN ) {
             this.setPlayerDirection(rand.nextInt(3));
             this.sinceLastTurn = 0;
         }
