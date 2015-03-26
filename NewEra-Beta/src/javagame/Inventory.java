@@ -200,6 +200,11 @@ public class Inventory {
         return inventory;
     }
 
+    //inventory plus equipped items
+    public int getFullInventoryCount() {
+        return this.currentInventoryCount;
+    }
+
     public void addMoney( int money ) { this.money += money; }
     public void subMoney( int money ) { this.money -= money; }
     public int getMoney() { return this.money; }
@@ -217,9 +222,9 @@ public class Inventory {
             return true;
         }
             // Checks for space in inventory
-        if( getInventoryCount() < MAX_ITEMS_IN_INVENTORY ) {
-            this.currentInventoryCount++;
+        if( getInventoryCount() <= MAX_ITEMS_IN_INVENTORY ) {
             this.itemList.addElement( item );
+            this.currentInventoryCount++;
             return true;
         }
         else {
@@ -280,53 +285,58 @@ public class Inventory {
     }
 
     public void addEnemyNPCArmor( int level ) {
-        Items[] basic = new Items[6];
-        Random rand = new Random();
 
-        // Assigning basic Items
-        basic[0] = new Items(2, this.classID, -1, level);
-        basic[1] = new Items(3, this.classID, -1, level);
-        basic[2] = new Items(4, this.classID, -1, level);
-        basic[3] = new Items(5, this.classID, -1, level);
-        basic[4] = new Items(6, this.classID, -1, level);
+        if( this.playerHelmet == -1 ) {
+            Items[] basic = new Items[6];
+            Random rand = new Random();
 
-        // Check class to give correct weapon
-        if (this.classID == 0) {
-            basic[5] = new Items(10, this.classID, -1, level);
-        } else if (this.classID == 1) {
-            basic[5] = new Items(9, this.classID, -1, level);
-        } else if (this.classID == 2) {
-            basic[5] = new Items(12, this.classID, -1, level);
-        } else if (this.classID == 3) {
-            basic[5] = new Items(11, this.classID, -1, level);
-        }
+            // Assigning basic Items
+            basic[0] = new Items(2, this.classID, -1, level);
+            basic[1] = new Items(3, this.classID, -1, level);
+            basic[2] = new Items(4, this.classID, -1, level);
+            basic[3] = new Items(5, this.classID, -1, level);
+            basic[4] = new Items(6, this.classID, -1, level);
 
-        for (int x = 0; x < basic.length; x++) {
-            addItem(basic[x]);
-            equipItem(basic[x].getID());
-        }
+            // Check class to give correct weapon
+            if (this.classID == 0) {
+                basic[5] = new Items(10, this.classID, -1, level);
+            } else if (this.classID == 1) {
+                basic[5] = new Items(9, this.classID, -1, level);
+            } else if (this.classID == 2) {
+                basic[5] = new Items(12, this.classID, -1, level);
+            } else if (this.classID == 3) {
+                basic[5] = new Items(11, this.classID, -1, level);
+            }
 
-        // Necklaces
-        int willHaveItem = rand.nextInt(100);
-        if (willHaveItem > 40 && willHaveItem < 60) {
-            Items necklace = new Items(8, this.classID, -1, level);
-            addItem(necklace);
-        }
-        // Ring
-        willHaveItem = rand.nextInt(100);
-        if (willHaveItem > 20 && willHaveItem < 40) {
-            Items ring = new Items(7, this.classID, -1, level);
-            addItem(ring);
-        }
-        // Adds monies
-        this.addMoney(rand.nextInt(level + 3) * (rand.nextInt(3) + 1));
+            for (int x = 0; x < basic.length; x++) {
+                addItem(basic[x]);
+                equipItem(basic[x].getID());
+            }
 
-        // Extra inventory items
-        Items[] extra = new Items[7];
-        int itemCount = rand.nextInt(7);
+            // Necklaces
+            int willHaveItem = rand.nextInt(100);
+            if (willHaveItem > 40 && willHaveItem < 60) {
+                Items necklace = new Items(8, this.classID, -1, level);
+                addItem(necklace);
+            }
+            // Ring
+            willHaveItem = rand.nextInt(100);
+            if (willHaveItem > 20 && willHaveItem < 40) {
+                Items ring = new Items(7, this.classID, -1, level);
+                addItem(ring);
+            }
+            // Adds monies
+            this.addMoney(rand.nextInt(level + 3) * (rand.nextInt(3) + 1));
 
-        for (int x = 0; x < itemCount; x++) {
-            extra[x] = new Items(rand.nextInt(level) + 1);
+                // Extra inventory items
+           /* Items[] extra = new Items[7];
+            int itemCount = rand.nextInt(7);
+
+            for (int x = 0; x < itemCount; x++) {
+                extra[x] = new Items(rand.nextInt(level) + 1);
+                this.addItem(extra[x]);
+            }*/
+
         }
     }
     
@@ -430,6 +440,11 @@ public class Inventory {
     public int unEquipItem( int ID ) {
 
         if( getInventoryCount() < this.MAX_ITEMS_IN_INVENTORY ) {
+            for(int i = 0; i<this.itemList.size(); i++) {
+                if(this.itemList.elementAt(i).getID() == ID) {
+                    this.itemList.elementAt(i).setEquipped(false);
+                }
+            }
             if (this.playerHelmet == ID) {
                 this.playerHelmet = -1;
                 calculateAttackAndDefence();
@@ -465,6 +480,55 @@ public class Inventory {
             } else {
                 return 2;
             }
+        }
+        else {
+            return 2;
+        }
+    }
+
+    public int unEquipAllItems() {
+
+        for(int i = 0; i<this.itemList.size(); i++) {
+            if(this.itemList.elementAt(i).isEquipped()) {
+                this.itemList.elementAt(i).setEquipped(false);
+
+            }
+        }
+
+        if( getInventoryCount() < this.MAX_ITEMS_IN_INVENTORY ) {
+            if (this.playerHelmet != -1) {
+                this.playerHelmet = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerBoots != -1) {
+                this.playerBoots = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerPants != -1) {
+                this.playerPants = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerBody != -1) {
+                this.playerBody = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerGloves != -1) {
+                this.playerGloves = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerWeapon != -1) {
+                this.playerWeapon = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerRing != -1) {
+                this.playerRing = -1;
+                calculateAttackAndDefence();
+            }
+            if (this.playerNecklaces != -1) {
+                this.playerNecklaces = -1;
+                calculateAttackAndDefence();
+            }
+            return 1;
         }
         else {
             return 2;
@@ -574,6 +638,57 @@ public class Inventory {
         }
         catch( SlickException e ){
             e.printStackTrace();
+        }
+    }
+
+    public void renderPlayerInventoryInLootMenu( Graphics g, int[] inventory ) {
+
+        int x = 112 , y=80;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+
+    public void renderNPCInventoryInLootMenu( Graphics g, int[] inventory ) {
+
+        int x = 112 , y=400;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
         }
     }
 

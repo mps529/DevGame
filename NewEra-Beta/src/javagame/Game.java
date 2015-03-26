@@ -7,6 +7,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 import java.util.Vector;
 
@@ -28,6 +29,8 @@ public class Game extends BasicGameState {
     private SaveGame save;
 
     private Vector<Map> maps;
+
+    TiledMap lootMap;
 
         // Is Attacking animation playing
     private boolean attacking = false;
@@ -80,6 +83,9 @@ public class Game extends BasicGameState {
         maps.addElement( new Map( "house1.tmx", -3, -8 ) );
 
 
+        lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );
+
+
 
             // Setting starting map
         for( int x = 0; x < maps.size(); x++) {
@@ -107,6 +113,7 @@ public class Game extends BasicGameState {
             this.maps.elementAt(this.currentMap).setMapSkewX(this.player.getSkewX());
             this.maps.elementAt(this.currentMap).setMapSkewY(this.player.getSkewY());
         }
+        this.isActing = false;
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
@@ -140,9 +147,21 @@ public class Game extends BasicGameState {
             this.player.renderProjectile(gc, g);
 
             if(isActing){
-                player.getAction().getLootableEnemies(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                        this.maps.elementAt(this.currentMap).getEnemies());
-                isActing = false;
+
+                if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
+                        this.maps.elementAt(this.currentMap).getEnemies()) != null) {
+                    player.setLootingInventory(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
+                            this.maps.elementAt(this.currentMap).getEnemies()).getInventory());
+
+                    player.setMapX(maps.elementAt(currentMap).getX());
+                    player.setMapY(maps.elementAt(currentMap).getY());
+                    player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
+                    player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
+                    sbg.enterState(4);
+                } else {
+                    isActing = false;
+                }
+
             }
 
             // Drawing Health/Stamina etc.
@@ -403,6 +422,11 @@ public class Game extends BasicGameState {
                 // Bring up debugging
                 if (input.isKeyPressed(Input.KEY_ESCAPE)) {
                     this.showInfo = !showInfo;
+                }
+
+                if(input.isKeyPressed(Input.KEY_E)) {
+                    this.isActing = true;
+                    input.clearKeyPressedRecord();
                 }
 
                 //save game
