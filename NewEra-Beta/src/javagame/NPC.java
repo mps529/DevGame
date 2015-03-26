@@ -106,7 +106,7 @@ public class NPC extends NPCMovement {
 
     }
         // NPC Enemy with race
-    public NPC( int race  ) {
+    public NPC( int race, boolean good ) {
         super();
 
             // Set the race
@@ -155,6 +155,9 @@ public class NPC extends NPCMovement {
         this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence();
 
         this.good = good;
+
+
+
 
         if( !good ) {
             setNPCClass("fancyOrk.png", 3);
@@ -663,8 +666,6 @@ public class NPC extends NPCMovement {
 
         int npcX = findCurrentTile( getNPCX() );
         int npcY = findCurrentTile( getNPCY() );
-
-        System.out.println( npcX + ",  " + npcY );
 
         this.path = this.pathFinder.findPath( null, npcX, npcY, findCurrentTile( enemyX ), findCurrentTile( enemyY ) );
 
