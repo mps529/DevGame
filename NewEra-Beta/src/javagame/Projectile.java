@@ -55,7 +55,7 @@ public class Projectile {
             if(  map.isSpaceTaken( this.projectilePos.getX(), this.projectilePos.getY() ) != 0 ) {
                 this.active = false;
             }
-            else if( map.isSpaceEnemy( this.projectilePos.getX(), this.projectilePos.getY() ) )  {
+            else if( map.isSpaceEnemy( this.projectilePos.getX(), this.projectilePos.getY(), direction ) )  {
                 this.active = false;
             }
                 // Calculation if player changed position since projectile shot

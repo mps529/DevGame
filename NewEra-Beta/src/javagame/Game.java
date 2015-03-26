@@ -147,9 +147,9 @@ public class Game extends BasicGameState {
             if(isActing){
 
                 if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                        this.maps.elementAt(this.currentMap).getEnemies(), g) != null) {
+                        this.maps.elementAt(this.currentMap).getEnemies()) != null) {
                     player.setLootingInventory(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                            this.maps.elementAt(this.currentMap).getEnemies(), g).getInventory());
+                            this.maps.elementAt(this.currentMap).getEnemies()).getInventory());
 
                     player.setMapX(maps.elementAt(currentMap).getX());
                     player.setMapY(maps.elementAt(currentMap).getY());
@@ -444,7 +444,8 @@ public class Game extends BasicGameState {
                 }
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
-                this.maps.elementAt(this.currentMap).enemyMove( delta );
+                this.maps.elementAt(this.currentMap).enemyMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
+                this.maps.elementAt(this.currentMap).alliesMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
 
             } else {
 

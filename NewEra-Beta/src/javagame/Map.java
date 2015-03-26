@@ -6,6 +6,8 @@ import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
+import java.util.Vector;
+
 public class Map implements TileBasedMap{
 
         // This is the map
@@ -27,6 +29,14 @@ public class Map implements TileBasedMap{
         // Above Layer
     private int aboveLayer;
 
+        // Layer for enemies to spawn
+    private int enemySpawn;
+        // Layer for good to spawn
+    private int villagerSpawn;
+        // Layer for guards to spawn
+    private int guardSpawn;
+
+
         // Map size in tiles
     private int mapHeight, mapWidth;
 
@@ -41,7 +51,10 @@ public class Map implements TileBasedMap{
         // How many pixels to move
     private static int speed = 2;
 
-    private NPC[] enemies;
+    private Vector<NPC> enemies;
+
+
+    private Vector<NPC> allies;
 
         // 0-walkable area, 1-collisions, 2-doors
     private int[][] mapObjects;
@@ -65,26 +78,23 @@ public class Map implements TileBasedMap{
         this.collisionsLayer = map.getLayerIndex( "collision" );
         this.doorLayer = map.getLayerIndex( "doorway" );
         this.aboveLayer = map.getLayerIndex( "above" );
+        this.enemySpawn = map.getLayerIndex("spawn");
+        this.villagerSpawn = map.getLayerIndex( "villagerSpawn" );
+        this.guardSpawn = map.getLayerIndex( "guardSpawn" );
 
             // Setting 2D array for collisions
         this.mapObjects = new int[ getMapWidth() ][ getMapHeight() ];
 
             // This will be where the map will start rendering
-        setMapCoordX( x );
-        setMapCoordY( y );
+        setMapCoordX(x);
+        setMapCoordY(y);
         this.mapSkewX = Math.abs( x );
         this.mapSkewY = Math.abs( y );
         this.x=0;
         this.y=0;
 
-        enemies = new NPC[1];
-
-        enemies[0] = new NPC( 3, 3 );
-        enemies[0].stopAnimationWalking();
-
-        for( NPC enemy : enemies ) {
-            enemy.setMapPath(this);
-        }
+        enemies = new Vector<NPC>();
+        allies = new Vector<NPC>();
 
             // Fills the 2D array with collisions
         fillMapObjects();
@@ -97,6 +107,18 @@ public class Map implements TileBasedMap{
     public String getMapName() {
         return this.mapName;
     }
+
+    public void addEnemies() {
+
+        /*
+        for( NPC enemy : enemies ) {
+            enemy.setMapPath(this);
+        }
+        */
+    }
+     public void clearEnemyList() {
+
+     }
 
         // Send in TileX
     public void setMapCoordX( float x ) { mapCoordX = x*32; }
@@ -133,7 +155,7 @@ public class Map implements TileBasedMap{
     public void setMapCoordY( float y ) { mapCoordY = y*32; }
     public void setMapCoordYInPixels( float y ) { mapCoordY = y; }
     public float getMapCoordY( ) { return this.mapCoordY; }
-    
+
     public void incrementMapCoordY( ) {
         this.mapCoordY += this.speed;
         int skewY =  (int)this.mapSkewY * 32;
@@ -178,8 +200,12 @@ public class Map implements TileBasedMap{
         map.render( (int)this.x-32, (int)this.y-32, (int)this.mapSkewX-1, (int)this.mapSkewY-1 , 21, 21);
         //map.render( (int)mapCoordX, (int)mapCoordY );
 
-        for( int x =0; x < this.enemies.length; x++ ) {
-            this.enemies[x].drawNPC( g );
+        for( int x =0; x < this.enemies.size(); x++ ) {
+            this.enemies.elementAt(x).drawNPC(g);
+        }
+
+        for( int x =0; x < this.allies.size(); x++ ) {
+            this.allies.elementAt(x).drawNPC(g);
         }
     }
     public void drawMapAbove() {
@@ -225,12 +251,12 @@ public class Map implements TileBasedMap{
     }
 
 
-    public boolean isSpaceEnemy( float x, float y ) {
+    public boolean isSpaceEnemy( float x, float y, int direction ) {
 
         for( NPC enemy : enemies ) {
             if( enemy.getIsAlive() ) {
                 if ((enemy.getNPCX() >= x - 12 && enemy.getNPCX() <= x + 12) && (enemy.getNPCY() >= y - 12 && enemy.getNPCY() <= y + 12)) {
-                    enemy.takeDamage();
+                    enemy.takeDamage( direction );
                     return true;
                 }
             }
@@ -238,29 +264,107 @@ public class Map implements TileBasedMap{
         return false;
     }
 
-    public NPC[] getEnemies() { return this.enemies; }
+    public Vector getEnemies() { return this.enemies; }
 
-    public void enemyMove( int delta ) {
+    public void enemyMove( int delta, int x, int y ) {
 
-        for( NPC enemy : enemies ) {
-            if( enemy.getStunned() > 0 ) {
-                enemy.decreaseStunned( delta );
+        for( int i = 0; i < enemies.size(); i++ ) {
+            enemies.elementAt(i).stopAnimationWalking();
+            int opponent = enemies.elementAt(i).getEnemy();
+            int opponentX;
+            int opponentY;
+            if( opponent == -1 ) {
+                opponentX = x;
+                opponentY = y;
             }
-            if( !enemy.getIsAlive() && enemy.getDeathTime() > 0 ) {
-                enemy.decreaseTimeLeftOnEarth( delta );
+            else {
+                opponentX = (int)allies.elementAt(opponent).getNPCX();
+                opponentY = (int)allies.elementAt(opponent).getNPCY();
             }
-            else if( enemy.getIsAlive() ) {
-                if( enemy.isGoodInSight( this.mapObjects ) ) {
-                    enemy.goToGood( );
+            if( enemies.elementAt(i).getStunned() > 0 ) {
+                enemies.elementAt(i).decreaseStunned(delta);
+            }
+            if( !enemies.elementAt(i).getIsAlive() && enemies.elementAt(i).getDeathTime() > 0 ) {
+                enemies.elementAt(i).decreaseTimeLeftOnEarth(delta);
+            }
+            else if(  enemies.elementAt(i).getStunned() <=0 && enemies.elementAt(i).getIsAlive() ) {
+                if( !enemies.elementAt(i).getIsAttacking() ) {
+                    if (enemies.elementAt(i).isGoodInSight(this.mapObjects, allies)) {
+
+                        if (!enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
+                            enemies.elementAt(i).goToGood(opponentX, opponentY);
+                        }
+                    }
+                    else if( enemies.elementAt(i).getInCombat() ) {
+                        enemies.elementAt(i).facePlayer();
+                    }
+                    else {
+                        enemies.elementAt(i).lookAround(delta);
+                    }
                 }
                 else {
-                    enemy.lookAround( delta );
+                    if( opponent == -1 ) {
+                        enemies.elementAt(i).goToGood(x, y);
+                    }
+                    else {
+                        enemies.elementAt(i).goToGood((int) enemies.elementAt(opponent).getNPCX(), (int) enemies.elementAt(opponent).getNPCY());
+                    }
+                    if( enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
+                        allies.elementAt(opponent).takeDamage( enemies.elementAt(i).getDirection() );
+                    }
                 }
             }
 
         }
 
     }
+
+    public void alliesMove( int delta, int x, int y ) {
+
+        for(int i = 0; i < allies.size(); i++ ) {
+            allies.elementAt(i).stopAnimationWalking();
+            int opponent = allies.elementAt(i).getEnemy();
+            int opponentX;
+            int opponentY;
+            if( opponent == -1 ) {
+                opponentX = x;
+                opponentY = y;
+            }
+            else {
+                opponentX = (int)enemies.elementAt(opponent).getNPCX();
+                opponentY = (int)enemies.elementAt(opponent).getNPCY();
+            }
+            if( allies.elementAt(i).getStunned() > 0 ) {
+                allies.elementAt(i).decreaseStunned(delta);
+            }
+            if( !allies.elementAt(i).getIsAlive() && allies.elementAt(i).getDeathTime() > 0 ) {
+                allies.elementAt(i).decreaseTimeLeftOnEarth( delta );
+            }
+            else if(  allies.elementAt(i).getStunned() <=0 && allies.elementAt(i).getIsAlive() ) {
+                if( !allies.elementAt(i).getIsAttacking() ) {
+                    if (allies.elementAt(i).isGoodInSight(this.mapObjects, enemies)) {
+                        if (!allies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
+                            allies.elementAt(i).goToGood(opponentX, opponentY);
+                        }
+                    }
+                    else if( allies.elementAt(i).getInCombat() ) {
+                        allies.elementAt(i).facePlayer();
+                    }
+                    else {
+                        allies.elementAt(i).lookAround(delta);
+                    }
+                }
+                else {
+                    if( allies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
+                        enemies.elementAt(opponent).takeDamage(allies.elementAt(i).getDirection());
+                    }
+                }
+            }
+
+        }
+
+    }
+
 
     public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
     public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }
@@ -331,6 +435,17 @@ public class Map implements TileBasedMap{
         if( this.mapObjects[ x ][ y ] == 1 ) {
             return true;
         }
+        for( NPC enemy : enemies ) {
+            if( enemy.getNPCXTile() == x && enemy.getNPCYTile() == y ) {
+                return true;
+            }
+        }
+        for( NPC ally : allies ) {
+            if( ally.getNPCXTile() == x && ally.getNPCYTile() == y ) {
+                return true;
+            }
+        }
+
         return false;
     }
 

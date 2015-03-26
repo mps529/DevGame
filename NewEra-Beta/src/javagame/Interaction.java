@@ -20,19 +20,19 @@ public class Interaction {
         menuY = 200;
     }
 
-    public NPC getLootableEnemy (float x, float y, int direction, NPC[] enemies, Graphics g) {
+    public NPC getLootableEnemy (float x, float y, int direction, Vector<NPC> enemies) {
 
         // 0-Up, 1-Right, 2-Down, 3-Left
         boolean isLooting = false;
 
 
-        for( NPC enemy : enemies ) {
-            if( enemy.getIsAlive() == false ) {
-                    if ((enemy.getNPCX() >= x - 24 && enemy.getNPCX() <= x + 24) && (enemy.getNPCY() >= y - 24 && enemy.getNPCY() <= y + 24)) {
+        for( int i = 0; i < enemies.size(); i++ ) {
+            if( !enemies.elementAt(i).getIsAlive() ) {
+                    if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24)) {
                         System.out.println("\n");
-                        enemy.getInventory().printInventory();
+                        enemies.elementAt(i).getInventory().printInventory();
                         isLooting = true;
-                        return enemy;
+                        return enemies.elementAt(i);
                     }
 
             }
