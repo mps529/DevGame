@@ -84,7 +84,7 @@ public class NPC extends NPCMovement {
     private AStarPathFinder pathFinder;
     private Path path;
 
-        // -1 for player, 0-whatever for index
+        // -1 for player, 0 to whatever for index
     private int opponentsArrayLocation;
 
     private int sinceLastTurn = 0;
@@ -109,7 +109,6 @@ public class NPC extends NPCMovement {
     public NPC( int race  ) {
         super();
 
-        this.stopAnimationWalking();
             // Set the race
         this.npcRace = race;
             // Get player class
@@ -146,8 +145,8 @@ public class NPC extends NPCMovement {
 
             // Setting up the NPC Inventory
         this.inventory = new Inventory();
-        this.inventory.setClassID( this.npcClass );
-        this.inventory.setBaseAttack( this.BASE_ATTACK );
+        this.inventory.setClassID(this.npcClass);
+        this.inventory.setBaseAttack(this.BASE_ATTACK);
         this.inventory.setBaseDefence(this.BASE_DEFENCE);
         this.inventory.addEnemyNPCArmor( this.npcLevel );
 
@@ -157,13 +156,17 @@ public class NPC extends NPCMovement {
 
         this.good = good;
 
-        setNPCClass( "fancyOrk.png", 3 );
+        if( !good ) {
+            setNPCClass("fancyOrk.png", 3);
+        }
+        else {
+            setNPCClass("villager1.png", 2);
+        }
+
 
         this.isAlive = true;
         this.willRender = false;
 
-        setNPCX( 89 );
-        setNPCY( 99 );
         this.stopAnimationWalking();
         this.setPlayerDirection( 0 );
     }
@@ -231,16 +234,6 @@ public class NPC extends NPCMovement {
         }
         this.isAlive = true;
         this.willRender = false;
-
-        if( !good ) {
-            setNPCX( 75 );
-            setNPCY( 92 );
-        }
-        else {
-            setNPCX( 80 );
-            setNPCY( 92 );
-        }
-
 
         this.stopAnimationWalking();
         this.setPlayerDirection(3);
@@ -470,11 +463,10 @@ public class NPC extends NPCMovement {
         int viewSpan;
         int blockCheck;
 
-        int playerX = findCurrentTile(this.player.getPlayerX());
-        int playerY = findCurrentTile(this.player.getPlayerY());
+        int playerX = findCurrentTile( this.player.getPlayerX() );
+        int playerY = findCurrentTile( this.player.getPlayerY() );
 
         if( !this.good ) {
-
             if (direction == 0) {
                 for (int i = y; i > y - 6; i--) {
                     if (i >= y - 2) {
@@ -489,6 +481,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (blockCheck == playerX && i == playerY) {
                             this.inCombat = true;
+                            this.opponentsArrayLocation = -1;
                             return true;
                         }
                         viewSpan--;
@@ -509,6 +502,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (i == playerX && blockCheck == playerY) {
                             this.inCombat = true;
+                            this.opponentsArrayLocation = -1;
                             return true;
                         }
                         viewSpan--;
@@ -530,6 +524,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (blockCheck == playerX && i == playerY) {
                             this.inCombat = true;
+                            this.opponentsArrayLocation = -1;
                             return true;
                         }
                         viewSpan--;
@@ -551,6 +546,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (i == playerX && blockCheck == playerY) {
                             this.inCombat = true;
+                            this.opponentsArrayLocation = -1;
                             return true;
                         }
                         viewSpan--;
@@ -559,7 +555,7 @@ public class NPC extends NPCMovement {
                 }
             }
         }
-        if( npcs != null ) {
+        else if( npcs != null ) {
             for( int iterator = 0; iterator < npcs.size(); iterator++ ) {
 
                 if( npcs.elementAt(iterator).getIsAlive() == true ) {
@@ -581,6 +577,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (blockCheck == playerX && i == playerY) {
                                         this.inCombat = true;
+                                        this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
                                     viewSpan--;
@@ -601,6 +598,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (i == playerX && blockCheck == playerY) {
                                         this.inCombat = true;
+                                        this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
                                     viewSpan--;
@@ -622,6 +620,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (blockCheck == playerX && i == playerY) {
                                         this.inCombat = true;
+                                        this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
                                     viewSpan--;
@@ -643,6 +642,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (i == playerX && blockCheck == playerY) {
                                         this.inCombat = true;
+                                        this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
                                     viewSpan--;
@@ -664,13 +664,15 @@ public class NPC extends NPCMovement {
         int npcX = findCurrentTile( getNPCX() );
         int npcY = findCurrentTile( getNPCY() );
 
-
-
+        System.out.println( npcX + ",  " + npcY );
 
         this.path = this.pathFinder.findPath( null, npcX, npcY, findCurrentTile( enemyX ), findCurrentTile( enemyY ) );
 
 
         if(  this.path != null && this.path.getLength() > 1  ) {
+
+
+
             int x = this.path.getX(1);
             int y = this.path.getY(1);
 

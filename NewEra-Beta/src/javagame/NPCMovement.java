@@ -35,6 +35,10 @@ public class NPCMovement {
 
     private int npcClass;
 
+        // This tel where the enemy was spawned at.
+    private float spawnX;
+    private float spawnY;
+
     // Players position in pixels of map
     private float npcX, npcY;
 
@@ -191,6 +195,12 @@ public class NPCMovement {
     public Animation getDieingNPC(){
         return this.npcDeath;
     }
+
+    public void setSpawnX( float x ) { this.spawnX = x; this.npcX = x; }
+    public void setSpawnY( float y ) { this.spawnY = y; this.npcY = y; }
+
+    public float getSpawnX() { return this.spawnX; }
+    public float getSpawnY() { return this.spawnY; }
 
     public float getNPCX() {
         return this.npcX;
