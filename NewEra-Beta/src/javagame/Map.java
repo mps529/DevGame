@@ -6,6 +6,7 @@ import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class Map implements TileBasedMap{
@@ -51,9 +52,9 @@ public class Map implements TileBasedMap{
         // How many pixels to move
     private static int speed = 2;
 
+        // enemies
     private Vector<NPC> enemies;
-
-
+        // Good
     private Vector<NPC> allies;
 
         // 0-walkable area, 1-collisions, 2-doors
@@ -78,7 +79,9 @@ public class Map implements TileBasedMap{
         this.collisionsLayer = map.getLayerIndex( "collision" );
         this.doorLayer = map.getLayerIndex( "doorway" );
         this.aboveLayer = map.getLayerIndex( "above" );
+            // Enemies
         this.enemySpawn = map.getLayerIndex("spawn");
+            // Goods
         this.villagerSpawn = map.getLayerIndex( "villagerSpawn" );
         this.guardSpawn = map.getLayerIndex( "guardSpawn" );
 
@@ -93,8 +96,9 @@ public class Map implements TileBasedMap{
         this.x=0;
         this.y=0;
 
-        enemies = new Vector<NPC>();
-        allies = new Vector<NPC>();
+        this.enemies = new Vector<NPC>();
+        this.allies = new Vector<NPC>();
+
 
             // Fills the 2D array with collisions
         fillMapObjects();
@@ -108,16 +112,56 @@ public class Map implements TileBasedMap{
         return this.mapName;
     }
 
+    public void printSizes() {
+        System.out.println("Enemies: " + this.enemies.size() + ", Allies: " + this.allies.size());
+    }
+
     public void addEnemies() {
 
-        /*
-        for( NPC enemy : enemies ) {
-            enemy.setMapPath(this);
-        }
-        */
-    }
-     public void clearEnemyList() {
+        Random rand = new Random();
 
+        for( int x = 0; x < getMapHeight(); x++ ) {
+            for (int y = 0; y < getMapWidth(); y++) {
+
+                if( this.map.getTileId( x, y, this.enemySpawn) != 0 ) {
+                    NPC temp = new NPC( rand.nextInt( 2 ), false );
+                    this.enemies.add( temp );
+                    this.enemies.lastElement().setSpawnX( x*32 );
+                    this.enemies.lastElement().setSpawnY( y*32 );
+                    this.enemies.lastElement().setMapPath( this );
+                }
+
+            }
+        }
+    }
+    public void addGood() {
+
+        Random rand = new Random();
+
+        for( int x = 0; x < getMapHeight(); x++ ) {
+            for (int y = 0; y < getMapWidth(); y++) {
+
+                if( this.map.getTileId( x, y, this.villagerSpawn) != 0 ) {
+                    NPC temp = new NPC( rand.nextInt( 2 ), true );
+                    this.allies.add( temp );
+                    this.allies.lastElement().setSpawnX( x*32 );
+                    this.allies.lastElement().setSpawnY( y*32 );
+                    this.allies.lastElement().setMapPath( this );
+                }
+                else if( this.map.getTileId( x, y, this.guardSpawn ) != 0 ) {
+                    NPC temp = new NPC( rand.nextInt( 2 ), true );
+                    this.allies.add( temp );
+                    this.allies.lastElement().setSpawnX( x*32 );
+                    this.allies.lastElement().setSpawnY( y*32 );
+                    this.allies.lastElement().setMapPath( this );
+                }
+            }
+        }
+    }
+
+
+     public void clearEnemyList() {
+        this.enemies.clear();
      }
 
         // Send in TileX
@@ -271,15 +315,18 @@ public class Map implements TileBasedMap{
         for( int i = 0; i < enemies.size(); i++ ) {
             enemies.elementAt(i).stopAnimationWalking();
             int opponent = enemies.elementAt(i).getEnemy();
+
             int opponentX;
             int opponentY;
+
             if( opponent == -1 ) {
                 opponentX = x;
                 opponentY = y;
             }
             else {
-                opponentX = (int)allies.elementAt(opponent).getNPCX();
-                opponentY = (int)allies.elementAt(opponent).getNPCY();
+                opponentX = (int) allies.elementAt(opponent).getNPCX();
+                opponentY = (int) allies.elementAt(opponent).getNPCY();
+
             }
             if( enemies.elementAt(i).getStunned() > 0 ) {
                 enemies.elementAt(i).decreaseStunned(delta);
@@ -289,7 +336,9 @@ public class Map implements TileBasedMap{
             }
             else if(  enemies.elementAt(i).getStunned() <=0 && enemies.elementAt(i).getIsAlive() ) {
                 if( !enemies.elementAt(i).getIsAttacking() ) {
-                    if (enemies.elementAt(i).isGoodInSight(this.mapObjects, allies)) {
+                    if (enemies.elementAt(i).isGoodInSight(this.mapObjects, allies )) {
+
+
 
                         if (!enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
                             enemies.elementAt(i).goToGood(opponentX, opponentY);

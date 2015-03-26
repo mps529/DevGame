@@ -85,6 +85,8 @@ public class Game extends BasicGameState {
         for( int x = 0; x < maps.size(); x++) {
             if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
                 currentMap = x;
+                maps.elementAt(x).addEnemies();
+                maps.elementAt(x).addGood();
                 break;
             }
         }
@@ -420,6 +422,8 @@ public class Game extends BasicGameState {
                 }
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
+
+
                 this.maps.elementAt(this.currentMap).enemyMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
                 this.maps.elementAt(this.currentMap).alliesMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
 
