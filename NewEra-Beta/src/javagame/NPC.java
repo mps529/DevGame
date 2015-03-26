@@ -97,8 +97,16 @@ public class NPC extends NPCMovement {
         this.willRender = false;
     }
 
-        // NPC with race
-    public NPC( int race, boolean good  ) {
+    public NPC(NPC other) {
+        //minimal copy constructor only used when looting
+        this.inventory = new Inventory(other.getInventory(), false );
+        this.currentIndex = other.currentIndex;
+        this.isAlive = other.isAlive;
+
+
+    }
+        // NPC Enemy with race
+    public NPC( int race  ) {
         super();
 
         this.stopAnimationWalking();
@@ -294,6 +302,7 @@ public class NPC extends NPCMovement {
         stunnedImages[1] =  new Image( "NewEra-Beta/res/moves/stunFlipped.png" );
         int[] duration = { 400, 400 };
         this.stunnedAnimation = new Animation( stunnedImages, duration, true );
+
         this.red = new Color( 225, 0, 0, .7f );
 
     }
@@ -406,6 +415,7 @@ public class NPC extends NPCMovement {
         }
 
         if ( checkDeath() ) {
+            this.getInventory().unEquipAllItems();
             startAnimationDeath();
             stopAnimationDeath();
         }

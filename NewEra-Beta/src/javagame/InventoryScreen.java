@@ -13,7 +13,7 @@ public class InventoryScreen extends BasicGameState{
         // singelton for Inventory
     private Player player;
 
-    // singelton for Inventory
+        //inventory object
     private Inventory playerInventory;
         // Background
     private TiledMap inventoryMap;
@@ -138,7 +138,7 @@ public class InventoryScreen extends BasicGameState{
                 g.drawString("Class: Wizard", 360, 100);
             }
             else if( classID == 3 ) {
-                g.drawString("Class: Rouge", 360, 100);
+                g.drawString("Class: Rogue", 360, 100);
             }
             else if( classID == 4 ) {
                 g.drawString("Class: Any", 360, 100);
