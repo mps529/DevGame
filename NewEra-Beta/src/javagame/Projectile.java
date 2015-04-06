@@ -44,19 +44,32 @@ public class Projectile {
         this.active = false;
     }
 
-    public void update( int delta, int x, int y, Map map ) {
+    public void update( int delta, int x, int y, Map map, boolean good ) {
 
             // Checks for the change in position
         int changeX = 0;
         int changeY = 0;
 
         if( this.active ) {
+
+            if( good ) {
                 // Checking if projectile hit something
-            if(  map.isSpaceTaken( this.projectilePos.getX(), this.projectilePos.getY() ) != 0 ) {
-                this.active = false;
+                if (map.isSpaceTaken(this.projectilePos.getX(), this.projectilePos.getY()) != 0) {
+                    this.active = false;
+                } else if (map.isSpaceEnemy(this.projectilePos.getX(), this.projectilePos.getY(), direction)) {
+                    this.active = false;
+                }
             }
-            else if( map.isSpaceEnemy( this.projectilePos.getX(), this.projectilePos.getY(), direction ) )  {
-                this.active = false;
+            else {
+                // Checking if projectile hit something
+                if (map.isSpaceTaken(this.projectilePos.getX(), this.projectilePos.getY()) != 0) {
+                    this.active = false;
+                } else if ((x >= this.projectilePos.getX() - 12 && x <= this.projectilePos.getX() + 12) && (y >= this.projectilePos.getY() - 12 && y <= this.projectilePos.getY() + 12)) {
+                    System.out.println( "Hurt Player" );
+
+                } else if (map.isSpaceAlly(this.projectilePos.getX(), this.projectilePos.getY(), direction)) {
+                    this.active = false;
+                }
             }
                 // Calculation if player changed position since projectile shot
             changeX = (int)this.playerPos.getX() - x;

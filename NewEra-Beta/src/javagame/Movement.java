@@ -303,7 +303,7 @@ public class Movement {
             // Checks if the time is good to shoot again and if the player shot an projectile
             if (this.lastShot > this.FIRE_RATE && shot) {
             /*
-                This section checks which direction the player is looking then creates a new projectile in that direcetion.
+                This section checks which direction the player is looking then creates a new projectile in that direction.
                   The first vector is where the projectile will be drawn on the screen
                   The second vector is for holding the position of the player, so if they move the project will move to look like it is in the sam position
                   The third vector is for the projectiles position.  This will allow it to crash on collisions and detect people *( Future update to hurt others )
@@ -327,7 +327,7 @@ public class Movement {
             }
         }
         for (Projectile p : this.projectiles) {
-            p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map );
+            p.update( delta, (int)getPlayerX(), (int)getPlayerY(), map, true );
         }
 
     }

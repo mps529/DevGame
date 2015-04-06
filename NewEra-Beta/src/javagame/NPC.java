@@ -59,6 +59,8 @@ public class NPC extends NPCMovement {
 
     private boolean good;
 
+    private boolean hasAttacked = false;
+
         // This is what skin the character has
     private int npcRace;
 
@@ -133,7 +135,13 @@ public class NPC extends NPCMovement {
         this.stamina = this.MAX_STAMINA;
 
             // Setting the class randomly
-        this.npcClass = random.nextInt( 4 );
+        this.npcClass = random.nextInt( 2 );
+        if( this.npcClass == 0 ) {
+            this.npcClass = 1 ;
+        }
+        else {
+            this.npcClass = 3;
+        }
             // Setting stats and image
         try {
             setClassStat();
@@ -157,21 +165,32 @@ public class NPC extends NPCMovement {
         this.good = good;
 
 
-
-
-        if( !good ) {
-            setNPCClass("fancyOrk.png", 3);
-        }
-        else {
-            setNPCClass("villager1.png", 2);
-        }
-
-
         this.isAlive = true;
         this.willRender = false;
 
+
+    }
+
+    public void setImage( boolean villager ) {
+
+        if( good ) {
+
+            if( villager ) {
+                setNPCClass("villager.png", 3);
+            }
+            else {
+                setNPCClass("guard.png", 1);
+            }
+
+        }
+        else {
+
+            setNPCClass("fancyOrk.png", this.npcClass);
+        }
+
         this.stopAnimationWalking();
         this.setPlayerDirection( 0 );
+
     }
 
         // NPC with race and class
@@ -258,6 +277,8 @@ public class NPC extends NPCMovement {
                 projectileImage[2] = new Image("NewEra-Beta/res/projectiles/Arrow-Down.png");
                 projectileImage[3] = new Image("NewEra-Beta/res/projectiles/Arrow-Left.png");
 
+                setProjectileImage( projectileImage );
+
                 this.BASE_ATTACK = 10;
                 this.BASE_DEFENCE = 3;
 
@@ -275,6 +296,8 @@ public class NPC extends NPCMovement {
                 projectileImage[1] = new Image("NewEra-Beta/res/projectiles/FireBall-Right.png");
                 projectileImage[2] = new Image("NewEra-Beta/res/projectiles/FireBall-Down.png");
                 projectileImage[3] = new Image("NewEra-Beta/res/projectiles/FireBall-Left.png");
+
+                setProjectileImage( projectileImage );
 
                 this.BASE_ATTACK = 13;
                 this.BASE_DEFENCE = 2;
@@ -393,7 +416,7 @@ public class NPC extends NPCMovement {
             defence = getOverallDefence() + 20;
         }
 
-        this.health -= (  (this.player.getOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack();
+        this.health -= (  (this.player.getInventory().getPlayerOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack() ;
 
         switch ( direction ) {
             case 0 :
@@ -764,6 +787,12 @@ public class NPC extends NPCMovement {
         }
     }
 
+    public boolean isGood(  ) { return this.good; }
+
+    public int getNpcClass() { return this.npcClass; }
+    public boolean getHasAttacked() { return this.hasAttacked; }
+    public void setHasAttacked( boolean hasAttacked) { this.hasAttacked = hasAttacked; }
+
     public boolean closeEnoughToAttack( int x, int y ) {
 
         float playerX = x;
@@ -771,75 +800,119 @@ public class NPC extends NPCMovement {
         float npcX = getNPCX();
         float npcY = getNPCY();
 
-        if( !this.isAttacking ) {
-            if (this.getDirection() == 0) {
-                if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY  && npcY <= playerY +24 )) {
-                    this.startAnimationAttacking();
-                    this.stopAnimationAttacking();
-                    this.isAttacking = true;
-                    return true;
-                }
-            } else if (this.getDirection() == 1) {
-                if ((npcX >= playerX -24 && npcX <= playerX ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
-                    this.startAnimationAttacking();
-                    this.stopAnimationAttacking();
-                    this.isAttacking = true;
-                    return true;
-                }
-            } else if (this.getDirection() == 2) {
-                if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY )) {
-                    this.startAnimationAttacking();
-                    this.stopAnimationAttacking();
-                    this.isAttacking = true;
-                    return true;
-                }
-            } else if (this.getDirection() == 3) {
-                if ((npcX >= playerX  && npcX <= playerX + 24 ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
-                    this.startAnimationAttacking();
-                    this.stopAnimationAttacking();
-                    this.isAttacking = true;
-                    return true;
-                }
-            }
-            this.stopAnimationAttacking();
-        }
-        else {
-            if ( isStoppedAttacking() ) {
+            // Hunter attacks
+        if( this.npcClass == 0 ||  this.npcClass == 2  ) {
+            if( !this.isAttacking ) {
                 if (this.getDirection() == 0) {
-                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY  && npcY <= playerY +24 )) {
-                        if( opponentsArrayLocation == -1 ) {
-                            this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
-                        }
-                        this.isAttacking = false;
+                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY  && npcY <= playerY + 216 )) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
                         return true;
                     }
                 } else if (this.getDirection() == 1) {
-                    if ((npcX >= playerX -24 && npcX <= playerX ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
-                        if( opponentsArrayLocation == -1 ) {
-                            this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
-                        }
-                        this.isAttacking = false;
+                    if ((npcX >= playerX -216 && npcX <= playerX ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
                         return true;
                     }
                 } else if (this.getDirection() == 2) {
-                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY )) {
-                        if( opponentsArrayLocation == -1 ) {
-                            this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
-                        }
-                        this.isAttacking = false;
+                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 216 && npcY <= playerY )) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
                         return true;
                     }
                 } else if (this.getDirection() == 3) {
-                    if ((npcX >= playerX  && npcX <= playerX + 24 ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
-                        if( opponentsArrayLocation == -1 ) {
-                            this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
-                        }
-                        this.isAttacking = false;
+                    if ((npcX >= playerX  && npcX <= playerX + 216 ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
                         return true;
                     }
-
                 }
+                this.stopAnimationAttacking();
+            }
+            else {
+                this.hasAttacked = true;
                 this.isAttacking = false;
+
+            }
+            return false;
+        }
+        else {
+
+            if (!this.isAttacking) {
+
+                if (this.getDirection() == 0) {
+                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY && npcY <= playerY + 24)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
+                        return true;
+                    }
+                } else if (this.getDirection() == 1) {
+                    if ((npcX >= playerX - 24 && npcX <= playerX) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
+                        return true;
+                    }
+                } else if (this.getDirection() == 2) {
+                    if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
+                        return true;
+                    }
+                } else if (this.getDirection() == 3) {
+                    if ((npcX >= playerX && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                        this.startAnimationAttacking();
+                        this.stopAnimationAttacking();
+                        this.isAttacking = true;
+                        return true;
+                    }
+                }
+                this.stopAnimationAttacking();
+            } else {
+                if ( isStoppedAttacking()) {
+                    if (this.getDirection() == 0) {
+                        if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY && npcY <= playerY + 24)) {
+                            if (opponentsArrayLocation == -1) {
+                                this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
+                            }
+                            this.isAttacking = false;
+                            return true;
+                        }
+                    } else if (this.getDirection() == 1) {
+                        if ((npcX >= playerX - 24 && npcX <= playerX) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                            if (opponentsArrayLocation == -1) {
+                                this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
+                            }
+                            this.isAttacking = false;
+                            return true;
+                        }
+                    } else if (this.getDirection() == 2) {
+                        if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY)) {
+                            if (opponentsArrayLocation == -1) {
+                                this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
+                            }
+                            this.isAttacking = false;
+                            return true;
+                        }
+                    } else if (this.getDirection() == 3) {
+                        if ((npcX >= playerX && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+                            if (opponentsArrayLocation == -1) {
+                                this.player.takeDamage(this.OVERALL_ATTACK, this.attackDamage);
+                            }
+                            this.isAttacking = false;
+                            return true;
+                        }
+
+                    }
+                    this.isAttacking = false;
+                }
             }
         }
         return false;
