@@ -531,7 +531,7 @@ public class Player extends Movement {
 
         int defence  = getOverallDefence() + 1;
 
-        this.health -= (  ( (attack+2) * ( rand.nextInt( 15 ) + 4 )   ) / defence  ) + movePower;
+        this.health -= (  ( (attack) * ( rand.nextInt( 15 ) + 4 )   ) / defence  ) + movePower;
 
         if( this.health < 0 ) {
             this.health = 0;
