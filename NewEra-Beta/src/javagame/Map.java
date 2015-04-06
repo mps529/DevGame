@@ -310,6 +310,8 @@ public class Map implements TileBasedMap{
 
     public Vector getEnemies() { return this.enemies; }
 
+    public void setEnemies(Vector<NPC> enemies) {this.enemies = enemies;}
+
     public void enemyMove( int delta, int x, int y ) {
 
         for( int i = 0; i < enemies.size(); i++ ) {
@@ -367,6 +369,9 @@ public class Map implements TileBasedMap{
         }
 
     }
+
+    public Vector<NPC> getAllies() {return allies;}
+    public void setAllies(Vector<NPC> allies) {this.allies = allies;}
 
     public void alliesMove( int delta, int x, int y ) {
 
@@ -469,6 +474,27 @@ public class Map implements TileBasedMap{
 
     public void setX(float newX) {this.x = newX;}
     public float getX() {return this.x;}
+
+    public boolean despawnNpc (int id) {
+        for(int i=0;i <this.enemies.size(); i++) {
+            if(this.enemies.elementAt(i).getId() == id) {
+                this.enemies.elementAt(i).setDeadTime(0);
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean checkIfCanLoot(int id) {
+        for(int i=0;i <this.enemies.size(); i++) {
+            if (this.enemies.elementAt(i).getId() == id) {
+                if(this.enemies.elementAt(i).getDeathTime() == 0) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
 
     public void setY(float newY) {this.y = newY;}
     public float getY() {return this.y;}

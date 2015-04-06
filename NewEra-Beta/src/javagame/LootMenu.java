@@ -181,6 +181,10 @@ public class LootMenu extends BasicGameState {
         // 'I' will return to game
         if (input.isKeyPressed(Input.KEY_ESCAPE) || input.isKeyPressed(Input.KEY_E)) {
             input.clearKeyPressedRecord();
+            this.inventoryItemSelected = false;
+            this.displayItem = null;
+            this.addIsPressed = false;
+            this.removeIsPressed = false;
             sbg.enterState(1);
         }
 
@@ -202,28 +206,47 @@ public class LootMenu extends BasicGameState {
         if ((this.mouseX >= 128 && this.mouseX <= 160) && (this.mouseY >= 288 && this.mouseY <= 320)) {
             if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                 if(addIsPressed) {
-                    this.player.getInventory().addItem(this.displayItem);
-                    this.enemyInventory.dropItem(this.displayItem.getID());
-                    this.addIsPressed = false;
-                    this.inventoryItemSelected = false;
-                    this.displayItem = null;
-
+                    if(this.player.getInventory().addItem(this.displayItem)) {
+                        this.enemyInventory.dropItem(this.displayItem.getID());
+                        this.addIsPressed = false;
+                        this.inventoryItemSelected = false;
+                        this.displayItem = null;
+                    }
 
                 }
             }
         }
 
-        //
+        // removing from player inventory
         if ((this.mouseX >= 160 && this.mouseX <= 192) && (this.mouseY >= 288 && this.mouseY <= 320)) {
             if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                 if(removeIsPressed) {
-                    this.enemyInventory.addItem(this.displayItem);
-                    this.player.getInventory().dropItem(this.displayItem.getID());
+                    if(this.enemyInventory.addItem(this.displayItem)) {
+                        this.player.getInventory().dropItem(this.displayItem.getID());
+                        this.removeIsPressed = false;
+                        this.inventoryItemSelected = false;
+                        this.displayItem = null;
+                    }
+
+                }
+            }
+        }
+        //add/remove item shortcut
+        if(input.isKeyPressed(Input.KEY_R)) {
+            input.clearKeyPressedRecord();
+            if(addIsPressed) {
+                if (this.player.getInventory().addItem(this.displayItem)) {
+                    this.enemyInventory.dropItem(this.displayItem.getID());
                     this.addIsPressed = false;
                     this.inventoryItemSelected = false;
                     this.displayItem = null;
-
-
+                }
+            } else if(removeIsPressed) {
+                if(this.enemyInventory.addItem(this.displayItem)) {
+                    this.player.getInventory().dropItem(this.displayItem.getID());
+                    this.removeIsPressed = false;
+                    this.inventoryItemSelected = false;
+                    this.displayItem = null;
                 }
             }
         }
@@ -237,7 +260,6 @@ public class LootMenu extends BasicGameState {
                 if ((this.mouseX >= xPos && this.mouseX <= xPos + 32) && (this.mouseY >= yPos && this.mouseY <= yPos + 32)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.displayItem = this.player.getInventory().getItemByID(this.inventoryItems[x]);
-                        System.out.println(this.displayItem.getName());
                         x = this.inventoryItems.length;
                         this.selectedX = xPos;
                         this.selectedY = yPos;
@@ -262,7 +284,6 @@ public class LootMenu extends BasicGameState {
                 if ((this.mouseX >= xPos && this.mouseX <= xPos + 32) && (this.mouseY >= yPos && this.mouseY <= yPos + 32)) {
                     if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
                         this.displayItem = this.enemyInventory.getItemByID(this.npcInventoryItems[x]);
-                        System.out.println(this.displayItem.getName());
                         x = this.npcInventoryItems.length;
                         this.selectedX = xPos;
                         this.selectedY = yPos;

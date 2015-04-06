@@ -222,7 +222,7 @@ public class Inventory {
             return true;
         }
             // Checks for space in inventory
-        if( getInventoryCount() <= MAX_ITEMS_IN_INVENTORY ) {
+        if( getInventoryCount() < MAX_ITEMS_IN_INVENTORY ) {
             this.itemList.addElement( item );
             this.currentInventoryCount++;
             return true;
@@ -691,6 +691,7 @@ public class Inventory {
             }
         }
     }
+
 
     public void printInventory() {
         String Test;
