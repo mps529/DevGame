@@ -13,7 +13,7 @@ public class NPCMovement {
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
-    private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60 };
+    private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60};
     private int[] durationRougeSpeedAttack = { 60,60,60,60,60,60  };
     private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
 
@@ -277,7 +277,7 @@ public class NPCMovement {
         }
     }
 
-    public void updateProjectile( int delta, boolean shot, Map map, int playerX, int playerY  )  {
+    public void updateProjectile( int delta, boolean shot, Map map, int playerX, int playerY, boolean good  )  {
 
         // Increases time since last shot
         this.lastShot += delta;
@@ -311,7 +311,7 @@ public class NPCMovement {
             }
         }
         for (Projectile p : this.projectiles) {
-            p.update( delta, (int)getNPCX(), (int)getNPCY(), map );
+            p.update( delta, (int)this.npcX, (int)this.npcY,  map, good );
         }
 
     }
