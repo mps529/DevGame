@@ -96,6 +96,8 @@ public class NPC extends NPCMovement {
     private int sinceLastTurn = 0;
     private int TIME_TO_TURN = 1700;
 
+    private int timeInBattle = 1000;
+
     public NPC () {
         super();
             // Set player to be dead
@@ -441,6 +443,8 @@ public class NPC extends NPCMovement {
                 break;
         }
 
+        this.inCombat = true;
+
         if ( checkDeath() ) {
             this.getInventory().unEquipAllItems();
             startAnimationDeath();
@@ -614,6 +618,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (blockCheck == playerX && i == playerY) {
                                         this.inCombat = true;
+                                        this.timeInBattle = 1000;
                                         this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
@@ -635,6 +640,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (i == playerX && blockCheck == playerY) {
                                         this.inCombat = true;
+                                        this.timeInBattle = 1000;
                                         this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
@@ -657,6 +663,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (blockCheck == playerX && i == playerY) {
                                         this.inCombat = true;
+                                        this.timeInBattle = 1000;
                                         this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
@@ -679,6 +686,7 @@ public class NPC extends NPCMovement {
                                 while (viewSpan >= 0) {
                                     if (i == playerX && blockCheck == playerY) {
                                         this.inCombat = true;
+                                        this.timeInBattle = 1000;
                                         this.opponentsArrayLocation = iterator;
                                         return true;
                                     }
@@ -691,6 +699,14 @@ public class NPC extends NPCMovement {
                 }
             }
         }
+        if( this.inCombat = true && this.timeInBattle > 0 ) {
+            this.timeInBattle -= 2;
+        }
+        else if( this.inCombat = true ) {
+            this.timeInBattle = 1000;
+            this.inCombat = false;
+        }
+
         return false;
     }
 
