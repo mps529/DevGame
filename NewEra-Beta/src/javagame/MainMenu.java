@@ -19,6 +19,9 @@ public class MainMenu extends BasicGameState {
 
     private int gameState;
 
+    //music
+    private Music theme;
+
     //buttons and menu items
     private Image title;
     private Image newGame, newGamePressed;
@@ -80,7 +83,9 @@ public class MainMenu extends BasicGameState {
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
 
-
+        theme = new Music("NewEra-Beta/res/sounds/title_loop.ogg");
+        theme.setVolume(0.02f);
+        theme.loop();
 
         //load games with helper functions to set booleans
         this.loadGames();
@@ -220,6 +225,7 @@ public class MainMenu extends BasicGameState {
         this.player = this.player.getInstance();
 
     }
+
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
 
         //load initial main menu
@@ -554,6 +560,7 @@ public class MainMenu extends BasicGameState {
         }
         if( gameStarted ) {
             //PLAYER STARTED GAME
+            this.theme.stop();
             if(newGameStarted) {
                 playerName = characterName.getText();
 

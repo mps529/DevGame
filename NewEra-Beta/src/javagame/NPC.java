@@ -34,6 +34,10 @@ public class NPC extends NPCMovement {
         // Player level
     private int npcLevel;
 
+
+    private static int npcCount = 0;
+    private int id;
+
         // NPC's Inventory
     private Inventory inventory;
 
@@ -104,6 +108,7 @@ public class NPC extends NPCMovement {
         this.inventory = new Inventory(other.getInventory(), false );
         this.currentIndex = other.currentIndex;
         this.isAlive = other.isAlive;
+        this.id = other.id;
 
 
     }
@@ -111,6 +116,7 @@ public class NPC extends NPCMovement {
     public NPC( int race, boolean good ) {
         super();
 
+        this.id = this.npcCount++;
             // Set the race
         this.npcRace = race;
             // Get player class
@@ -197,6 +203,8 @@ public class NPC extends NPCMovement {
     public NPC( int race, int npcClass, boolean good  ) {
 
         super();
+
+        this.id = this.npcCount++;
 
             // Set the race
         this.npcRace = race;
@@ -445,6 +453,9 @@ public class NPC extends NPCMovement {
     }
 
     public long getDeathTime( ) { return this.deadTime; }
+    public void setDeadTime(long time) { this.deadTime = time;}
+
+    public int getId() {return this.id;}
 
     public boolean getIsAttacking() { return this.isAttacking; }
 
@@ -971,6 +982,14 @@ public class NPC extends NPCMovement {
         }
     }
    // public void drawPlayerDieing( float x, float y ) { npcDeath.draw( x, y );  }
+    public boolean equals(NPC other) {
+        if(other.getId() == this.getId()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 
