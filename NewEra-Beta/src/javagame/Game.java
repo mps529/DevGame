@@ -107,8 +107,10 @@ public class Game extends BasicGameState {
      }
 
     public void enter( GameContainer gc, StateBasedGame sbg ) {
-        outsideTheme.setVolume(0.02f);
-        outsideTheme.loop();
+        if(!outsideTheme.playing()) {
+            outsideTheme.setVolume(0.02f);
+            outsideTheme.loop();
+        }
         this.playerAttack.setPlayerSpriteSheet(this.player.getPlayerSpriteSheet());
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
