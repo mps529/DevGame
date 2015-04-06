@@ -1,5 +1,6 @@
 package javagame;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
@@ -126,6 +127,7 @@ public class Map implements TileBasedMap{
                 if( this.map.getTileId( x, y, this.enemySpawn) != 0 ) {
                     NPC temp = new NPC( rand.nextInt( 2 ), false );
                     this.enemies.add( temp );
+                    this.enemies.lastElement().setImage(false);
                     this.enemies.lastElement().setSpawnX( x*32 );
                     this.enemies.lastElement().setSpawnY( y*32 );
                     this.enemies.lastElement().setMapPath( this );
@@ -144,6 +146,7 @@ public class Map implements TileBasedMap{
                 if( this.map.getTileId( x, y, this.villagerSpawn) != 0 ) {
                     NPC temp = new NPC( rand.nextInt( 2 ), true );
                     this.allies.add( temp );
+                    this.allies.lastElement().setImage( true );
                     this.allies.lastElement().setSpawnX( x*32 );
                     this.allies.lastElement().setSpawnY( y*32 );
                     this.allies.lastElement().setMapPath( this );
@@ -151,6 +154,7 @@ public class Map implements TileBasedMap{
                 else if( this.map.getTileId( x, y, this.guardSpawn ) != 0 ) {
                     NPC temp = new NPC( rand.nextInt( 2 ), true );
                     this.allies.add( temp );
+                    this.allies.lastElement().setImage( false );
                     this.allies.lastElement().setSpawnX( x*32 );
                     this.allies.lastElement().setSpawnY( y*32 );
                     this.allies.lastElement().setMapPath( this );
@@ -294,6 +298,19 @@ public class Map implements TileBasedMap{
 
     }
 
+    public void updateNPCAttacks( int delta, int x, int y  ) {
+
+        for( int i = 0; i < this.enemies.size(); i++ ) {
+            if( ( this.enemies.elementAt( i ).getNpcClass() == 0 || this.enemies.elementAt( i ).getNpcClass() == 2 )  ) {
+                this.enemies.elementAt( i ).updateProjectile(delta, this.enemies.elementAt(i).getHasAttacked(), this, x, y, enemies.elementAt(i).isGood());
+                if( this.enemies.elementAt( i ).getHasAttacked() ) {
+                    this.enemies.elementAt( i ).setHasAttacked( false );
+                }
+            }
+        }
+
+    }
+
 
     public boolean isSpaceEnemy( float x, float y, int direction ) {
 
@@ -301,6 +318,19 @@ public class Map implements TileBasedMap{
             if( enemy.getIsAlive() ) {
                 if ((enemy.getNPCX() >= x - 12 && enemy.getNPCX() <= x + 12) && (enemy.getNPCY() >= y - 12 && enemy.getNPCY() <= y + 12)) {
                     enemy.takeDamage( direction );
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isSpaceAlly( float x, float y, int direction ) {
+
+        for( NPC ally : allies ) {
+            if( ally.getIsAlive() ) {
+                if ((ally.getNPCX() >= x - 12 && ally.getNPCX() <= x + 12) && (ally.getNPCY() >= y - 12 && ally.getNPCY() <= y + 12)) {
+                    ally.takeDamage( direction );
                     return true;
                 }
             }
@@ -419,6 +449,20 @@ public class Map implements TileBasedMap{
 
     }
 
+    public void renderProjectile( GameContainer gc, Graphics g )  {
+
+        try {
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.elementAt(i).renderProjectile(gc, g);
+            }
+            for (int i = 0; i < allies.size(); i++) {
+                allies.elementAt(i).renderProjectile(gc, g);
+            }
+        }
+        catch( SlickException e ) {
+            e.printStackTrace();
+        }
+    }
 
     public float getPlayerXInPixels() { return (Math.abs( getMapCoordX() ) + 320); }
     public float getPlayerYInPixels() { return (Math.abs( getMapCoordY() ) + 320); }

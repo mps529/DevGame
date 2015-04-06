@@ -151,6 +151,7 @@ public class Game extends BasicGameState {
 
             // Drawing arrows if he has them
             this.player.renderProjectile(gc, g);
+            this.maps.elementAt(this.currentMap).renderProjectile(gc, g);
 
             if(isActing){
 
@@ -464,9 +465,11 @@ public class Game extends BasicGameState {
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
 
+                this.maps.elementAt(this.currentMap).enemyMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY());
+                this.maps.elementAt(this.currentMap).alliesMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY());
 
-                this.maps.elementAt(this.currentMap).enemyMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
-                this.maps.elementAt(this.currentMap).alliesMove( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
+                this.maps.elementAt(this.currentMap).updateNPCAttacks( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
+
 
             } else {
 
