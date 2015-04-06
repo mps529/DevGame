@@ -109,7 +109,7 @@ public class Game extends BasicGameState {
     public void enter( GameContainer gc, StateBasedGame sbg ) {
         outsideTheme.setVolume(0.02f);
         outsideTheme.loop();
-        this.playerAttack.setPlayerSpriteSheet( this.player.getPlayerSpriteSheet() );
+        this.playerAttack.setPlayerSpriteSheet(this.player.getPlayerSpriteSheet());
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
         if( !this.player.getIsNewGame() ) {
@@ -160,7 +160,7 @@ public class Game extends BasicGameState {
                 //check if enemy close enough to loot
                 if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
                         this.maps.elementAt(this.currentMap).getEnemies()) != null) {
-
+                   
                     //grab copy of enemy to loot
                     lootingEnemy = new NPC(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
                             this.maps.elementAt(this.currentMap).getEnemies()));
