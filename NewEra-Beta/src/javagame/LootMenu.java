@@ -6,6 +6,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 
+
 public class LootMenu extends BasicGameState {
 
     // This game state
@@ -36,6 +37,8 @@ public class LootMenu extends BasicGameState {
 
     private boolean settingName;
 
+    private Sound lootSound;
+
     private int[] inventoryItems, npcInventoryItems;
 
     private int selectedX, selectedY;
@@ -65,6 +68,8 @@ public class LootMenu extends BasicGameState {
         addItemButtonPressed = new Image( "NewEra-Beta/res/buttons/up_orange.png" );
         removeItemButton = new Image( "NewEra-Beta/res/buttons/down_white.png" );
         removeItemButtonPressed= new Image( "NewEra-Beta/res/buttons/down_orange.png" );
+
+        lootSound = new Sound("NewEra-Beta/res/sounds/lootItem.ogg");
 
         addGold = new Image( "NewEra-Beta/res/buttons/plus_orange.png" );
         goldAdded = new Image( "NewEra-Beta/res/buttons/plus_white.png" );
@@ -211,6 +216,7 @@ public class LootMenu extends BasicGameState {
                         this.addIsPressed = false;
                         this.inventoryItemSelected = false;
                         this.displayItem = null;
+                        lootSound.play();
                     }
 
                 }
@@ -226,6 +232,7 @@ public class LootMenu extends BasicGameState {
                         this.removeIsPressed = false;
                         this.inventoryItemSelected = false;
                         this.displayItem = null;
+                        lootSound.play();
                     }
 
                 }
@@ -240,6 +247,7 @@ public class LootMenu extends BasicGameState {
                     this.addIsPressed = false;
                     this.inventoryItemSelected = false;
                     this.displayItem = null;
+                    lootSound.play();
                 }
             } else if(removeIsPressed) {
                 if(this.enemyInventory.addItem(this.displayItem)) {
@@ -247,8 +255,11 @@ public class LootMenu extends BasicGameState {
                     this.removeIsPressed = false;
                     this.inventoryItemSelected = false;
                     this.displayItem = null;
+                    lootSound.play();
                 }
+
             }
+
         }
 
 
