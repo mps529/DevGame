@@ -194,6 +194,8 @@ public class Items {
         this.rarity = other.rarity;
         this.itemRarityColor = other.itemRarityColor;
         this.itemRarityColorNoAlpha = other.itemRarityColorNoAlpha;
+        this.isEquipped = other.isEquipped;
+
 
     }
 

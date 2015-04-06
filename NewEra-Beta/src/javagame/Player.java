@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.Sound;
 import java.util.Random;
 
 public class Player extends Movement {
@@ -37,6 +38,8 @@ public class Player extends Movement {
     private int attackTwoDamage;
     private int attackThreeDamage;
     private int attackFourDamage;
+
+    private Sound attack1, attack2, attack3, attack4;
 
     /*
         0 - attackOneStamina
@@ -134,7 +137,7 @@ public class Player extends Movement {
         this.perkPoints = other.perkPoints;
         this.movePoints = other.movePoints;
         this.inventory = new Inventory(other.getInventory(), false );
-        this.lootingInventory = new Inventory(other.getLootingInventory(), false);
+        //this.lootingInventory = new Inventory(other.getLootingInventory(), false);
         this.FIRE_RATE = other.FIRE_RATE;
         this.currentIndex = other.currentIndex;
         this.lastShot = other.lastShot;
@@ -174,6 +177,7 @@ public class Player extends Movement {
         }
         else if( classID == 2 ) {
             setWizard();
+            //attack1 = new Sound("")
         }
         else if( classID == 3 ) {
             setRouge();
@@ -437,12 +441,11 @@ public class Player extends Movement {
         return this.inventory;
     }
     public void setInventory( Inventory inventory) {this.inventory = new Inventory(inventory, false);}
+    public void setInventoryLoad(Inventory inventory) {this.inventory = new Inventory(inventory, true);}
 
     public Inventory getLootingInventory() {return lootingInventory;}
     public void setLootingInventory(Inventory lootingInventory) {
         if(lootingInventory != null) {
-            System.out.println("-----------");
-            lootingInventory.printInventory();
             this.lootingInventory = new Inventory(lootingInventory, false);
         } else {
             this.lootingInventory = null;
@@ -528,7 +531,7 @@ public class Player extends Movement {
 
         int defence  = getOverallDefence() + 1;
 
-        this.health -= (  ( attack * ( rand.nextInt( 15 ) + 1 )   ) / defence  ) + movePower;
+        this.health -= (  ( (attack+2) * ( rand.nextInt( 15 ) + 4 )   ) / defence  ) + movePower;
 
         if( this.health < 0 ) {
             this.health = 0;

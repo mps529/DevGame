@@ -2,6 +2,7 @@ package javagame;
 
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -15,6 +16,8 @@ public class Game extends BasicGameState {
 
         // Game State
     private static int gameState;
+
+    private Music outsideTheme;
 
     private PlayerAttack playerAttack;
 
@@ -85,6 +88,10 @@ public class Game extends BasicGameState {
 
         lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );
 
+        outsideTheme = new Music("NewEra-Beta/res/sounds/adventure.ogg");
+
+
+
             // Setting starting map
         for( int x = 0; x < maps.size(); x++) {
             if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
@@ -100,7 +107,9 @@ public class Game extends BasicGameState {
      }
 
     public void enter( GameContainer gc, StateBasedGame sbg ) {
-        this.playerAttack.setPlayerSpriteSheet( this.player.getPlayerSpriteSheet() );
+        outsideTheme.setVolume(0.02f);
+        outsideTheme.loop();
+        this.playerAttack.setPlayerSpriteSheet(this.player.getPlayerSpriteSheet());
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
         if( !this.player.getIsNewGame() ) {
@@ -111,7 +120,6 @@ public class Game extends BasicGameState {
             this.maps.elementAt(this.currentMap).setMapSkewX(this.player.getSkewX());
             this.maps.elementAt(this.currentMap).setMapSkewY(this.player.getSkewY());
         }
-        this.isActing = false;
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
@@ -147,16 +155,27 @@ public class Game extends BasicGameState {
 
             if(isActing){
 
+                NPC lootingEnemy;
+
+                //check if enemy close enough to loot
                 if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
                         this.maps.elementAt(this.currentMap).getEnemies()) != null) {
-                    player.setLootingInventory(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                            this.maps.elementAt(this.currentMap).getEnemies()).getInventory());
-
-                    player.setMapX(maps.elementAt(currentMap).getX());
-                    player.setMapY(maps.elementAt(currentMap).getY());
-                    player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
-                    player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
-                    sbg.enterState(4);
+                   
+                    //grab copy of enemy to loot
+                    lootingEnemy = new NPC(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
+                            this.maps.elementAt(this.currentMap).getEnemies()));
+                    //if enemy is already looted dont go further(false return), else (true return) loot and despawn
+                    if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
+                        System.out.println("idToDespawn:" + lootingEnemy.getId());
+                        this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
+                        player.setLootingInventory(lootingEnemy.getInventory());
+                        player.setMapX(maps.elementAt(currentMap).getX());
+                        player.setMapY(maps.elementAt(currentMap).getY());
+                        player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
+                        player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
+                        isActing = false;
+                        sbg.enterState(4);
+                    }
                 } else {
                     isActing = false;
                 }

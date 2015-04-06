@@ -3,7 +3,7 @@ package javagame;
 import com.thoughtworks.xstream.XStream;
 import org.lwjgl.Sys;
 import org.newdawn.slick.SlickException;
-
+import java.util.Vector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,10 +18,9 @@ public class SaveGame {
     private int playerLvl;
     private Player playerObj;
     private Inventory inv;
-    private static int itemscount; //only variable needed from Items class
+    private static int itemscount;
     private int currentMap;
     private int slot;
-    //private Map map;
 
 
     private static SaveGame saveGameClass = null;
@@ -69,9 +68,9 @@ public class SaveGame {
         this.playerLvl = playerObj.getLevel();
         this.sheetName = playerObj.getSpriteSheetName();
         this.classID = playerObj.getCharacterClassChosen();
-        System.out.println("\n\n\n\n Inventory: \n");
         playerObj.getInventory().printInventory();
         this.inv = new Inventory(playerObj.getInventory(), true);
+
 
 
         //map = m;
@@ -124,7 +123,6 @@ public class SaveGame {
           and store in slotIndex
         */
         for(int i=0;i<listOfFiles.length;i++) {
-            //System.out.println(listOfFiles[i].getName());
             if(listOfFiles[i].getName().endsWith(".xml")) {
                 String[] parsedName = listOfFiles[i].getName().split("_");
                 slotNo = Math.abs(Character.getNumericValue(parsedName[1].charAt(0)));
@@ -142,7 +140,7 @@ public class SaveGame {
 
                         player.setUpLoadInstance(saveGameClass.sheetName, saveGameClass.saveName, saveGameClass.classID);
                         player.playerCopy(saveGameClass.playerObj);
-                        //player.setInventory( saveGameClass.getInv() );
+                        player.setInventoryLoad( saveGameClass.getInv() );
                         player.setSaveSlot(slotIndex);
                         foundSave = true;
                     } catch (SlickException e) {
@@ -179,7 +177,6 @@ public class SaveGame {
           and store in slotIndex
         */
         for(int i=0;i<listOfFiles.length;i++) {
-            //System.out.println(listOfFiles[i].getName());
             if (listOfFiles[i].getName().endsWith(".xml")) {
                 String[] parsedName = listOfFiles[i].getName().split("_");
                 slotNo = Math.abs(Character.getNumericValue(parsedName[1].charAt(0)));
@@ -214,15 +211,5 @@ public class SaveGame {
     public int getClassID() {return this.classID;}
 
     public int getPlayerLvl() {return this.playerLvl;}
-
-
-
-
-
-
-
-
-
-
 
 }
