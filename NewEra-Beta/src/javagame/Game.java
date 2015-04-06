@@ -85,8 +85,6 @@ public class Game extends BasicGameState {
 
         lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );
 
-
-
             // Setting starting map
         for( int x = 0; x < maps.size(); x++) {
             if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
