@@ -413,7 +413,7 @@ public class Game extends BasicGameState {
                     }
                 } // End of not attacking
 
-                if (this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking(input, delta, this.maps.elementAt(this.currentMap).getEnemies())) {
+                if (this.playerAttack.getIsAttacking() && this.playerAttack.isDoneAttacking(input, delta, this.maps.elementAt(this.currentMap).getEnemies(), this.maps.elementAt(this.currentMap))) {
                     attacked = true;
                     this.playerAttack.setIsAttacking(false);
                     input.clearKeyPressedRecord();
@@ -467,11 +467,14 @@ public class Game extends BasicGameState {
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
 
-                this.maps.elementAt(this.currentMap).enemyMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY());
+                this.maps.elementAt(this.currentMap).enemyMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY(), this.player);
                 this.maps.elementAt(this.currentMap).alliesMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY());
 
                 this.maps.elementAt(this.currentMap).updateNPCAttacks( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
 
+                if( this.playerAttack.getSummonedAlive() ) {
+                    this.playerAttack.decreaseSummonedLife( delta, this.maps.elementAt( this.currentMap ) );
+                }
 
             } else {
 

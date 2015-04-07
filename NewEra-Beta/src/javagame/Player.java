@@ -392,8 +392,7 @@ public class Player extends Movement {
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
-        this.attackThreeDamage = 30;
-        this.attackFourDamage = 40;
+        this.attackFourDamage = 5;
 
     }
     private void setRouge() throws SlickException {

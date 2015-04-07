@@ -38,6 +38,12 @@ public class PlayerAttack {
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
     private int[] durationfire = { 150, 150 };
     private int[] durationBush = { 500, 500 };
+
+
+        // time a summed is to be alive for
+    private int summonedTime = 8000;
+    private boolean summonedAlive = false;
+
     // Constructor
     public PlayerAttack( ) {
             // Gets the player Class
@@ -116,7 +122,7 @@ public class PlayerAttack {
     public boolean isSneaking() { return this.isSneaking; }
     public boolean isBeserk() { return this.isBeserk; }
 
-    public boolean isDoneAttacking( Input input, int delta, Vector<NPC> enemies ) {
+    public boolean isDoneAttacking( Input input, int delta, Vector<NPC> enemies, Map map  ) {
 
         if( this.player.getPlayerClass() == 0 ) {
             return isHunterDone( input, delta );
@@ -125,7 +131,7 @@ public class PlayerAttack {
             return isWarriorDone(input, delta, enemies);
         }
         else if( this.player.getPlayerClass() == 2 ) {
-            return isWizardDone(input, delta, enemies);
+            return isWizardDone(input, delta, enemies, map );
         }
         else if( this.player.getPlayerClass() == 3 ) {
             return isRougeDone(input, delta,enemies);
@@ -146,7 +152,7 @@ public class PlayerAttack {
             warriorAttacks(  );
         }
         else if( this.player.getPlayerClass() == 2 ) {
-            wizardAttacks(  );
+            wizardAttacks( );
         }
         else if( this.player.getPlayerClass() == 3 ) {
             rogueAttacks(  );
@@ -285,7 +291,7 @@ public class PlayerAttack {
             this.frameStop = 6;
         }
     }
-    private void wizardAttacks(  ) {
+    private void wizardAttacks( ) {
         int moveSelected = this.player.getMoveSelected();
         // 0-Up, 1-Right, 2-Down, 3-Left
         int direction = this.player.getDirection();
@@ -567,7 +573,20 @@ public class PlayerAttack {
         return false;
 
     }
-    private boolean isWizardDone( Input input, int delta, Vector<NPC> enemies ) {
+
+    public boolean getSummonedAlive() { return this.summonedAlive; }
+    public void setSummonedAlive( boolean alive ) { this.summonedAlive = alive; }
+
+    public void decreaseSummonedLife( int delta, Map map ) {
+        this.summonedTime -= delta * .1f;
+        System.out.println( this.summonedTime );
+        if( this.summonedTime <= 0 ) {
+            this.summonedAlive = false;
+            map.removedSummoned();
+        }
+    }
+
+    private boolean isWizardDone( Input input, int delta, Vector<NPC> enemies, Map map ) {
         int moveSelected = this.player.getMoveSelected();
 
         if( moveSelected == 0 ) {
@@ -592,9 +611,18 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 2 ) {
-            if( this.currentAttack.isStopped() ) {
-                // Summon Guy
+            if( this.currentAttack.isStopped() && this.summonedAlive == false ) {
+                System.out.println( "Summon!" );
+                map.addGood( (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
+                this.summonedAlive = true;
+                this.summonedTime =  8000;
                 return true;
+            }
+            else if( this.currentAttack.isStopped() ) {
+                return true;
+            }
+            else {
+                return false;
             }
         }
         else if( moveSelected == 3 ) {
