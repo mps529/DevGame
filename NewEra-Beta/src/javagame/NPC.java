@@ -96,7 +96,9 @@ public class NPC extends NPCMovement {
     private int sinceLastTurn = 0;
     private int TIME_TO_TURN = 1700;
 
-    private int timeInBattle = 1000;
+    private int timeInBattle = 0;
+    private boolean summoned = false;
+
 
     public NPC () {
         super();
@@ -189,10 +191,8 @@ public class NPC extends NPCMovement {
             else {
                 setNPCClass("guard.png", 1);
             }
-
         }
         else {
-
             setNPCClass("fancyOrk.png", this.npcClass);
         }
 
@@ -200,6 +200,11 @@ public class NPC extends NPCMovement {
         this.setPlayerDirection( 0 );
 
     }
+
+    public void setSummon( ) {
+        setNPCClass("summon.png", 3);
+    }
+
 
         // NPC with race and class
     public NPC( int race, int npcClass, boolean good  ) {
@@ -369,13 +374,19 @@ public class NPC extends NPCMovement {
     public boolean checkDeath() {
         if( getHealth() <= 0 ) {
             this.health = 0;
+            if( isAlive == true ) {
+                Random rand  = new Random();
+                this.player.increaseExp((this.npcLevel * 3) + rand.nextInt(10) + 1);
+            }
             this.isAlive = false;
-            Random rand  = new Random();
-            this.player.increaseExp( ( this.npcLevel * 3 ) + rand.nextInt( 10 ) + 1 );
+
             return true;
         }
         return false;
     }
+
+    public void setSummoned( boolean summoned ) { this.summoned = summoned; }
+    public boolean getSummoned() { return this.summoned; }
 
         // Stamina
     public double getStamina() {
@@ -522,6 +533,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (blockCheck == playerX && i == playerY) {
                             this.inCombat = true;
+                            this.player.setInCombat( true );
                             this.opponentsArrayLocation = -1;
                             return true;
                         }
@@ -543,6 +555,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (i == playerX && blockCheck == playerY) {
                             this.inCombat = true;
+                            this.player.setInCombat( true );
                             this.opponentsArrayLocation = -1;
                             return true;
                         }
@@ -565,6 +578,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (blockCheck == playerX && i == playerY) {
                             this.inCombat = true;
+                            this.player.setInCombat( true );
                             this.opponentsArrayLocation = -1;
                             return true;
                         }
@@ -587,6 +601,7 @@ public class NPC extends NPCMovement {
                     while (viewSpan >= 0) {
                         if (i == playerX && blockCheck == playerY) {
                             this.inCombat = true;
+                            this.player.setInCombat( true );
                             this.opponentsArrayLocation = -1;
                             return true;
                         }
@@ -702,7 +717,7 @@ public class NPC extends NPCMovement {
         if( this.inCombat = true && this.timeInBattle > 0 ) {
             this.timeInBattle -= 2;
         }
-        else if( this.inCombat = true ) {
+        else if( this.inCombat == true ) {
             this.timeInBattle = 1000;
             this.inCombat = false;
         }
@@ -759,16 +774,16 @@ public class NPC extends NPCMovement {
             int playerX = enemyX;
             int playerY = enemyY;
 
-            if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY)) {
+            if ((npcX >= playerX - 30 && npcX <= playerX + 30) && (npcY >= playerY - 30 && npcY <= playerY)) {
                 this.setPlayerDirection( 0 );
             }
-            else if ((npcX >= playerX && npcX <= playerX + 24) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+            else if ((npcX >= playerX && npcX <= playerX + 30) && (npcY >= playerY - 30 && npcY <= playerY + 30)) {
                 this.setPlayerDirection( 1 );
             }
-            else if ((npcX >= playerX - 24 && npcX <= playerX + 24) && (npcY >= playerY && npcY <= playerY + 24)) {
+            else if ((npcX >= playerX - 30 && npcX <= playerX + 30) && (npcY >= playerY && npcY <= playerY + 30)) {
                 this.setPlayerDirection( 2 );
             }
-            else if ((npcX >= playerX - 24 && npcX <= playerX ) && (npcY >= playerY - 24 && npcY <= playerY + 24)) {
+            else if ((npcX >= playerX - 30 && npcX <= playerX ) && (npcY >= playerY - 30 && npcY <= playerY + 30)) {
                 this.setPlayerDirection( 3 );
             }
             else {
@@ -778,19 +793,19 @@ public class NPC extends NPCMovement {
                 int directionX = npcX - playerX;
                 int directionY = npcY - playerY;
 
-                if( directionX > 24 ) {
+                if( directionX > 30 ) {
                     this.decrementNPCX();
                     this.setPlayerDirection( 3 );
                 }
-                else if( directionX < -24 ) {
+                else if( directionX < -30 ) {
                     this.incrementNPCX();
                     this.setPlayerDirection( 1 );
                 }
-                else if( directionY > 24 ) {
+                else if( directionY > 30 ) {
                     this.decrementNPCY();
                     this.setPlayerDirection( 0 );
                 }
-                else if( directionY < -24 ) {
+                else if( directionY < -30 ) {
                     this.incrementNPCY();
                     this.setPlayerDirection( 2 );
                 }
@@ -958,6 +973,10 @@ public class NPC extends NPCMovement {
     }
 
     public void drawNPC( Graphics g ) {
+
+        if( this.summoned == true) {
+            System.out.println("Being drawn at X:" + this.getNPCX() + " Y: " + getNPCY() );
+        }
 
         if( this.deadTime > 0 ) {
             int npcX = (int)getNPCX();

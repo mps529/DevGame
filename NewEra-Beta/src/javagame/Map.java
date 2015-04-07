@@ -163,6 +163,35 @@ public class Map implements TileBasedMap{
         }
     }
 
+    public void addGood( int x, int y ) {
+        if( this.mapObjects[(x/32)][y/32] != 1 ) {
+            NPC temp = new NPC( 1, true );
+            this.allies.add( temp );
+            this.allies.lastElement().setSummon();
+            this.allies.lastElement().setSpawnX(x );
+            this.allies.lastElement().setSpawnY(y);
+            this.allies.lastElement().setMapPath(this);
+            this.allies.lastElement().setSummoned( true );
+        }
+    }
+
+    public boolean checkIfSummonedAlive() {
+        for( int x = 0; x < this.allies.size(); x++ ) {
+            if( this.allies.elementAt(x).getSummoned() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removedSummoned() {
+        for( int x = 0; x < this.allies.size(); x++ ) {
+            if( this.allies.elementAt(x).getSummoned() ) {
+                this.allies.removeElementAt( x );
+                return;
+            }
+        }
+    }
 
      public void clearEnemyList() {
         this.enemies.clear();
@@ -342,7 +371,9 @@ public class Map implements TileBasedMap{
 
     public void setEnemies(Vector<NPC> enemies) {this.enemies = enemies;}
 
-    public void enemyMove( int delta, int x, int y ) {
+    public void enemyMove( int delta, int x, int y, Player player ) {
+
+        boolean playerFound = false;
 
         for( int i = 0; i < enemies.size(); i++ ) {
             enemies.elementAt(i).stopAnimationWalking();
@@ -369,21 +400,21 @@ public class Map implements TileBasedMap{
             else if(  enemies.elementAt(i).getStunned() <=0 && enemies.elementAt(i).getIsAlive() ) {
                 if( !enemies.elementAt(i).getIsAttacking() ) {
                     if (enemies.elementAt(i).isGoodInSight(this.mapObjects, allies )) {
-
-
-
+                        playerFound = true;
                         if (!enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
                             enemies.elementAt(i).goToGood(opponentX, opponentY);
                         }
                     }
                     else if( enemies.elementAt(i).getInCombat() ) {
                         enemies.elementAt(i).facePlayer();
+                        playerFound = true;
                     }
                     else {
                         enemies.elementAt(i).lookAround(delta);
                     }
                 }
                 else {
+                    playerFound = true;
                     if( opponent == -1 ) {
                         enemies.elementAt(i).goToGood(x, y);
                     }
@@ -396,6 +427,10 @@ public class Map implements TileBasedMap{
                 }
             }
 
+        }
+
+        if( playerFound == false ) {
+            player.setInCombat( false );
         }
 
     }
