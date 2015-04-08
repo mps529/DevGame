@@ -37,7 +37,7 @@ public class LootMenu extends BasicGameState {
 
     private boolean settingName;
 
-    private Sound lootSound;
+    private Sound lootSound, coinSound;
 
     private int[] inventoryItems, npcInventoryItems;
 
@@ -70,6 +70,7 @@ public class LootMenu extends BasicGameState {
         removeItemButtonPressed= new Image( "NewEra-Beta/res/buttons/down_orange.png" );
 
         lootSound = new Sound("NewEra-Beta/res/sounds/lootItem.ogg");
+        coinSound = new Sound("NewEra-Beta/res/sounds/coin.ogg");
 
         addGold = new Image( "NewEra-Beta/res/buttons/plus_orange.png" );
         goldAdded = new Image( "NewEra-Beta/res/buttons/plus_white.png" );
@@ -201,6 +202,7 @@ public class LootMenu extends BasicGameState {
                     this.enemyInventory.subMoney(gold);
                     this.player.getInventory().addMoney(gold);
                     this.addGoldPressed = true;
+                    coinSound.play();
                 }
 
             }

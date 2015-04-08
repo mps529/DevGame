@@ -1,11 +1,6 @@
 package javagame;
 
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
@@ -18,6 +13,7 @@ public class Game extends BasicGameState {
     private static int gameState;
 
     private Music outsideTheme;
+    private Sound potion;
 
     private PlayerAttack playerAttack;
 
@@ -89,6 +85,8 @@ public class Game extends BasicGameState {
         lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );
 
         outsideTheme = new Music("NewEra-Beta/res/sounds/adventure.ogg");
+
+        potion = new Sound("NewEra-Beta/res/sounds/potion.ogg");
 
 
 
@@ -398,9 +396,11 @@ public class Game extends BasicGameState {
                     if (input.isKeyPressed(Input.KEY_9)) {
                         input.clearKeyPressedRecord();
                         this.player.usedHealthPotion();
+                        potion.play();
                     } else if (input.isKeyPressed(Input.KEY_0)) {
                         input.clearKeyPressedRecord();
                         this.player.usedStaminaPotion();
+                        potion.play();
                     }
 
                     if (input.isKeyPressed(Input.KEY_V)) {
