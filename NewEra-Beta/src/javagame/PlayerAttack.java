@@ -12,6 +12,14 @@ public class PlayerAttack {
 
     private SpriteSheet playerSpriteSheet;
 
+    //warrior
+    private Sound spearAttack, stun, berserk;
+    //wizard
+    private Sound fireball, transmute, summonSpell, immolate;
+    //hunter
+    private Sound bowShot, trap, bushStealth, doubleShot;
+    //rogue
+    private Sound daggerSwing, shurikenThrow, cloak, poison;
         // Did the player Attack
     private boolean isAttacking;
     private boolean isSneaking = false;
@@ -43,7 +51,10 @@ public class PlayerAttack {
             // Gets the player Class
         this.player = this.player.getInstance();
             // Sets the player to be attacking
+        this.loadSounds();
         this.isAttacking = false;
+
+
     }
 
     public void setPlayerSpriteSheet( SpriteSheet playerSpriteSheet ) { this.playerSpriteSheet = playerSpriteSheet; }
@@ -174,6 +185,7 @@ public class PlayerAttack {
                 currentAttack = arrowAttackLeft;
             }
             this.frameStop = 12;
+            bowShot.play();
         }
             // Trap
         else if( moveSelected == 1 ) {
@@ -234,6 +246,7 @@ public class PlayerAttack {
                 currentAttack = thrustAttackLeft;
             }
             this.frameStop = 7;
+            spearAttack.play();
         }
         // Battle Cry
         else if( moveSelected == 1 ) {
@@ -283,6 +296,7 @@ public class PlayerAttack {
                 currentAttack = spellAttackLeft;
             }
             this.frameStop = 6;
+            berserk.play();
         }
     }
     private void wizardAttacks(  ) {
@@ -305,6 +319,7 @@ public class PlayerAttack {
                 currentAttack = swipeAttackLeft;
             }
             this.frameStop = 5;
+            fireball.play();
         }
         // Transmute
         else if( moveSelected == 1 ) {
@@ -321,6 +336,7 @@ public class PlayerAttack {
                 currentAttack = spellAttackLeft;
             }
             this.frameStop = 6;
+            transmute.play();
         }
         // Summon
         else if( moveSelected == 2 ) {
@@ -337,8 +353,9 @@ public class PlayerAttack {
                 currentAttack = swipeAttackLeft;
             }
             this.frameStop = 5;
+            summonSpell.play();
         }
-        // Immulate
+        // Immolate
         else if( moveSelected == 3 ) {
             if( direction == 0 ) {
                 currentAttack = spellAttackUp;
@@ -353,6 +370,7 @@ public class PlayerAttack {
                 currentAttack = spellAttackLeft;
             }
             this.frameStop = 6;
+            immolate.play();
         }
     }
     private void rogueAttacks( ) {
@@ -375,6 +393,7 @@ public class PlayerAttack {
                 currentAttack = swipeAttackLeft;
             }
             this.frameStop = 5;
+            daggerSwing.play();
         }
         // Ninja Star
         else if( moveSelected == 1 ) {
@@ -391,6 +410,7 @@ public class PlayerAttack {
                 currentAttack = thrustAttackLeft;
             }
             this.frameStop = 7;
+            shurikenThrow.play();
         }
             // Invisible
         else if( moveSelected == 2 ) {
@@ -407,6 +427,7 @@ public class PlayerAttack {
                 currentAttack = spellAttackLeft;
             }
             this.frameStop = 6;
+            bushStealth.play();
         }
             // Poison
         else if( moveSelected == 3 ) {
@@ -684,4 +705,22 @@ public class PlayerAttack {
         return this.currentAttack.isStopped();
     }
     public void drawPlayerAttacking( float x, float y ) { this.currentAttack.draw( x, y );  }
+
+    private void loadSounds() {
+        try{
+            fireball =      new Sound("NewEra-Beta/res/sounds/fireball.ogg");
+            immolate =      new Sound("NewEra-Beta/res/sounds/immolate.ogg");
+            berserk =       new Sound("NewEra-Beta/res/sounds/rage.ogg");
+            bowShot =       new Sound("NewEra-Beta/res/sounds/bow.ogg");
+            daggerSwing =   new Sound("NewEra-Beta/res/sounds/dagger.ogg");
+            shurikenThrow = new Sound("NewEra-Beta/res/sounds/shuriken.ogg");
+            spearAttack =   new Sound("NewEra-Beta/res/sounds/dagger.ogg");
+            transmute =     new Sound("NewEra-Beta/res/sounds/magic1.ogg");
+            summonSpell =   new Sound("NewEra-Beta/res/sounds/spell.ogg");
+            cloak =         new Sound("NewEra-Beta/res/sounds/cloak.ogg");
+            bushStealth =   new Sound("NewEra-Beta/res/sounds/hide.ogg");
+        } catch(SlickException e) {
+            e.printStackTrace();
+        }
+    }
 }
