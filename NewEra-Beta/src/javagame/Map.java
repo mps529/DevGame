@@ -17,6 +17,8 @@ public class Map implements TileBasedMap{
         // Name of this map
     private String mapName;
 
+    private Player player;
+
     // Coords of the map  and the skew
     // These are for rendering the area around the player
     private float mapCoordX, mapCoordY;
@@ -557,7 +559,19 @@ public class Map implements TileBasedMap{
     public boolean despawnNpc (int id) {
         for(int i=0;i <this.enemies.size(); i++) {
             if(this.enemies.elementAt(i).getId() == id) {
-                this.enemies.elementAt(i).setDeadTime(0);
+                this.enemies.elementAt(i).setAlive(false);
+                return true;
+            }
+        }
+        return false;
+    }
+    //used when looting to replace inventory with looted inventory
+    public boolean setNewInventory(int id) {
+        this.player = this.player.getInstance();
+
+        for(int i=0; i<this.enemies.size();i++) {
+            if(this.enemies.elementAt(i).getId() == player.getLootingId()) {
+                this.enemies.elementAt(i).setInventory(player.getLootingInventory());
                 return true;
             }
         }

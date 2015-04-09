@@ -82,7 +82,8 @@ public class Player extends Movement {
     // enemy inventory player is looting
         // used only when interacting with enemy bodies
     private Inventory lootingInventory;
-    private String lootingName;
+    //enemy id that is being looted
+    private int lootingId;
 
     // How long arrow will live for.
     private static int FIRE_RATE = 250;
@@ -451,6 +452,9 @@ public class Player extends Movement {
         }
     }
 
+    public int getLootingId() {return lootingId;}
+    public void setLootingId(int lootingId) {this.lootingId = lootingId;}
+
     public int getAttackOneDamage() { return this.attackOneDamage; }
     public void incrementAttackOneDamage() { this.attackOneDamage += 2; }
 
@@ -528,9 +532,10 @@ public class Player extends Movement {
     public void takeDamage( int attack, int movePower ) {
         Random rand = new Random();
 
-        int defence  = getOverallDefence() + 1;
+        int defence  = inventory.getPlayerOverallDefence() + 1;
 
         this.health -= (  ( attack * ( rand.nextInt( 15 ) + 1 )   ) / defence  ) + movePower;
+
 
         if( this.health < 0 ) {
             this.health = 0;

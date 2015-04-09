@@ -114,8 +114,9 @@ public class NPC extends NPCMovement {
         this.isAlive = other.isAlive;
         this.id = other.id;
 
-
     }
+
+
         // NPC Enemy with race
     public NPC( int race, boolean good ) {
         super();
@@ -178,6 +179,27 @@ public class NPC extends NPCMovement {
         this.isAlive = true;
         this.willRender = false;
 
+
+    }
+
+    public NPC(NPC other, boolean isAlive) {
+        this.stamina = other.stamina;
+        this.npcLevel = other.npcLevel;
+        this.id = other.id;
+        this.inventory = other.inventory;
+        this.FIRE_RATE = other.FIRE_RATE;
+        this.isAlive = other.isAlive;
+        this.deadTime = other.deadTime;
+        this.willRender = other.willRender;
+
+        this.npcRace = other.npcRace;
+
+        this.npcClass = other.npcClass;
+
+        this.red = other.red;
+        this.healthBar = other.healthBar;
+
+        this.opponentsArrayLocation = other.opponentsArrayLocation;
 
     }
 
@@ -834,6 +856,10 @@ public class NPC extends NPCMovement {
     public int getNpcClass() { return this.npcClass; }
     public boolean getHasAttacked() { return this.hasAttacked; }
     public void setHasAttacked( boolean hasAttacked) { this.hasAttacked = hasAttacked; }
+
+    public void setAlive(boolean isAlive) {this.isAlive = isAlive;}
+
+    public int getNpcLevel() {return npcLevel;}
 
     public boolean closeEnoughToAttack( int x, int y ) {
 
