@@ -35,7 +35,11 @@ public class PlayerAttack {
     private Animation fire;
 
     public Animation bush;
+
     public Animation shadow;
+
+    boolean isHidding = false;
+
         // Indicates which frame to stop at
     private int frameStop = 0;
 
@@ -132,6 +136,7 @@ public class PlayerAttack {
     public boolean renderFire() { return this.renderFire; }
     public boolean isSneaking() { return this.isSneaking; }
     public boolean isBeserk() { return this.isBeserk; }
+    public void setBeserk( boolean beserk ) { this.isBeserk = beserk; }
 
     public boolean isDoneAttacking( Input input, int delta, Vector<NPC> enemies, Map map  ) {
 
@@ -152,9 +157,11 @@ public class PlayerAttack {
     }
 
     public void attack(  ) {
-        setIsAttacking( true );
+        setIsAttacking(true);
 
-        this.player.decreaseStamina();
+        if( !this.isBeserk ) {
+            this.player.decreaseStamina();
+        }
 
         if( this.player.getPlayerClass() == 0 ) {
             hunterAttacks( );
@@ -520,6 +527,8 @@ public class PlayerAttack {
         }
     }
 
+    public boolean getIsHidding() { return this.isHidding; }
+
     private boolean isHunterDone( Input input, int delta ) {
         int moveSelected = this.player.getMoveSelected();
 
@@ -535,13 +544,16 @@ public class PlayerAttack {
         }
         else if( moveSelected == 2 ) {
             if (!input.isKeyDown(Input.KEY_SPACE) ) {
+                this.isHidding = false;
                 return true;
             }
             else if( this.player.getStamina() >= 2 ) {
                 this.player.decreaseStamina(delta * .01f);
+                this.isHidding = true;
                 return false;
             }
             else {
+                this.isHidding = false;
                 return true;
             }
         }
@@ -563,7 +575,6 @@ public class PlayerAttack {
             }
         }
         else if( moveSelected == 1 ) {
-                // Everyone around him will flee
             if( this.currentAttack.isStopped() ) {
                 return true;
             }
@@ -579,10 +590,6 @@ public class PlayerAttack {
                 if( input.isKeyDown( Input.KEY_SPACE ) || this.player.getStamina() <= 2 ) {
                     this.isBeserk = false;
                     return true;
-                }
-                else {
-                    this.player.decreaseStamina(delta * .03f);
-                    return false;
                 }
             }
             else if( this.currentAttack.isStopped() ) {

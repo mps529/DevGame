@@ -132,19 +132,19 @@ public class Game extends BasicGameState {
 
             // Drawing traps if set
             this.player.renderTraps(gc, g);
-        if(!this.PAUSED) {
+        if(!this.PAUSED || !this.player.checkDeath()) {
+
+            if ( this.player.checkDeath() ) {
+                this.player.drawPlayerDieing(this.halfScreenWidth, this.halfScreenHeight);
+            }
             // Switches to attack animation if true
-            if (this.playerAttack.getIsAttacking()) {
+             else if (this.playerAttack.getIsAttacking()) {
                 this.playerAttack.drawPlayerAttacking(this.halfScreenWidth, this.halfScreenHeight);
                 if (this.playerAttack.renderFire()) {
                     this.playerAttack.drawFire(this.halfScreenWidth, this.halfScreenHeight);
                 }
-
             }
-            // If dead
-            else if (this.dead) {
-                this.player.drawPlayerDieing(this.halfScreenWidth, this.halfScreenHeight);
-            } else {
+            else {
                 this.player.drawPlayer(this.halfScreenWidth, this.halfScreenHeight);
             }
         } else {
@@ -257,17 +257,8 @@ public class Game extends BasicGameState {
 
         if(!this.PAUSED) {
 
-            // Checks if the player is dead
-            dead = player.checkDeath();
-
-            if (input.isKeyPressed(Input.KEY_BACKSLASH)) {
-                this.player.setHealth(10);
-
-            }
-            
-
             // If player is ded
-            if (!dead) {
+            if ( !this.player.checkDeath()  ) {
                 boolean attacked = false;
 
                 // Checking if the player has moved with running, will change if the player does
@@ -279,7 +270,7 @@ public class Game extends BasicGameState {
                   3) If space is not a collision move the hunter and the map
                   4) If the player is running, decrease stamina.
             */
-                if (!this.playerAttack.getIsAttacking() || this.playerAttack.isSneaking()) {
+                if (!this.playerAttack.getIsAttacking() || this.playerAttack.isSneaking() ) {
 
                     // Enter Inventory
                     if (input.isKeyPressed(Input.KEY_I)) {
@@ -370,14 +361,21 @@ public class Game extends BasicGameState {
                         this.player.stopAnimationWalking();
                     }
 
-                // If player attacks and the player has stamina to attack
-                if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && !this.playerAttack.isBeserk() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
-                    this.playerAttack.attack();
-                    this.playerAttack.startAnimationAttacking();
-                    this.playerAttack.stopAnimationAttacking();
-                }
+                    // If player attacks and the player has stamina to attack
+                    if (input.isKeyPressed(Input.KEY_SPACE) && !this.playerAttack.isSneaking() && this.player.getStamina() >= this.player.getAttackStamina() && player.isWeaponEqiupped() ) {
+                        this.playerAttack.attack();
+                        this.playerAttack.startAnimationAttacking();
+                        this.playerAttack.stopAnimationAttacking();
+                    }
+                    if( this.playerAttack.isBeserk() ) {
+                        this.player.decreaseStamina(delta * .01f);
+                        if( this.player.getStamina() <= 2 ) {
+                            this.playerAttack.setBeserk( false );
+                        }
+                    }
+                    this.player.setInBeserkMode( this.playerAttack.isBeserk() );
 
-                    if (!this.playerAttack.isSneaking() || !this.playerAttack.isBeserk()) {
+                    if (!this.playerAttack.isSneaking() ) {
                         if (input.isKeyDown(Input.KEY_1)) {
                             if (this.player.isMoveKnown(0)) {
                                 this.player.setMoveSelected(0);
@@ -471,7 +469,7 @@ public class Game extends BasicGameState {
                 // Update projectiles position
                 this.player.updateAttack(delta, attacked, maps.elementAt(this.currentMap));
 
-                this.maps.elementAt(this.currentMap).enemyMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY(), this.player);
+                this.maps.elementAt(this.currentMap).enemyMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY(), this.player, this.playerAttack.getIsHidding(), this.playerAttack.isSneaking() );
                 this.maps.elementAt(this.currentMap).alliesMove(delta, (int) this.player.getPlayerX(), (int) this.player.getPlayerY());
 
                 this.maps.elementAt(this.currentMap).updateNPCAttacks( delta, (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
@@ -481,13 +479,12 @@ public class Game extends BasicGameState {
                 }
 
             } else {
-
-                if (!this.startDed) {
+                if ( this.player.checkDeath() && !this.startDed ) {
                     this.player.startAnimationDeath();
                     this.player.stopAnimationDeath();
                     this.startDed = true;
                 } else if (this.player.isStoppedDead()) {
-                    sbg.enterState(0);
+                    //sbg.enterState(0);
                 }
             }
 
@@ -548,7 +545,11 @@ public class Game extends BasicGameState {
                 // Setting the current map
                 this.currentMap = x;
                 this.maps.elementAt( x ).resetSkewAndCoords();
-                this.player.setCurrentMapIndex( x );
+                this.maps.elementAt(this.currentMap).clearNPCList();
+
+                this.player.setCurrentMapIndex(x);
+                this.maps.elementAt(this.currentMap).addEnemies();
+                this.maps.elementAt(this.currentMap).addGood();
 
                 return;
             }

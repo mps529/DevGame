@@ -326,7 +326,7 @@ public class Inventory {
                 addItem(ring);
             }
             // Adds monies
-            this.addMoney(rand.nextInt(level + 3) * (rand.nextInt(3) + 1));
+           this.money = ( (rand.nextInt(level + 3) +1) * (rand.nextInt(3) + 1));
 
                 // Extra inventory items
            /* Items[] extra = new Items[7];

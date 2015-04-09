@@ -70,6 +70,8 @@ public class Player extends Movement {
     private int perkPoints;
     private int movePoints;
 
+    private boolean inBeserkMode = false;
+
     // projectile Animations
     private Image[] projectileImageOne = null;
     private Image[] projectileImageTwo = null;
@@ -78,6 +80,8 @@ public class Player extends Movement {
     private Image currentAttack;
     // Players Inventory
     private Inventory inventory;
+
+    private boolean playerDead = false;
 
     // enemy inventory player is looting
         // used only when interacting with enemy bodies
@@ -317,10 +321,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 13;
         this.BASE_DEFENCE = 5;
 
-        this.attackOneStamina = 10;
-        this.attackTwoStamina = 20;
+        this.attackOneStamina = 5;
+        this.attackTwoStamina = 10;
         this.attackThreeStamina = 2;
-        this.attackFourStamina = 40;
+        this.attackFourStamina = 20;
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
@@ -331,9 +335,17 @@ public class Player extends Movement {
     private void setWarrior() throws SlickException {
         this.characterClassChosen = 1;
 
+        projectileImageOne = new Image[4];
+        projectileImageOne[0] = new Image("NewEra-Beta/res/moves/BoulderThrow.png");
+        projectileImageOne[1] = new Image("NewEra-Beta/res/moves/BoulderThrow.png");
+        projectileImageOne[2] = new Image("NewEra-Beta/res/moves/BoulderThrow.png");
+        projectileImageOne[3] = new Image("NewEra-Beta/res/moves/BoulderThrow.png");
+        // sets the projectile
+        setProjectileImage( projectileImageOne );
+
             // This sets the display image for which attack is chosen
         this.attackImages[0] =  new Image("NewEra-Beta/res/items/spear.png");
-        this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/battleCry.png" );
+        this.attackImages[1] = new Image( "NEwEra-Beta/res/moves/BoulderThrow.png" );
         this.attackImages[2] = new Image( "NEwEra-Beta/res/moves/stun.png" );
         this.attackImages[3 ]= new Image( "NEwEra-Beta/res/moves/berserk.png" );
 
@@ -349,10 +361,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 7;
         this.BASE_DEFENCE = 10;
 
-        this.attackOneStamina = 10;
-        this.attackTwoStamina = 20;
+        this.attackOneStamina = 5;
+        this.attackTwoStamina = 10;
         this.attackThreeStamina = 2;
-        this.attackFourStamina = 40;
+        this.attackFourStamina = 20;
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
@@ -386,10 +398,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 15;
         this.BASE_DEFENCE = 5;
 
-        this.attackOneStamina = 10;
-        this.attackTwoStamina = 20;
-        this.attackThreeStamina = 30;
-        this.attackFourStamina = 40;
+        this.attackOneStamina = 5;
+        this.attackTwoStamina = 10;
+        this.attackThreeStamina = 15;
+        this.attackFourStamina = 20;
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
@@ -422,10 +434,10 @@ public class Player extends Movement {
         this.BASE_ATTACK = 11;
         this.BASE_DEFENCE = 9;
 
-        this.attackOneStamina = 10;
-        this.attackTwoStamina = 20;
+        this.attackOneStamina = 5;
+        this.attackTwoStamina = 10;
         this.attackThreeStamina = 2;
-        this.attackFourStamina = 40;
+        this.attackFourStamina = 20;
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
@@ -454,6 +466,9 @@ public class Player extends Movement {
 
     public int getLootingId() {return lootingId;}
     public void setLootingId(int lootingId) {this.lootingId = lootingId;}
+
+    public void setInBeserkMode( boolean beserkMode ) { this.inBeserkMode = beserkMode; }
+    public boolean getInBeserkMode() { return this.inBeserkMode; }
 
     public int getAttackOneDamage() { return this.attackOneDamage; }
     public void incrementAttackOneDamage() { this.attackOneDamage += 2; }
@@ -496,7 +511,13 @@ public class Player extends Movement {
     public int getOverallAttack() { return this.OVERALL_ATTACK; }
     public void setOverallAttack( int attack ) { this.OVERALL_ATTACK = attack; }
 
-    public int getOverallDefence() { return this.OVERALL_DEFENCE; }
+    public int getOverallDefence() {
+        if( this.inBeserkMode ) {
+            return ( this.OVERALL_DEFENCE  + ( this.level * 2 ) );
+        }
+
+        return this.OVERALL_DEFENCE;
+    }
     public void setOverallDefence( int defence ) { this.OVERALL_DEFENCE = defence; }
 
     public void setBaseAttack( int attack ) { this.BASE_ATTACK = attack; }
@@ -532,13 +553,16 @@ public class Player extends Movement {
     public void takeDamage( int attack, int movePower ) {
         Random rand = new Random();
 
-        int defence  = inventory.getPlayerOverallDefence() + 1;
+        int defence  = getOverallDefence() + 1;
+        if( this.inBeserkMode ) {
+            defence += this.level * 2;
+        }
 
-        this.health -= (  ( attack * ( rand.nextInt( 15 ) + 1 )   ) / defence  ) + movePower;
-
+        this.health -= (  ( attack * ( rand.nextInt( 7 ) + 1 )   ) / defence  ) + movePower;
 
         if( this.health < 0 ) {
-            this.health = 0;
+            this.playerDead = true;
+
         }
 
     }
@@ -608,10 +632,10 @@ public class Player extends Movement {
     public int getMinRunningStamina() { return this.minRunningStamina; }
 
     public boolean checkDeath() {
-        if( getHealth() <= 0 ) {
-            return true;
+        if( this.playerDead ) {
+            this.health = 0;
         }
-        return false;
+        return this.playerDead;
     }
 
     public void setExpToLevelUp( double exp ) { this.expToLevelUp = exp; }
@@ -691,8 +715,8 @@ public class Player extends Movement {
 
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
-        updateProjectile(delta, attacked, map, getMoveSelected() );
-        updateTrap( delta, attacked, getMoveSelected() );
+        updateProjectile(delta, attacked, map, getMoveSelected());
+        updateTrap(delta, attacked, map, getMoveSelected());
     }
 
     public void usedHealthPotion() {

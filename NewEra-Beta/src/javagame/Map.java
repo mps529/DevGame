@@ -121,45 +121,49 @@ public class Map implements TileBasedMap{
 
     public void addEnemies() {
 
-        Random rand = new Random();
+        if( this.enemySpawn != -1 ) {
+            Random rand = new Random();
 
-        for( int x = 0; x < getMapHeight(); x++ ) {
-            for (int y = 0; y < getMapWidth(); y++) {
+            for (int x = 0; x < getMapHeight(); x++) {
+                for (int y = 0; y < getMapWidth(); y++) {
 
-                if( this.map.getTileId( x, y, this.enemySpawn) != 0 ) {
-                    NPC temp = new NPC( rand.nextInt( 2 ), false );
-                    this.enemies.add( temp );
-                    this.enemies.lastElement().setImage(false);
-                    this.enemies.lastElement().setSpawnX( x*32 );
-                    this.enemies.lastElement().setSpawnY( y*32 );
-                    this.enemies.lastElement().setMapPath( this );
+                    if (this.map.getTileId(x, y, this.enemySpawn) != 0) {
+                        NPC temp = new NPC(rand.nextInt(2), false);
+                        this.enemies.add(temp);
+                        this.enemies.lastElement().setImage(false);
+                        this.enemies.lastElement().setSpawnX(x * 32);
+                        this.enemies.lastElement().setSpawnY(y * 32);
+                        this.enemies.lastElement().setMapPath(this);
+                    }
+
                 }
-
             }
         }
     }
     public void addGood() {
 
-        Random rand = new Random();
+        if (this.villagerSpawn != -1 && this.guardSpawn != -1) {
 
-        for( int x = 0; x < getMapHeight(); x++ ) {
-            for (int y = 0; y < getMapWidth(); y++) {
+            Random rand = new Random();
 
-                if( this.map.getTileId( x, y, this.villagerSpawn) != 0 ) {
-                    NPC temp = new NPC( rand.nextInt( 2 ), true );
-                    this.allies.add( temp );
-                    this.allies.lastElement().setImage( true );
-                    this.allies.lastElement().setSpawnX( x*32 );
-                    this.allies.lastElement().setSpawnY( y*32 );
-                    this.allies.lastElement().setMapPath( this );
-                }
-                else if( this.map.getTileId( x, y, this.guardSpawn ) != 0 ) {
-                    NPC temp = new NPC( rand.nextInt( 2 ), true );
-                    this.allies.add( temp );
-                    this.allies.lastElement().setImage( false );
-                    this.allies.lastElement().setSpawnX( x*32 );
-                    this.allies.lastElement().setSpawnY( y*32 );
-                    this.allies.lastElement().setMapPath( this );
+            for (int x = 0; x < getMapHeight(); x++) {
+                for (int y = 0; y < getMapWidth(); y++) {
+
+                    if (this.map.getTileId(x, y, this.villagerSpawn) != 0) {
+                        NPC temp = new NPC(rand.nextInt(2), true);
+                        this.allies.add(temp);
+                        this.allies.lastElement().setImage(true);
+                        this.allies.lastElement().setSpawnX(x * 32);
+                        this.allies.lastElement().setSpawnY(y * 32);
+                        this.allies.lastElement().setMapPath(this);
+                    } else if (this.map.getTileId(x, y, this.guardSpawn) != 0) {
+                        NPC temp = new NPC(rand.nextInt(2), true);
+                        this.allies.add(temp);
+                        this.allies.lastElement().setImage(false);
+                        this.allies.lastElement().setSpawnX(x * 32);
+                        this.allies.lastElement().setSpawnY(y * 32);
+                        this.allies.lastElement().setMapPath(this);
+                    }
                 }
             }
         }
@@ -195,8 +199,9 @@ public class Map implements TileBasedMap{
         }
     }
 
-     public void clearEnemyList() {
-        this.enemies.clear();
+     public void clearNPCList() {
+         this.enemies.clear();
+         this.allies.clear();
      }
 
         // Send in TileX
@@ -347,8 +352,14 @@ public class Map implements TileBasedMap{
 
         for( NPC enemy : enemies ) {
             if( enemy.getIsAlive() ) {
-                if ((enemy.getNPCX() >= x - 12 && enemy.getNPCX() <= x + 12) && (enemy.getNPCY() >= y - 12 && enemy.getNPCY() <= y + 12)) {
-                    enemy.takeDamage( direction );
+                if ((enemy.getNPCX() >= x - 20 && enemy.getNPCX() <= x + 20) && (enemy.getNPCY() >= y - 20 && enemy.getNPCY() <= y + 20)) {
+
+                    if( direction == -1 ) {
+                        enemy.takeDamage( enemy.getDirection() );
+                    }
+                    else {
+                        enemy.takeDamage( direction );
+                    }
                     return true;
                 }
             }
@@ -373,9 +384,16 @@ public class Map implements TileBasedMap{
 
     public void setEnemies(Vector<NPC> enemies) {this.enemies = enemies;}
 
-    public void enemyMove( int delta, int x, int y, Player player ) {
+    public void enemyMove( int delta, int x, int y, Player player, boolean hidden, boolean invisible ) {
 
         boolean playerFound = false;
+
+        boolean isHidden = false;
+
+        if( hidden || invisible ) {
+            isHidden = true;
+        }
+
 
         for( int i = 0; i < enemies.size(); i++ ) {
             enemies.elementAt(i).stopAnimationWalking();
@@ -401,26 +419,31 @@ public class Map implements TileBasedMap{
             }
             else if(  enemies.elementAt(i).getStunned() <=0 && enemies.elementAt(i).getIsAlive() ) {
                 if( !enemies.elementAt(i).getIsAttacking() ) {
-                    if (enemies.elementAt(i).isGoodInSight(this.mapObjects, allies )) {
-                        playerFound = true;
+                    if ( enemies.elementAt(i).isGoodInSight(this.mapObjects, allies, isHidden )) {
+                        if( enemies.elementAt(i).getEnemy() == -1 ) {
+                            playerFound = true;
+                        }
                         if (!enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
                             enemies.elementAt(i).goToGood(opponentX, opponentY);
                         }
                     }
                     else if( enemies.elementAt(i).getInCombat() ) {
                         enemies.elementAt(i).facePlayer();
-                        playerFound = true;
+                        if( enemies.elementAt(i).getEnemy() == -1 ) {
+                            playerFound = true;
+                        }
                     }
                     else {
                         enemies.elementAt(i).lookAround(delta);
                     }
                 }
                 else {
-                    playerFound = true;
-                    if( opponent == -1 ) {
+
+                    if( opponent == -1  && !enemies.elementAt(i).getIsAttacking() ) {
                         enemies.elementAt(i).goToGood(x, y);
+                        playerFound = true;
                     }
-                    else {
+                    else if ( !enemies.elementAt(i).getIsAttacking() ){
                         enemies.elementAt(i).goToGood((int) enemies.elementAt(opponent).getNPCX(), (int) enemies.elementAt(opponent).getNPCY());
                     }
                     if( enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
@@ -439,6 +462,7 @@ public class Map implements TileBasedMap{
 
     public Vector<NPC> getAllies() {return allies;}
     public void setAllies(Vector<NPC> allies) {this.allies = allies;}
+
 
     public void alliesMove( int delta, int x, int y ) {
 
@@ -463,7 +487,7 @@ public class Map implements TileBasedMap{
             }
             else if(  allies.elementAt(i).getStunned() <=0 && allies.elementAt(i).getIsAlive() ) {
                 if( !allies.elementAt(i).getIsAttacking() ) {
-                    if (allies.elementAt(i).isGoodInSight(this.mapObjects, enemies)) {
+                    if (allies.elementAt(i).isGoodInSight(this.mapObjects, enemies, false )) {
                         if (!allies.elementAt(i).closeEnoughToAttack(opponentX, opponentY)) {
                             allies.elementAt(i).goToGood(opponentX, opponentY);
                         }
