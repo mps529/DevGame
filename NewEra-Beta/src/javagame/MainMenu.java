@@ -1086,5 +1086,6 @@ public class MainMenu extends BasicGameState {
             slot4ClassId = sg.getClassID();
             slot4Level = sg.getPlayerLvl();
         }
+        player = null;
     }
 }

@@ -86,7 +86,8 @@ public class Player extends Movement {
     // enemy inventory player is looting
         // used only when interacting with enemy bodies
     private Inventory lootingInventory;
-    private String lootingName;
+    //enemy id that is being looted
+    private int lootingId;
 
     // How long arrow will live for.
     private static int FIRE_RATE = 250;
@@ -195,7 +196,7 @@ public class Player extends Movement {
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Movement starting attributes
-        setLevel( 15 );
+        setLevel( 1 );
         calculateExpToLevelUp();
         setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
@@ -463,6 +464,9 @@ public class Player extends Movement {
         }
     }
 
+    public int getLootingId() {return lootingId;}
+    public void setLootingId(int lootingId) {this.lootingId = lootingId;}
+
     public void setInBeserkMode( boolean beserkMode ) { this.inBeserkMode = beserkMode; }
     public boolean getInBeserkMode() { return this.inBeserkMode; }
 
@@ -549,7 +553,7 @@ public class Player extends Movement {
     public void takeDamage( int attack, int movePower ) {
         Random rand = new Random();
 
-        int defence  = inventory.getPlayerOverallDefence() + 1;
+        int defence  = getOverallDefence() + 1;
         if( this.inBeserkMode ) {
             defence += this.level * 2;
         }
