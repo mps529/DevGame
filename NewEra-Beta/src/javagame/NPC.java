@@ -2,9 +2,14 @@ package javagame;
 
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Path;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.Vector;
 
@@ -144,6 +149,8 @@ public class NPC extends NPCMovement {
         this.health = this.MAX_HEALTH;
         this.stamina = this.MAX_STAMINA;
 
+        this.attackDamage = 5;
+
             // Setting the class randomly
         this.npcClass = random.nextInt( 2 );
         if( this.npcClass == 0 ) {
@@ -169,8 +176,8 @@ public class NPC extends NPCMovement {
         this.inventory.addEnemyNPCArmor( this.npcLevel );
 
             // Setting attack and defence
-        this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack();
-        this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence();
+        this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack() + (int)( this.npcLevel *2) ;
+        this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence()  + (int)( this.npcLevel *2);
 
         this.good = good;
 
@@ -239,6 +246,7 @@ public class NPC extends NPCMovement {
 
         this.npcClass = npcClass;
 
+        this.attackDamage = 5;
 
             // Setting stats and image
         try {
@@ -508,7 +516,7 @@ public class NPC extends NPCMovement {
 
     }
 
-    public boolean isGoodInSight( int[][] mapObjects, Vector<NPC> npcs ) {
+    public boolean isGoodInSight( int[][] mapObjects, Vector<NPC> npcs, boolean isHidden ) {
         int x = findCurrentTile( getNPCX() );
         int y = findCurrentTile( getNPCY() );
         int direction = getDirection();
@@ -518,7 +526,7 @@ public class NPC extends NPCMovement {
         int playerX = findCurrentTile( this.player.getPlayerX() );
         int playerY = findCurrentTile( this.player.getPlayerY() );
 
-        if( !this.good ) {
+        if( !this.good && !isHidden) {
             if (direction == 0) {
                 for (int i = y; i > y - 6; i--) {
                     if (i >= y - 2) {
@@ -974,10 +982,6 @@ public class NPC extends NPCMovement {
 
     public void drawNPC( Graphics g ) {
 
-        if( this.summoned == true) {
-            System.out.println("Being drawn at X:" + this.getNPCX() + " Y: " + getNPCY() );
-        }
-
         if( this.deadTime > 0 ) {
             int npcX = (int)getNPCX();
             int npcY = (int)getNPCY();
@@ -997,6 +1001,8 @@ public class NPC extends NPCMovement {
 
                     g.fillRect(328 + x, 319 + y, 16 * (float) healthPercent, 6);
                     this.healthBar.draw(328 + x, 319 + y);
+                    g.setColor(Color.black);
+                    g.drawString( "" + this.npcLevel, 332 + x, 300 + y );
                 }
                 if (this.isAlive) {
                     if( this.stunned > 0 ) {

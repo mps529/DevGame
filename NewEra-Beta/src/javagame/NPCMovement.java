@@ -14,8 +14,8 @@ public class NPCMovement {
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
     private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
     private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60};
-    private int[] durationRougeSpeedAttack = { 60,60,60,60,60,60  };
-    private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
+    private int[] durationRougeSpeedAttack = { 70,70,70,70,70,70  };
+    private int[] durationWarriorSpeedAttack = { 70,70,70,70,70, 70,70,70 };
 
     private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
 

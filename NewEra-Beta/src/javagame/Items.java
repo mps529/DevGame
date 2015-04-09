@@ -4,6 +4,9 @@ import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.ImageData;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Random;
 
 public class Items {
@@ -213,6 +216,8 @@ public class Items {
     public void setSpritePosY(int y) {this.spritePosY = y;}
 
     private void assignRarity(  Random randomNumber ) {
+
+        randomNumber.setSeed( System.currentTimeMillis() / randomNumber.nextInt() );
         int rarity = randomNumber.nextInt(101);
 
         if (rarity <= 60) {
