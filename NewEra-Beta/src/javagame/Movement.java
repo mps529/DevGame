@@ -15,12 +15,12 @@ public class Movement {
     private SpriteSheet playerSpriteSheet;
 
     private int[] durationSpeed = { 80,80,80,80,80,80,80,80 };
-    private int[] durationHunterSpeedAttack = { 60,60,60,60,60,60,60,60,60,60,60,60,60 };
+    private int[] durationHunterSpeedAttack = { 50,50,50,50,50,50,50,50,50,50,50,50,50 };
     private int[] durationWizardSpeedAttack = { 60,60,60,60,60,60 };
     private int[] durationRougeSpeedAttack = { 60,60,60,60,60,60  };
-    private int[] durationWarriorSpeedAttack = { 60,60,60,60,60,60,60,60 };
+    private int[] durationWarriorSpeedAttack = { 50,50,50,50,50,50,50,50 };
 
-    private int[] durationSpeedDeath = { 80,80,80,80,80,80 };
+    private int[] durationSpeedDeath = { 120,120,120,120,120,120 };
 
         // Walking animations
     private Animation movingPlayer, movingUp, movingRight, movingDown, movingLeft;
@@ -293,6 +293,7 @@ public class Movement {
         boolean spin = false;
 
         if( ( this.playerClass == 0 && ( move == 0 || move == 3 ) )  ||
+                (this.playerClass == 1 && move == 1) ||
                 (this.playerClass == 2 && move == 0) ||
                 (this.playerClass == 3 && move == 1) ) {
 
@@ -338,13 +339,13 @@ public class Movement {
         }
     }
 
-    public void updateTrap( int delta, boolean layed, int move ) {
+    public void updateTrap( int delta, boolean layed, Map map, int move ) {
         // Increases time since last shot
         this.lastLayed += delta;
 
         if( this.playerClass == 0 && move == 1 ) {
             if(  layed ) {
-                this.traps[ this.currentTrapIndex++ ] = new Trap(  new Vector2f( 320, 320 ),  new Vector2f( getPlayerX(), getPlayerY() ) );
+                this.traps[ this.currentTrapIndex++ ] = new Trap(  new Vector2f( 320, 320 ),  new Vector2f( getPlayerX(), getPlayerY() ), new Vector2f( getPlayerX(), getPlayerY() ) );
             }
             if (this.currentTrapIndex >= this.traps.length) {
                 this.currentTrapIndex = 0;
@@ -353,7 +354,7 @@ public class Movement {
         }
 
         for (Trap t : this.traps) {
-            t.update( delta, (int)getPlayerX(), (int)getPlayerY()  );
+            t.update( delta, (int)getPlayerX(), (int)getPlayerY(), map  );
         }
     }
     

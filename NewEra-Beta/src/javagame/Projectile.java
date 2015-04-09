@@ -20,8 +20,8 @@ public class Projectile {
     private int direction;
         // If the projectile is still active
     private boolean active = true;
-        // Lifespan of projectile
-    private static int MAX_LIFETIME = 890;
+        // Lifespan of projectile    890
+    private static int MAX_LIFETIME = 390;
 
     private int speed = 5 ;
 
@@ -65,7 +65,6 @@ public class Projectile {
                 if (map.isSpaceTaken(this.projectilePos.getX(), this.projectilePos.getY()) != 0) {
                     this.active = false;
                 } else if ((x >= this.projectilePos.getX() - 12 && x <= this.projectilePos.getX() + 12) && (y >= this.projectilePos.getY() - 12 && y <= this.projectilePos.getY() + 12)) {
-                    System.out.println( "Hurt Player" );
 
                 } else if (map.isSpaceAlly(this.projectilePos.getX(), this.projectilePos.getY(), direction)) {
                     this.active = false;
@@ -118,7 +117,7 @@ public class Projectile {
 
     public void render( GameContainer gc, Graphics g, Image[] projectile ) throws SlickException {
         if( this.active ) {
-            if( this.spin ) {
+            if( this.spin  ) {
                 projectile[ this.direction ].rotate( 110 );
             }
             projectile[ this.direction ].draw( this.pos.getX(), this.pos.getY() );

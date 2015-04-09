@@ -6,12 +6,16 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.Vector;
+
 public class Trap {
 
         // Position of the trap
     private Vector2f pos;
         // Position of player
     private Vector2f playerPos;
+        // Position of trap in relation to map
+    private Vector2f trapPos;
         // How long the projectile has been alive for
     private int lived = 0;
         // If the trap is active
@@ -23,11 +27,13 @@ public class Trap {
     private static int MAX_LIFETIME = 20000;
 
 
-    public Trap(  Vector2f pos, Vector2f playerPos ) {
+    public Trap(  Vector2f pos, Vector2f playerPos, Vector2f trapPos ) {
             // Setting Position
         this.pos = pos;
             // Setting Player position
         this.playerPos = playerPos;
+            // Setting Trap Position
+        this.trapPos = trapPos;
 
         try {
             trap = new Image("NewEra-Beta/res/moves/trap.png");
@@ -41,27 +47,34 @@ public class Trap {
         this.active = false;
     }
 
-    public void update( int delta, int x, int y ) {
+    public void update( int delta, int x, int y, Map map ) {
 
         if( this.active ) {
-                // Checks for the change in position
-            int changeX = (int) this.playerPos.getX() - x;
-            int changeY = (int) this.playerPos.getY() - y;
 
-            if (changeX != 0) {
-                this.pos.set(this.pos.getX() + changeX, this.pos.getY());
-                this.playerPos.set(x, y);
+            if( map.isSpaceEnemy( trapPos.getX(), trapPos.getY(), -1 ) ) {
+                this.active = false;
             }
-            if (changeY != 0) {
-                this.pos.set(this.pos.getX(), this.pos.getY() + changeY);
-                this.playerPos.set(x, y);
-            }
+            else {
+
+                // Checks for the change in position
+                int changeX = (int) this.playerPos.getX() - x;
+                int changeY = (int) this.playerPos.getY() - y;
+
+                if (changeX != 0) {
+                    this.pos.set(this.pos.getX() + changeX, this.pos.getY());
+                    this.playerPos.set(x, y);
+                }
+                if (changeY != 0) {
+                    this.pos.set(this.pos.getX(), this.pos.getY() + changeY);
+                    this.playerPos.set(x, y);
+                }
 
                 // Increase time alive
-            this.lived += delta;
+                this.lived += delta;
                 // Check if trap has live past its time
-            if( this.lived > this.MAX_LIFETIME ) {
-                this.active = false;
+                if (this.lived > this.MAX_LIFETIME) {
+                    this.active = false;
+                }
             }
         }
     }
