@@ -484,7 +484,7 @@ public class Game extends BasicGameState {
                     this.player.stopAnimationDeath();
                     this.startDed = true;
                 } else if (this.player.isStoppedDead()) {
-                    sbg.enterState(0);
+                    //sbg.enterState(0);
                 }
             }
 

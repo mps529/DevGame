@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -553,7 +554,7 @@ public class Player extends Movement {
     public void takeDamage( int attack, int movePower ) {
         Random rand = new Random();
 
-        int defence  = getOverallDefence() + 1;
+        int defence  = this.inventory.getPlayerOverallDefence() + 1;
         if( this.inBeserkMode ) {
             defence += this.level * 2;
         }
