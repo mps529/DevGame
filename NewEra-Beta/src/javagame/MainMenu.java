@@ -72,6 +72,8 @@ public class MainMenu extends BasicGameState {
     private int spriteSelectedX, spriteSelectedY;
     private int slotSelectedX, slotSelectedY, slotWidth, slotHeight;
 
+    private boolean firstTimeRunning = true;
+
     public MainMenu( int state ) {
         this.gameState = state;
     }
@@ -82,30 +84,35 @@ public class MainMenu extends BasicGameState {
 
     public void enter ( GameContainer gc, StateBasedGame sbg ) {
 
-        newGameStarted = false;
-        classSelected = false;
-        loadSlotSelected = false;
-        spriteSelected = false;
-        warriorSelected = false;
-        wizardSelected = false;
-        rogueSelected = false;
-        hunterSelected = false;
+        //theme.loop();
 
-        sprite1Selected = false;
-        sprite2Selected = false;
-        sprite3Selected = false;
-        sprite4Selected = false;
-        characterName.setText("");
-        editingName = false;
-        gameStarted = false;
+        System.out.println("hi");
+        if(!firstTimeRunning) {
+            newGameStarted = false;
+            classSelected = false;
+            loadSlotSelected = false;
+            spriteSelected = false;
+            warriorSelected = false;
+            wizardSelected = false;
+            rogueSelected = false;
+            hunterSelected = false;
 
-        loadSlot1Selected = false;
-        loadSlot2Selected = false;
-        loadSlot3Selected = false;
-        loadSlot4Selected = false;
+            sprite1Selected = false;
+            sprite2Selected = false;
+            sprite3Selected = false;
+            sprite4Selected = false;
+            characterName.setText("");
+            editingName = false;
+            gameStarted = false;
 
-        //load games with helper functions to set booleans
-        this.loadGames();
+            loadSlot1Selected = false;
+            loadSlot2Selected = false;
+            loadSlot3Selected = false;
+            loadSlot4Selected = false;
+
+            //load games with helper functions to set booleans
+            this.loadGames();
+        }
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
@@ -664,6 +671,7 @@ public class MainMenu extends BasicGameState {
                 loadSlot2Selected = false;
                 loadSlot3Selected = false;
                 loadSlot4Selected = false;
+                firstTimeRunning = false;
                 sbg.enterState(1);
 
             } else if(loadGameStarted) {
@@ -698,6 +706,7 @@ public class MainMenu extends BasicGameState {
                 loadSlot2Selected = false;
                 loadSlot3Selected = false;
                 loadSlot4Selected = false;
+                firstTimeRunning = false;
                 sbg.enterState(1);
 
 
