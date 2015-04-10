@@ -33,7 +33,7 @@ public class Interaction {
                     if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24)) {
                         isLooting = true;
                         this.player.setLootingId(enemies.elementAt(i).getId());
-                        if(enemies.elementAt(i).getInventory().getMoney() > 0) {
+                        if(enemies.elementAt(i).getInventory().getMoney() >= 0) {
                             enemies.elementAt(i).getInventory().addMoney(rand.nextInt(enemies.elementAt(i).getNpcLevel() + 3) * (rand.nextInt(3) + 1));
                         }
                         return enemies.elementAt(i);
