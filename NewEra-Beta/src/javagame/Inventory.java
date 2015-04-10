@@ -47,6 +47,8 @@ public class Inventory {
     private int healthPotions = 0 ;
     private int staminaPotions = 0;
 
+    private boolean hasBeenLooted = false;
+
         // Movement Class
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
@@ -209,7 +211,10 @@ public class Inventory {
     public void subMoney( int money ) { this.money -= money; }
     public int getMoney() { return this.money; }
 
-        // Returns True if added, false if not
+    public boolean isHasBeenLooted() {return hasBeenLooted;}
+    public void setHasBeenLooted(boolean hasBeenLooted) {this.hasBeenLooted = hasBeenLooted;}
+
+    // Returns True if added, false if not
     public boolean addItem( Items item  ) {
 
             // Potions don't actually get added, they just increment the counter
