@@ -80,6 +80,34 @@ public class MainMenu extends BasicGameState {
         return gameState;
     }
 
+    public void enter ( GameContainer gc, StateBasedGame sbg ) {
+
+        newGameStarted = false;
+        classSelected = false;
+        loadSlotSelected = false;
+        spriteSelected = false;
+        warriorSelected = false;
+        wizardSelected = false;
+        rogueSelected = false;
+        hunterSelected = false;
+
+        sprite1Selected = false;
+        sprite2Selected = false;
+        sprite3Selected = false;
+        sprite4Selected = false;
+        characterName.setText("");
+        editingName = false;
+        gameStarted = false;
+
+        loadSlot1Selected = false;
+        loadSlot2Selected = false;
+        loadSlot3Selected = false;
+        loadSlot4Selected = false;
+
+        //load games with helper functions to set booleans
+        this.loadGames();
+    }
+
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
 
@@ -87,8 +115,7 @@ public class MainMenu extends BasicGameState {
         theme.setVolume(0.02f);
         theme.loop();
 
-        //load games with helper functions to set booleans
-        this.loadGames();
+
 
 
 
@@ -616,7 +643,29 @@ public class MainMenu extends BasicGameState {
 
                 }
                 player.setSaveSlot(slotNo);
+                newGameStarted = false;
+                classSelected = false;
+                loadSlotSelected = false;
+                spriteSelected = false;
+                warriorSelected = false;
+                wizardSelected = false;
+                rogueSelected = false;
+                hunterSelected = false;
+
+                sprite1Selected = false;
+                sprite2Selected = false;
+                sprite3Selected = false;
+                sprite4Selected = false;
+                characterName.setText("");
+                editingName = false;
+                gameStarted = false;
+
+                loadSlot1Selected = false;
+                loadSlot2Selected = false;
+                loadSlot3Selected = false;
+                loadSlot4Selected = false;
                 sbg.enterState(1);
+
             } else if(loadGameStarted) {
 
                 if(this.slotNo == 1) {
@@ -628,7 +677,29 @@ public class MainMenu extends BasicGameState {
                 } else {
                     sg.load(4);
                 }
+                newGameStarted = false;
+                classSelected = false;
+                loadSlotSelected = false;
+                spriteSelected = false;
+                warriorSelected = false;
+                wizardSelected = false;
+                rogueSelected = false;
+                hunterSelected = false;
+
+                sprite1Selected = false;
+                sprite2Selected = false;
+                sprite3Selected = false;
+                sprite4Selected = false;
+                characterName.setText("");
+                editingName = false;
+                gameStarted = false;
+
+                loadSlot1Selected = false;
+                loadSlot2Selected = false;
+                loadSlot3Selected = false;
+                loadSlot4Selected = false;
                 sbg.enterState(1);
+
 
             }
 
