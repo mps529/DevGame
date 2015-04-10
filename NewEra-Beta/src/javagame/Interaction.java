@@ -3,6 +3,7 @@ package javagame;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.Random;
 import java.util.Vector;
 
 
@@ -25,13 +26,16 @@ public class Interaction {
         // 0-Up, 1-Right, 2-Down, 3-Left
         boolean isLooting = false;
 
+        Random rand = new Random();
 
         for( int i = 0; i < enemies.size(); i++ ) {
             if( !enemies.elementAt(i).getIsAlive() ) {
                     if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24)) {
-                        System.out.println("\n");
-                        enemies.elementAt(i).getInventory().printInventory();
                         isLooting = true;
+                        this.player.setLootingId(enemies.elementAt(i).getId());
+                        if(enemies.elementAt(i).getInventory().getMoney() > 0) {
+                            enemies.elementAt(i).getInventory().addMoney(rand.nextInt(enemies.elementAt(i).getNpcLevel() + 3) * (rand.nextInt(3) + 1));
+                        }
                         return enemies.elementAt(i);
                     }
 
@@ -54,4 +58,5 @@ public class Interaction {
 
     public int getMenuWidth() {return menuWidth;}
     public void setMenuWidth(int menuWidth) {this.menuWidth = menuWidth;}
+
 }

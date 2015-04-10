@@ -37,7 +37,7 @@ public class LootMenu extends BasicGameState {
 
     private boolean settingName;
 
-    private Sound lootSound, coinSound;
+    private Sound lootSound, coinSound, openLootMenu, closeLootMenu;
 
     private int[] inventoryItems, npcInventoryItems;
 
@@ -51,6 +51,9 @@ public class LootMenu extends BasicGameState {
     public void enter( GameContainer gc, StateBasedGame sbg ) {
 
         this.enemyInventory = new Inventory(this.player.getLootingInventory(), false);
+        System.out.println(player.getLootingInventory().getMoney());
+        System.out.println(this.enemyInventory.getMoney());
+        openLootMenu.play();
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
@@ -71,6 +74,8 @@ public class LootMenu extends BasicGameState {
 
         lootSound = new Sound("NewEra-Beta/res/sounds/lootItem.ogg");
         coinSound = new Sound("NewEra-Beta/res/sounds/coin.ogg");
+        openLootMenu = new Sound("NewEra-Beta/res/sounds/openLoot.ogg");
+        closeLootMenu = new Sound("NewEra-Beta/res/sounds/closeLoot.ogg");
 
         addGold = new Image( "NewEra-Beta/res/buttons/plus_orange.png" );
         goldAdded = new Image( "NewEra-Beta/res/buttons/plus_white.png" );
@@ -112,7 +117,7 @@ public class LootMenu extends BasicGameState {
         g.drawString("Gold: "+ this.player.getInventory().getMoney(), 96, 40);
         g.drawString("Gold: "+ this.enemyInventory.getMoney(), 448, 585);
 
-
+        g.drawString("(R)Take Item", 496, 336);
 
         if(!addIsPressed) {
             this.addItemButton.draw(128, 288);
@@ -191,6 +196,8 @@ public class LootMenu extends BasicGameState {
             this.displayItem = null;
             this.addIsPressed = false;
             this.removeIsPressed = false;
+            closeLootMenu.play();
+            this.player.setLootingInventory(this.enemyInventory);
             sbg.enterState(1);
         }
 

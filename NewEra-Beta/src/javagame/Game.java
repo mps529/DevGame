@@ -109,6 +109,10 @@ public class Game extends BasicGameState {
             outsideTheme.setVolume(0.02f);
             outsideTheme.loop();
         }
+        if(this.isActing) {
+            this.maps.elementAt(this.currentMap).setNewInventory(player.getLootingId());
+            this.isActing = false;
+        }
         this.playerAttack.setPlayerSpriteSheet(this.player.getPlayerSpriteSheet());
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
@@ -166,14 +170,14 @@ public class Game extends BasicGameState {
                             this.maps.elementAt(this.currentMap).getEnemies()));
                     //if enemy is already looted dont go further(false return), else (true return) loot and despawn
                     if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
-                        System.out.println("idToDespawn:" + lootingEnemy.getId());
-                        this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
+                        System.out.println(lootingEnemy.getInventory().getMoney());
+
+                        //this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
                         player.setLootingInventory(lootingEnemy.getInventory());
                         player.setMapX(maps.elementAt(currentMap).getX());
                         player.setMapY(maps.elementAt(currentMap).getY());
                         player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
                         player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
-                        isActing = false;
                         sbg.enterState(4);
                     }
                 } else {
