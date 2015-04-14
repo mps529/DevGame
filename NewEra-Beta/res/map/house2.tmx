@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="TileC" tilewidth="32" tileheight="32">
+  <image source="tilesets/TileC.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1157" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="ff00ff" width="960" height="960"/>
+ </tileset>
+ <layer name="villagerSpawn" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjABM8ZxloF4yCUTAKQGAw50UAczRHkUAGAAA=
+  </data>
+ </layer>
+ <layer name="ground" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7vLxsBwdxSPYirie2TKDTU8WPxCbXcMFn+NVDyYwp+QWwBFDM6PQAYAAA==
+  </data>
+ </layer>
+ <objectgroup width="20" height="20" name="objectDoorway">
+  <object name="house2Exit" type="doorway" x="320" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-71"/>
+    <property name="destY" value="-77"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="collision" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7WTTQrCMBBGB1JyCTeeSlfS6AU8ge0NvIC2uFGXCrr39xo9iuIXqnQMSdpg/ODRKQkvGTpVkmgciQmYgQyU7+cv5Mxno+sZJfMtwNJB5lmzUYAK6EwTopUg6lGTTDb1AOvDhLypmM/MKPn2dYl29T1nhvge6O0p3PcL9enwfi9w78Be1HUM3wmcmU85ZpZHGWu+fm2zmUv3nrzFZ5vNQrr3FC0+nTl6X4MN2Ir63RXf/IUkxcypJJ7vE+67oo8DOIq6juG7gXuALzX+rX/2+2tS9j26YN7BxQuTDCstQAYAAA==
+  </data>
+ </layer>
+ <layer name="above" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGHhwjRm/fAYL6WYi6ykDssuxmDEBj71uQPXuZNgLA74U6KUGeAv02zsC4TrYQCHQvWep6OY7OMx6DRR/g8ceIxLj7jfQrD94zHMCmudMgplTgWZNA+LpdIo/f6DbAgY4vZID7pEYPv5DyI9Dxa0AgMwdfEAGAAA=
+  </data>
+ </layer>
+ <layer name="doorway" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYBSMglEwChBAjA2CCQEAv8+e/EAGAAA=
+  </data>
+ </layer>
+</map>

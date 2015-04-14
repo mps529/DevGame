@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="000000" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="000000" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1801" name="TileC" tilewidth="32" tileheight="32">
+  <image source="tilesets/TileC.png" trans="000000" width="512" height="512"/>
+ </tileset>
+ <layer name="villagerSpawn" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYPiDFYwD7YJRMJCAmPgfTSOkAwAvc3G1QAYAAA==
+  </data>
+ </layer>
+ <objectgroup width="20" height="20" name="objectDoorway">
+  <object x="352" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-65"/>
+    <property name="destY" value="-63"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="ground" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC4tgY2CIGMWjeBSP4lE8ipGwGCsE41MDAN/Gl6JABgAA
+  </data>
+ </layer>
+ <layer name="collision" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC5vMxsAweRQPGpzAysCQSAAnsRJvXi1QbR0BXE+CebOBaucQwHNJMC8CiNvZGeCgDYkNE59OonmEALp5uMIcFM7EmleLFJa4wrweat5ndtLMwxXmc7G4D5vZ05HMAOmBAU2gWi0g1obqicASfg443FgMxCX4vYFinj7QDgN2hHkhBMIAGZihuS+UBL3YgDlQvwU7dv+SA9yBZnmgmZcG5KdT4E4zItxnDFRjQoIdMPPQMQw4A81yYce0E5c+EAYAVoDgEkAGAAA=
+  </data>
+ </layer>
+ <layer name="above" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAVDCYixk67nK1RPNJBm5YDQMHE1MswrR9JTxo5dnFgwi5V0PbQy7wY7Ko1sHj9QTACP/7LZGBiusUNoGHjBDgnrF2SY1wk05xk7hIYBSSBfCoilyTAvFIjDcEuDwXRWhHnyQLMUyIhPXOZRA1DLvESgv5LYB6/7iDUvCOgHMUbqmZdDYnyDzAMAtfa7mkAGAAA=
+  </data>
+ </layer>
+</map>

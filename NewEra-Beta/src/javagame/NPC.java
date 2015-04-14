@@ -215,14 +215,90 @@ public class NPC extends NPCMovement {
         if( good ) {
 
             if( villager ) {
-                setNPCClass("villager.png", 3);
+
+                Random rand = new Random();
+                int villagerNumber = rand.nextInt( 8 );
+
+                switch ( villagerNumber ) {
+                    case 0:
+                        setNPCClass("villager.png", 3);
+                        break;
+                    case 1:
+                        setNPCClass("villager2.png", 3);
+                        break;
+                    case 2:
+                        setNPCClass("villager3.png", 3);
+                        break;
+                    case 3:
+                        setNPCClass("villager4.png", 3);
+                        break;
+                    case 4:
+                        setNPCClass("villager5.png", 3);
+                        break;
+                    case 5:
+                        setNPCClass("villager6.png", 3);
+                        break;
+                    case 6:
+                        setNPCClass("villager7.png", 3);
+                        break;
+                    case 7:
+                        setNPCClass("villager8.png", 3);
+                        break;
+                }
+
+
             }
             else {
                 setNPCClass("guard.png", 1);
             }
-        }
-        else {
-            setNPCClass("fancyOrk.png", this.npcClass);
+        } else {
+            Random rand = new Random();
+            int villagerNumber = rand.nextInt( 6 );
+            if( this.npcClass == 1 ) {
+                switch( villagerNumber ) {
+                    case 0:
+                        setNPCClass("enemyWarrior1.png", this.npcClass);
+                        break;
+                    case 1:
+                        setNPCClass("enemyWarrior2.png", this.npcClass);
+                        break;
+                    case 2:
+                        setNPCClass("enemyWarrior3.png", this.npcClass);
+                        break;
+                    case 3:
+                        setNPCClass("enemyWarrior4.png", this.npcClass);
+                        break;
+                    case 4:
+                        setNPCClass("enemyWarrior5.png", this.npcClass);
+                        break;
+                    case 5:
+                        setNPCClass("enemyWarrior6.png", this.npcClass);
+                        break;
+                }
+            }
+            else {
+                switch( villagerNumber ) {
+                    case 0:
+                        setNPCClass("enemyRouge1.png", this.npcClass);
+                        break;
+                    case 1:
+                        setNPCClass("enemyRouge2.png", this.npcClass);
+                        break;
+                    case 2:
+                        setNPCClass("enemyRouge3.png", this.npcClass);
+                        break;
+                    case 3:
+                        setNPCClass("enemyRouge4.png", this.npcClass);
+                        break;
+                    case 4:
+                        setNPCClass("enemyRouge5.png", this.npcClass);
+                        break;
+                    case 5:
+                        setNPCClass("enemyRouge6.png", this.npcClass);
+                        break;
+                }
+            }
+
         }
 
         this.stopAnimationWalking();

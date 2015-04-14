@@ -11,36 +11,31 @@
  </tileset>
  <layer name="villagerSpawn" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAWjYBTQClQPtAOGKRgN18EBAL5h+i9ABgAA
+   H4sIAAAAAAAAC2NgGAXDDTxnHmgXjIKhAOiZTii1ixT9o+mffgAAYRt+SkAGAAA=
   </data>
  </layer>
  <layer name="ground" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2thZWBoGcWjeBSP4lE8iknEAJ5UFMpABgAA
-  </data>
- </layer>
- <objectgroup width="20" height="20" name="objectDoorway">
-  <object name="house1Exit" x="416" y="608" width="64" height="32">
-   <properties>
-    <property name="destX" value="-57"/>
-    <property name="destY" value="-77"/>
-    <property name="mapName" value="LargeMapGrasslands.tmx"/>
-   </properties>
-  </object>
- </objectgroup>
- <layer name="doorway" width="20" height="20">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAWjYBSMglEwCrADMVYIxgYAhbRGgEAGAAA=
+   H4sIAAAAAAAAC2NgGHngLit1MDXNGsWjeBSP4sGAxaCYGLUARnhg2EAGAAA=
   </data>
  </layer>
  <layer name="collision" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2tmYWBoHsWjmIo4gZWBIZEInMRKnHmzgermEIHnEmneLKC6F+wMDPuAeD8QHwBiELAB0s5A7ALEn4F4OgnmEQO2suIOG+SwwGeeOdBdFkBsBnUfrrABhUUtENez4jfPHWiOBxC7sUPcB1J7B8i+Cw2To0C6EYib2CF2zSVgHjIAuW8HHrVC7MSZAwNbSbCbGEDIfaQCmPuMgf4yIdFvMDATqG8WKKzZEe6DpUl0cBkodoUdQRPrvhYSMQygi4PcBwCx0CYMQAYAAA==
+   H4sIAAAAAAAAC7WSTQ6CMBCFC4lyFnWhR0LugajXQLiGa/8WHqIL0BtwAR8yTcikpRMCL/nS5jG8MmXihVL7iUhACg6gpNWF5HkGcnCZiAJo8AiUeoIXaCL11xbrDryXyileqymvQk4NPsHwe60q7OvIXmfyppLJa9h596jjRkj0pX7jEXMRs54S8nzzUjr2KcvLyBs7LznLK8gz83IN3feywr2swcZzj23GXP+3r3PYwT0um8fz2pojOLFM4/nqpP3avtkmab+uMyR5Q/0ab65+uacF8ydVf/588POH+AHdN69TQAYAAA==
   </data>
  </layer>
  <layer name="above" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGF6gn5265s0fQeb1sUPMm0AlM+dBzVsANU8GSkeTYf4NoJ51QLweiDdA9esgmfMayH5JBXcnAs2YCjXnC5XjChnAwuANiXYEAdUHoOk5A+SfRRIrBLKLgNgRiJ1o6IehCCqB4VEFxNVAXEOFsOkEmtEFxN1A3APERtD4CaSC2XOg5oFAPA7zPrJDMDHAEKpOiR2C0cFjoNgTdgRNDAAAUnBgxUAGAAA=
+   H4sIAAAAAAAAC2NgwA742RkYBNghbBl2VDl0PrJaXABZjQ6aWnQ+unlLGRkYlgHxckaEmDxQXgGqxgZNPzofWe0sVvzuRAcXgfou4fDbdFbSzcMHqGneFXbauI9ckMiKwPiAI9DdTgTSEiEwkwm3nCTQbCkgliZgB8yMwRq/uMxLAro7mYk8MWzmxWCxNx5H2KGrHQr+3UGE+xLZIRhdLBBNDOY+fOmPWAAygxbhR4x/STEPAI/le8xABgAA
   </data>
  </layer>
+ <objectgroup width="20" height="20" name="objectDoorway">
+  <object name="house3Exit" x="288" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-80"/>
+    <property name="destY" value="-70"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
