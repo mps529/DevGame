@@ -302,7 +302,7 @@ public class NPC extends NPCMovement {
         }
 
         this.stopAnimationWalking();
-        this.setPlayerDirection( 0 );
+        this.setPlayerDirection(0);
 
     }
 
@@ -463,7 +463,7 @@ public class NPC extends NPCMovement {
     public double getMaxStamina() { return this.MAX_STAMINA; }
 
         // Attack and defence
-    public int getOverallAttack() { return this.OVERALL_ATTACK; }
+    public int getOverallAttack() { return this.inventory.getPlayerOverallAttack(); }
     public int getOverallDefence() { return this.OVERALL_DEFENCE; }
 
         // Base attack and defence
@@ -534,16 +534,25 @@ public class NPC extends NPCMovement {
         }
     }
 
-    public void takeDamage( int direction ) {
+    public void takeDamage( int direction, NPC enemy ) {
         Random rand = new Random();
 
         int defence  = getOverallDefence();
+        int overallAttack;
+        int currentAttackDamage;
 
-        if( this.player.getOverallDefence() + 20 > defence ) {
-            defence = getOverallDefence() + 20;
+
+        if( opponentsArrayLocation == -1  ) {
+            overallAttack = this.player.getInventory().getPlayerOverallAttack();
+            currentAttackDamage = this.player.getDamageOfCurrentAttack();
+        }
+        else {
+            overallAttack = enemy.getOverallAttack();
+            currentAttackDamage = enemy.getBaseAttack();
         }
 
-        this.health -= (  (this.player.getInventory().getPlayerOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack() ;
+
+        this.health -= (  (overallAttack * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + currentAttackDamage ;
 
         switch ( direction ) {
             case 0 :

@@ -465,6 +465,8 @@ public class PlayerAttack {
         float x = this.player.getPlayerX();
         float y = this.player.getPlayerY();
 
+        NPC sendIN = null;
+
         boolean stun = false;
         if( this.player.getCharacterClassChosen() == 1 && this.player.getMoveSelected() == 2 ) {
             stun = true;
@@ -474,7 +476,7 @@ public class PlayerAttack {
             if( enemies.elementAt(i).getIsAlive() ) {
                 if( this.player.getDirection() == 0 ) {
                     if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y )) {
-                        enemies.elementAt(i).takeDamage(this.player.getDirection());
+                        enemies.elementAt(i).takeDamage(this.player.getDirection(), sendIN);
                         if( stun ) {
                             enemies.elementAt(i).setStunned(5000);
                         }
@@ -483,7 +485,7 @@ public class PlayerAttack {
                 }
                 else if( this.player.getDirection() == 1 ) {
                     if ((enemies.elementAt(i).getNPCX() >= x  && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24 )) {
-                        enemies.elementAt(i).takeDamage(this.player.getDirection() );
+                        enemies.elementAt(i).takeDamage(this.player.getDirection(), sendIN );
                         if( stun ) {
                             enemies.elementAt(i).setStunned(5000);
                         }
@@ -492,7 +494,7 @@ public class PlayerAttack {
                 }
                 else if( this.player.getDirection() == 2 ) {
                     if ((enemies.elementAt(i).getNPCX() >= x - 24 && enemies.elementAt(i).getNPCX() <= x + 24) && (enemies.elementAt(i).getNPCY() >= y && enemies.elementAt(i).getNPCY() <= y + 24 )) {
-                        enemies.elementAt(i).takeDamage(this.player.getDirection());
+                        enemies.elementAt(i).takeDamage(this.player.getDirection(),sendIN);
                         if( stun ) {
                             enemies.elementAt(i).setStunned( 5000 );
                         }
@@ -501,7 +503,7 @@ public class PlayerAttack {
                 }
                 else if( this.player.getDirection() == 3 ) {
                     if ((enemies.elementAt(i).getNPCX() >= x - 24  && enemies.elementAt(i).getNPCX() <= x) && (enemies.elementAt(i).getNPCY() >= y - 24 && enemies.elementAt(i).getNPCY() <= y + 24 )) {
-                        enemies.elementAt(i).takeDamage(this.player.getDirection());
+                        enemies.elementAt(i).takeDamage(this.player.getDirection(), sendIN);
                         if( stun ) {
                             enemies.elementAt(i).setStunned( 5000 );
                         }
@@ -516,11 +518,11 @@ public class PlayerAttack {
 
         float x = this.player.getPlayerX();
         float y = this.player.getPlayerY();
-
+        NPC temp = null;
         for( int i = 0; i < enemies.size(); i++ ) {
             if( enemies.elementAt(i).getIsAlive() ) {
                 if ((enemies.elementAt(i).getNPCX() >= x - 44 && enemies.elementAt(i).getNPCX() <= x + 44) && (enemies.elementAt(i).getNPCY() >= y - 44 && enemies.elementAt(i).getNPCY() <= y + 44)) {
-                    enemies.elementAt(i).takeDamage(this.player.getDirection());
+                    enemies.elementAt(i).takeDamage(this.player.getDirection(), temp);
                     enemies.elementAt(i).setStunned();
                 }
             }

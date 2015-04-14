@@ -356,10 +356,10 @@ public class Map implements TileBasedMap{
                 if ((enemy.getNPCX() >= x - 20 && enemy.getNPCX() <= x + 20) && (enemy.getNPCY() >= y - 20 && enemy.getNPCY() <= y + 20)) {
 
                     if( direction == -1 ) {
-                        enemy.takeDamage( enemy.getDirection() );
+                        enemy.takeDamage( enemy.getDirection(), enemy );
                     }
                     else {
-                        enemy.takeDamage( direction );
+                        enemy.takeDamage( direction, enemy );
                     }
                     return true;
                 }
@@ -373,7 +373,7 @@ public class Map implements TileBasedMap{
         for( NPC ally : allies ) {
             if( ally.getIsAlive() ) {
                 if ((ally.getNPCX() >= x - 12 && ally.getNPCX() <= x + 12) && (ally.getNPCY() >= y - 12 && ally.getNPCY() <= y + 12)) {
-                    ally.takeDamage( direction );
+                    ally.takeDamage( direction, ally );
                     return true;
                 }
             }
@@ -454,7 +454,7 @@ public class Map implements TileBasedMap{
                         enemies.elementAt(i).goToGood((int) enemies.elementAt(opponent).getNPCX(), (int) enemies.elementAt(opponent).getNPCY());
                     }
                     if( enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
-                        allies.elementAt(opponent).takeDamage( enemies.elementAt(i).getDirection() );
+                        allies.elementAt(opponent).takeDamage( enemies.elementAt(i).getDirection(), enemies.elementAt(i) );
                     }
                 }
             }
@@ -515,7 +515,7 @@ public class Map implements TileBasedMap{
                 }
                 else {
                     if( allies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
-                        enemies.elementAt(opponent).takeDamage(allies.elementAt(i).getDirection());
+                        enemies.elementAt(opponent).takeDamage(allies.elementAt(i).getDirection(),  allies.elementAt(i));
                     }
                 }
             }
