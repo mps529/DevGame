@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_til-art-batch-2.png" trans="000000" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="901" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32">
+  <image source="tilesets/hyptosis_tile-art-batch-1.png" trans="000000" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1801" name="TileC" tilewidth="32" tileheight="32">
+  <image source="tilesets/TileC.png" trans="000000" width="512" height="512"/>
+ </tileset>
+ <layer name="ground" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgoA/4zT44zLvLSjleiITJNeMeEP9GM4tc8+4h6T8AxX/INO8eEvs3FnMpMQ/ZrX+gmBrx8RvJTGqYhxyexOoxYCbOjdRwH66wHcWjmBpYDIqJUQsA9tleCkAGAAA=
+  </data>
+ </layer>
+ <layer name="collision" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC92S0Q2CMBRFHxii47iEe6AL6AIiayjYhC10GJyEiLdJX2ia11KE+OFNzge0HJrXm2dE+4U4gDMoZqAMJbiACtQj2N+H9t3BdU10AxWogRRlnUWn8exrsN5m8pqd0vH5MsXH/NqXW/ftht+rSF9n+uKbC3ehiJxfZ/oS2qt7sF0N2DkmRKdkeI6d3xv96HVHNuF9sb7YvIzP18+paWec75ESPdPlfFL+2bcT7pB90my/cbNvDPf/IT4RtOjoQAYAAA==
+  </data>
+ </layer>
+ <layer name="grass" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAUDDUqYIHQRE2XmKDNT7hZsgFJ3DRQwYaSeWcZUNGsUjILhAgBJ1oBnQAYAAA==
+  </data>
+ </layer>
+ <layer name="above" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgQABVRgayAUxvJTsDQxU7hO2MZN5voFg0O3a9MPHfUHonI0JvJ1CsC4i7gTiRTPddZ0ToncVKnhnYwHTWkWceNQHIPEdgvDrhSBfI4D5QzQM0dYHAOA1CShPEuu8d0Jz3QPyBgL1DIT7INW8WEwPDbCbqmYcNjFTzsIUtIeAKTIvGQGyClCYpdZ8z0CwXdojZ1DAPHYDMAwAaW5xPQAYAAA==
+  </data>
+ </layer>
+ <objectgroup width="20" height="20" name="objectDoor">
+  <object x="288" y="608" width="64" height="32">
+   <properties>
+    <property name="destX" value="-80"/>
+    <property name="destY" value="-58"/>
+    <property name="mapName" value="LargeMapGrasslands.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
