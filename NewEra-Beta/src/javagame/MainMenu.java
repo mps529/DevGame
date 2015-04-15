@@ -117,6 +117,7 @@ public class MainMenu extends BasicGameState {
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
 
+        this.loadGames();
         theme = new Music("NewEra-Beta/res/sounds/title_loop.ogg");
         theme.setVolume(0.02f);
         theme.loop();

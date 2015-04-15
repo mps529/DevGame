@@ -9,17 +9,22 @@
  <tileset firstgid="1801" name="TileC" tilewidth="32" tileheight="32">
   <image source="tilesets/TileC.png" trans="ff00ff" width="512" height="512"/>
  </tileset>
+ <layer name="merchantSpawn" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGAWjYBQMd1A90A4YBcMSAACwDr0nQAYAAA==
+  </data>
+ </layer>
  <layer name="villagerSpawn" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAWjYBTQClQPtAOGKRgN18EBAL5h+i9ABgAA
+   H4sIAAAAAAAAA2NgGAWjYBTQClQPtAOGKRgN18EBAL5h+i9ABgAA
   </data>
  </layer>
  <layer name="ground" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2thZWBoGcWjeBSP4lE8iknEAJ5UFMpABgAA
+   H4sIAAAAAAAAA2thZWBoGcWjeBSP4lE8iknEAJ5UFMpABgAA
   </data>
  </layer>
- <objectgroup width="20" height="20" name="objectDoorway">
+ <objectgroup name="objectDoorway" width="20" height="20">
   <object name="house1Exit" x="416" y="608" width="64" height="32">
    <properties>
     <property name="destX" value="-57"/>
@@ -30,17 +35,17 @@
  </objectgroup>
  <layer name="doorway" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAWjYBSMglEwCrADMVYIxgYAhbRGgEAGAAA=
+   H4sIAAAAAAAAA2NgGAWjYBSMglEwCrADMVYIxgYAhbRGgEAGAAA=
   </data>
  </layer>
  <layer name="collision" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2tmYWBoHsWjmIo4gZWBIZEInMRKnHmzgermEIHnEmneLKC6F+wMDPuAeD8QHwBiELAB0s5A7ALEn4F4OgnmEQO2suIOG+SwwGeeOdBdFkBsBnUfrrABhUUtENez4jfPHWiOBxC7sUPcB1J7B8i+Cw2To0C6EYib2CF2zSVgHjIAuW8HHrVC7MSZAwNbSbCbGEDIfaQCmPuMgf4yIdFvMDATqG8WKKzZEe6DpUl0cBkodoUdQRPrvhYSMQygi4PcBwCx0CYMQAYAAA==
+   H4sIAAAAAAAAA2tmYWBoHsWjmIo4gZWBIZEInMRKnHmzgermEIHnEmleOzsDwwsgDgPiJ0AMAzZAtjMQuwDxZyCeTqR5i5DMuILERgdbWXGHDXJYbEIy4wke80DuwxU2oLCoBeJ6VlQ9hNw3C4jvANXchao7CqQbgbiJHWLXXKiaJ+wIjM99O1hxywvh0YvPfdQChNxHKoC5zxjoLxMS/QYDM4H6ZoHCmh3hPliaRAeX2SHxCaOJdV8LiRgG0MVB7gMA47Om30AGAAA=
   </data>
  </layer>
  <layer name="above" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGF6gn5265s0fQeb1sUPMm0AlM+dBzVsANU8GSkeTYf4NoJ51QLweiDdA9esgmfMayH5JBXcnAs2YCjXnC5XjChnAwuANiXYEAdUHoOk5A+SfRRIrBLKLgNgRiJ1o6IehCCqB4VEFxNVAXEOFsOkEmtEFxN1A3APERtD4CaSC2XOg5oFAPA7zPrJDMDHAEKpOiR2C0cFjoNgTdgRNDAAAUnBgxUAGAAA=
+   H4sIAAAAAAAAA2NgGAWjAAL62CH0BHbqmPcSzRwZKD+aRPPLgepvAPErIL6CpFcHif2aHdM+XKAdj7pEoNxUqPwXKoUDNgALgzdUsOMM0IyzSOYUAtlFQOwIxE408MMTJDMTaBhGtACVQPdWAXE1ENdQwe2dQDO6gLgbiHuA2AiIA4A4kApmz4GaBwLxOMz7yA7BxABDqDoldghGB4/ZIXELo4kBAPqh4o9ABgAA
   </data>
  </layer>
 </map>

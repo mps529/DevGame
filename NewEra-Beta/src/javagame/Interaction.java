@@ -21,7 +21,7 @@ public class Interaction {
         menuY = 200;
     }
 
-    public NPC getLootableEnemy (float x, float y, int direction, Vector<NPC> enemies) {
+    public NPC getLootableEnemy (float x, float y, Vector<NPC> enemies) {
 
         // 0-Up, 1-Right, 2-Down, 3-Left
         boolean isLooting = false;
@@ -34,7 +34,7 @@ public class Interaction {
                         isLooting = true;
                         this.player.setLootingId(enemies.elementAt(i).getId());
                         if(!enemies.elementAt(i).getInventory().isHasBeenLooted()) {
-                            enemies.elementAt(i).getInventory().addMoney(rand.nextInt(enemies.elementAt(i).getNpcLevel() + 3) * (rand.nextInt(3) + 1));
+                            enemies.elementAt(i).getInventory().addMoney((rand.nextInt(player.getLevel() + 3) +1) * (rand.nextInt(3) + 1));
                             enemies.elementAt(i).getInventory().setHasBeenLooted(true);
                         }
                         return enemies.elementAt(i);
@@ -42,9 +42,23 @@ public class Interaction {
 
             }
         }
-
-
         return null;
+    }
+    public boolean findMerchant (float x, float y, Vector<NPC> allies) {
+
+
+
+
+        for( int i = 0; i < allies.size(); i++ ) {
+            if( allies.elementAt(i).isMerchant() ) {
+                if ((allies.elementAt(i).getNPCX() >= x - 100 && allies.elementAt(i).getNPCX() <= x + 100) &&
+                        (allies.elementAt(i).getNPCY() >= y - 100 && allies.elementAt(i).getNPCY() <= y + 100)) {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
 
