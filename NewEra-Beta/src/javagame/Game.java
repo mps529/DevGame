@@ -80,6 +80,11 @@ public class Game extends BasicGameState {
         maps.addElement( new Map( "devGrasslandsDungeon.tmx", -15, -38 )  );
         maps.addElement( new Map( "devGrasslandsHome.tmx", 0, -8 )  );
         maps.addElement( new Map( "house1.tmx", -3, -8 ) );
+        maps.addElement( new Map( "house2.tmx", -1, -8 ) );
+        maps.addElement( new Map( "house3.tmx", 0, -8 ) );
+        maps.addElement( new Map( "house4.tmx", 0, -8 ) );
+        maps.addElement( new Map( "house5.tmx", 8, -8 ) );
+        maps.addElement( new Map( "house6.tmx", 0, -8 ) );
 
 
         lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );

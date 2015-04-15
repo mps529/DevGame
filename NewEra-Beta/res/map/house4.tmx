@@ -11,36 +11,31 @@
  </tileset>
  <layer name="villagerSpawn" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAXDESxnpI3aUTAKhjIYTevUBQCjntcDQAYAAA==
-  </data>
- </layer>
- <layer name="ground" width="20" height="20">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC4tkYmCIHMWDCkcNUrOoYedAuGcoxNNgcsdg8ddIxYMp/Am5BQBRHuIkQAYAAA==
+   H4sIAAAAAAAAC2NgGAXDDcgzjyx7R8HgAKPxTx8wmMIZAOYqkmxABgAA
   </data>
  </layer>
  <objectgroup width="20" height="20" name="objectDoorway">
-  <object name="houseExit" type="doorway" x="288" y="608" width="64" height="32">
+  <object x="288" y="608" width="64" height="32">
    <properties>
-    <property name="destX" value="-84"/>
-    <property name="destY" value="-85"/>
+    <property name="destX" value="-60"/>
+    <property name="destY" value="-63"/>
     <property name="mapName" value="LargeMapGrasslands.tmx"/>
    </properties>
   </object>
  </objectgroup>
- <layer name="doorway" width="20" height="20">
+ <layer name="ground" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAWjYBSMglEwCiBgEiMEEwMA2CMZIkAGAAA=
+   H4sIAAAAAAAAC4tkYmCIHMWjeBSP4lE8ioF4EiMEE6MWAPAFm3JABgAA
   </data>
  </layer>
  <layer name="collision" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC7vDyMBwl0r4HhD/BGIpJgaGX4yYuAKLGD78G2oesepxmQ9zD8g8cSBbggQM0gdjz2JHYBBfEogjgdgYyDcBYhDQB9IGQHyEmQEFPASKPWKHmNcOpGcimTUbiOewQ8wCYWcg24WdgSgAMg8XgJlHCsBlnhE7xJ/I5pkB+eZAbMEOYZPqPpA/vyDpA5nhDsQeBMxrBsq1YJEn179HcNgFMusOgfSODu5gkUMWw5eef2Mx7ycWOWQxfOlZEktYiGORQxZbSGS6QwZCWPQIsmOPj33MmGqJBTDzKDEDGSxBS8+UmOvKTj23wcoTbOHHyUa6u2DlCb78YceGKQ/jI8uhYwBnq6yMQAYAAA==
+   H4sIAAAAAAAAC62T2Q3CMBBEDT9LBwH+qICzA0gR1AMSNXD8UArQhoMEXUAkYCJnxSpyfARGGjlrbZ4dZ6xbSmV/8hV+wE+43zZjrOV7OZyg7nrM/b6+HryEpbak1A7ewwcyc8wr9MLcu5jvmFrjOYM3ZFjMG5CqleS5JHlT8Gbw2MKN5U3AmMOLP/F8Yt4Ka61rzuVC8byQ/ekyh1r0c+3Kra2f85yXI4trmdVqbm39nOcih4n4bq5dubX12/Js0xBnPXLkU55fCC9Ex8r/PQes7xPzThXWnYyb8poope8dtfFuZBwjvqMp/b4/m5jnc0z/B0IA0m5ABgAA
   </data>
  </layer>
  <layer name="above" width="20" height="20">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgQAX87AwMAuwMVAP2QLMckMzLBbLzKDAf3bxaILsOi3mVQLEqKK4G4hocdsoDxRWwyF0Eil2CipcD6U4g7oLibiDuQdKzGMhewky+n4YKSMISToFAsXgC8VkMlC/BoeYLmngCFdMeLcFWFvLU/2SHYBBwBNJOUPZlPOa9wRIm+NSPgqENgoDxHU4gHyiwkSaXQ0G+ssNjFwCtZamFQAYAAA==
+   H4sIAAAAAAAAC2NgYGDIZWdgyANiXECMiYFBGIivQdXcR1KbD2QXoOmtBfLroGKVQLoKiKuBuIYd1bxnQP49doh5D6By9UC6AY9bOoFyXUDcDcQ9aOaBwDug2Hsg/gCVOwOkzwJxOZJaQgDZPHwApIZW5gUB3ZuEIxxo5b5ioH0lOOzczE5b/1LLPGRwlxGC0YE90C8OWPyJSz0uIAo1gx9IC7CjipEDVKF65YG0AjuqGC5ATPgRC4iND0rNu8QOwdQy7xE7BFNi3kV2CCYFBALVxyPpoVf4DSbzABnWXohABgAA
   </data>
  </layer>
 </map>

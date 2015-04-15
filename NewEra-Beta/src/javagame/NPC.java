@@ -215,18 +215,94 @@ public class NPC extends NPCMovement {
         if( good ) {
 
             if( villager ) {
-                setNPCClass("villager.png", 3);
+
+                Random rand = new Random();
+                int villagerNumber = rand.nextInt( 8 );
+
+                switch ( villagerNumber ) {
+                    case 0:
+                        setNPCClass("villager.png", 3);
+                        break;
+                    case 1:
+                        setNPCClass("villager2.png", 3);
+                        break;
+                    case 2:
+                        setNPCClass("villager3.png", 3);
+                        break;
+                    case 3:
+                        setNPCClass("villager4.png", 3);
+                        break;
+                    case 4:
+                        setNPCClass("villager5.png", 3);
+                        break;
+                    case 5:
+                        setNPCClass("villager6.png", 3);
+                        break;
+                    case 6:
+                        setNPCClass("villager7.png", 3);
+                        break;
+                    case 7:
+                        setNPCClass("villager8.png", 3);
+                        break;
+                }
+
+
             }
             else {
                 setNPCClass("guard.png", 1);
             }
-        }
-        else {
-            setNPCClass("fancyOrk.png", this.npcClass);
+        } else {
+            Random rand = new Random();
+            int villagerNumber = rand.nextInt( 6 );
+            if( this.npcClass == 1 ) {
+                switch( villagerNumber ) {
+                    case 0:
+                        setNPCClass("enemyWarrior1.png", this.npcClass);
+                        break;
+                    case 1:
+                        setNPCClass("enemyWarrior2.png", this.npcClass);
+                        break;
+                    case 2:
+                        setNPCClass("enemyWarrior3.png", this.npcClass);
+                        break;
+                    case 3:
+                        setNPCClass("enemyWarrior4.png", this.npcClass);
+                        break;
+                    case 4:
+                        setNPCClass("enemyWarrior5.png", this.npcClass);
+                        break;
+                    case 5:
+                        setNPCClass("enemyWarrior6.png", this.npcClass);
+                        break;
+                }
+            }
+            else {
+                switch( villagerNumber ) {
+                    case 0:
+                        setNPCClass("enemyRouge1.png", this.npcClass);
+                        break;
+                    case 1:
+                        setNPCClass("enemyRouge2.png", this.npcClass);
+                        break;
+                    case 2:
+                        setNPCClass("enemyRouge3.png", this.npcClass);
+                        break;
+                    case 3:
+                        setNPCClass("enemyRouge4.png", this.npcClass);
+                        break;
+                    case 4:
+                        setNPCClass("enemyRouge5.png", this.npcClass);
+                        break;
+                    case 5:
+                        setNPCClass("enemyRouge6.png", this.npcClass);
+                        break;
+                }
+            }
+
         }
 
         this.stopAnimationWalking();
-        this.setPlayerDirection( 0 );
+        this.setPlayerDirection(0);
 
     }
 
@@ -387,7 +463,7 @@ public class NPC extends NPCMovement {
     public double getMaxStamina() { return this.MAX_STAMINA; }
 
         // Attack and defence
-    public int getOverallAttack() { return this.OVERALL_ATTACK; }
+    public int getOverallAttack() { return this.inventory.getPlayerOverallAttack(); }
     public int getOverallDefence() { return this.OVERALL_DEFENCE; }
 
         // Base attack and defence
@@ -458,16 +534,25 @@ public class NPC extends NPCMovement {
         }
     }
 
-    public void takeDamage( int direction ) {
+    public void takeDamage( int direction, NPC enemy ) {
         Random rand = new Random();
 
         int defence  = getOverallDefence();
+        int overallAttack;
+        int currentAttackDamage;
 
-        if( this.player.getOverallDefence() + 20 > defence ) {
-            defence = getOverallDefence() + 20;
+
+        if( opponentsArrayLocation == -1  ) {
+            overallAttack = this.player.getInventory().getPlayerOverallAttack();
+            currentAttackDamage = this.player.getDamageOfCurrentAttack();
+        }
+        else {
+            overallAttack = enemy.getOverallAttack();
+            currentAttackDamage = enemy.getBaseAttack();
         }
 
-        this.health -= (  (this.player.getInventory().getPlayerOverallAttack() * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + this.player.getDamageOfCurrentAttack() ;
+
+        this.health -= (  (overallAttack * ( rand.nextInt( 20 ) + 1 )   ) / defence  ) + currentAttackDamage ;
 
         switch ( direction ) {
             case 0 :

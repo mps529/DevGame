@@ -1,6 +1,7 @@
 package javagame;
 
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -68,10 +69,18 @@ public class PlayerScreen extends BasicGameState {
             this.plus.draw( 540, 195);
        }
         if( this.player.getMovePoints() != 0 ) {
-            this.plus.draw( 118, 560 );
-            this.plus.draw( 248, 560 );
-            this.plus.draw( 374, 560 );
-            this.plus.draw( 502, 560);
+            if( this.player.isMoveKnown( 0 ) ) {
+                this.plus.draw(118, 560);
+            }
+            if( this.player.isMoveKnown( 1 ) || this.player.getLevel() >= 4 ) {
+                this.plus.draw(248, 560);
+            }
+            if( this.player.isMoveKnown( 2 ) || this.player.getLevel() >= 8 ) {
+                this.plus.draw(374, 560);
+            }
+            if( this.player.isMoveKnown( 3 ) || this.player.getLevel() >= 12 ) {
+                this.plus.draw(502, 560);
+            }
         }
 
         int startX = 112;
@@ -98,8 +107,8 @@ public class PlayerScreen extends BasicGameState {
         this.playersAttacks = this.player.getAttackImages();
         this.knownAttacks = this.player.getAttacksKnown();
 
-        this.player.setOverallAttack( this.player.getInventory().getPlayerOverallAttack()  );
-        this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence() );
+        this.player.setOverallAttack(this.player.getInventory().getPlayerOverallAttack());
+        this.player.setOverallDefence(this.player.getInventory().getPlayerOverallDefence());
     }
 
     public void leave( GameContainer gc, StateBasedGame sbg ) {
@@ -155,17 +164,32 @@ public class PlayerScreen extends BasicGameState {
                     this.player.incrementAttackOneDamage();
                     this.player.decrementMovePoints();
                 }
-                else if( ( mouseX >= 248 && mouseX <= 264 ) && ( mouseY >= 560 && mouseY <= 576 ) ) {
-                    this.player.incrementAttackTwoDamage();
-                    this.player.decrementMovePoints();
+                else if( this.player.getLevel() >= 4 &&  (( mouseX >= 248 && mouseX <= 264 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
+                    if( this.player.isMoveKnown( 1 ) ) {
+                        this.player.incrementAttackTwoDamage();
+                        this.player.decrementMovePoints();
+                    }
+                    else {
+                        this.player.unlockMove( 1 );
+                    }
                 }
-                else if( ( mouseX >= 374 && mouseX <= 390 ) && ( mouseY >= 560 && mouseY <= 576 ) ) {
-                    this.player.incrementAttackThreeDamage();
-                    this.player.decrementMovePoints();
+                else if( this.player.getLevel() >= 8 &&  ( ( mouseX >= 374 && mouseX <= 390 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
+                    if( this.player.isMoveKnown( 2 ) ) {
+                        this.player.incrementAttackThreeDamage();
+                        this.player.decrementMovePoints();
+                    }
+                    else {
+                        this.player.unlockMove( 2 );
+                    }
                 }
-                else if( ( mouseX >= 502 && mouseX <= 518 ) && ( mouseY >= 560 && mouseY <= 576 ) ) {
-                    this.player.incrementAttackFourDamage();
-                    this.player.decrementMovePoints();
+                else if( this.player.getLevel() >= 12 &&  ( ( mouseX >= 502 && mouseX <= 518 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
+                    if( this.player.isMoveKnown( 3 ) ) {
+                        this.player.incrementAttackFourDamage();
+                        this.player.decrementMovePoints();
+                    }else {
+                        this.player.unlockMove( 3 );
+                    }
+
                 }
 
                 input.clearMousePressedRecord();

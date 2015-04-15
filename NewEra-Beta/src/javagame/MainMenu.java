@@ -121,10 +121,6 @@ public class MainMenu extends BasicGameState {
         theme.setVolume(0.02f);
         theme.loop();
 
-
-
-
-
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
 

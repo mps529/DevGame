@@ -142,31 +142,32 @@ public class Map implements TileBasedMap{
     }
     public void addGood() {
 
-        if (this.villagerSpawn != -1 && this.guardSpawn != -1) {
-
             Random rand = new Random();
 
             for (int x = 0; x < getMapHeight(); x++) {
                 for (int y = 0; y < getMapWidth(); y++) {
-
-                    if (this.map.getTileId(x, y, this.villagerSpawn) != 0) {
-                        NPC temp = new NPC(rand.nextInt(2), true);
-                        this.allies.add(temp);
-                        this.allies.lastElement().setImage(true);
-                        this.allies.lastElement().setSpawnX(x * 32);
-                        this.allies.lastElement().setSpawnY(y * 32);
-                        this.allies.lastElement().setMapPath(this);
-                    } else if (this.map.getTileId(x, y, this.guardSpawn) != 0) {
-                        NPC temp = new NPC(rand.nextInt(2), true);
-                        this.allies.add(temp);
-                        this.allies.lastElement().setImage(false);
-                        this.allies.lastElement().setSpawnX(x * 32);
-                        this.allies.lastElement().setSpawnY(y * 32);
-                        this.allies.lastElement().setMapPath(this);
+                    if (this.villagerSpawn != -1 ) {
+                        if (this.map.getTileId(x, y, this.villagerSpawn) != 0) {
+                            NPC temp = new NPC(rand.nextInt(2), true);
+                            this.allies.add(temp);
+                            this.allies.lastElement().setImage(true);
+                            this.allies.lastElement().setSpawnX(x * 32);
+                            this.allies.lastElement().setSpawnY(y * 32);
+                            this.allies.lastElement().setMapPath(this);
+                        }
+                    }
+                    if( this.guardSpawn != -1 ) {
+                        if (this.map.getTileId(x, y, this.guardSpawn) != 0) {
+                            NPC temp = new NPC(rand.nextInt(2), true);
+                            this.allies.add(temp);
+                            this.allies.lastElement().setImage(false);
+                            this.allies.lastElement().setSpawnX(x * 32);
+                            this.allies.lastElement().setSpawnY(y * 32);
+                            this.allies.lastElement().setMapPath(this);
+                        }
                     }
                 }
             }
-        }
     }
 
     public void addGood( int x, int y ) {
@@ -355,10 +356,10 @@ public class Map implements TileBasedMap{
                 if ((enemy.getNPCX() >= x - 20 && enemy.getNPCX() <= x + 20) && (enemy.getNPCY() >= y - 20 && enemy.getNPCY() <= y + 20)) {
 
                     if( direction == -1 ) {
-                        enemy.takeDamage( enemy.getDirection() );
+                        enemy.takeDamage( enemy.getDirection(), enemy );
                     }
                     else {
-                        enemy.takeDamage( direction );
+                        enemy.takeDamage( direction, enemy );
                     }
                     return true;
                 }
@@ -372,7 +373,7 @@ public class Map implements TileBasedMap{
         for( NPC ally : allies ) {
             if( ally.getIsAlive() ) {
                 if ((ally.getNPCX() >= x - 12 && ally.getNPCX() <= x + 12) && (ally.getNPCY() >= y - 12 && ally.getNPCY() <= y + 12)) {
-                    ally.takeDamage( direction );
+                    ally.takeDamage( direction, ally );
                     return true;
                 }
             }
@@ -402,13 +403,19 @@ public class Map implements TileBasedMap{
             int opponentX;
             int opponentY;
 
-            if( opponent == -1 ) {
+            if( opponent == -1  ) {
                 opponentX = x;
                 opponentY = y;
             }
             else {
-                opponentX = (int) allies.elementAt(opponent).getNPCX();
-                opponentY = (int) allies.elementAt(opponent).getNPCY();
+                if( !allies.isEmpty() ) {
+                    opponentX = (int) allies.elementAt(opponent).getNPCX();
+                    opponentY = (int) allies.elementAt(opponent).getNPCY();
+                }
+                else {
+                    opponentX = x;
+                    opponentY = y;
+                }
 
             }
             if( enemies.elementAt(i).getStunned() > 0 ) {
@@ -447,7 +454,7 @@ public class Map implements TileBasedMap{
                         enemies.elementAt(i).goToGood((int) enemies.elementAt(opponent).getNPCX(), (int) enemies.elementAt(opponent).getNPCY());
                     }
                     if( enemies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
-                        allies.elementAt(opponent).takeDamage( enemies.elementAt(i).getDirection() );
+                        allies.elementAt(opponent).takeDamage( enemies.elementAt(i).getDirection(), enemies.elementAt(i) );
                     }
                 }
             }
@@ -476,8 +483,15 @@ public class Map implements TileBasedMap{
                 opponentY = y;
             }
             else {
-                opponentX = (int)enemies.elementAt(opponent).getNPCX();
-                opponentY = (int)enemies.elementAt(opponent).getNPCY();
+                if( !enemies.isEmpty() ) {
+                    opponentX = (int)enemies.elementAt(opponent).getNPCX();
+                    opponentY = (int)enemies.elementAt(opponent).getNPCY();
+                }
+                else {
+                    opponentX = x;
+                    opponentY = y;
+                }
+
             }
             if( allies.elementAt(i).getStunned() > 0 ) {
                 allies.elementAt(i).decreaseStunned(delta);
@@ -501,7 +515,7 @@ public class Map implements TileBasedMap{
                 }
                 else {
                     if( allies.elementAt(i).closeEnoughToAttack(opponentX, opponentY) && opponent != -1 ) {
-                        enemies.elementAt(opponent).takeDamage(allies.elementAt(i).getDirection());
+                        enemies.elementAt(opponent).takeDamage(allies.elementAt(i).getDirection(),  allies.elementAt(i));
                     }
                 }
             }

@@ -313,9 +313,9 @@ public class Player extends Movement {
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/projectiles/Double-Arrow-Right.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = 1;
-        this.attacksKnown[2] = 1;
-        this.attacksKnown[3] = 1;
+        this.attacksKnown[1] = 0;
+        this.attacksKnown[2] = 0;
+        this.attacksKnown[3] = 0;
 
         this.MAX_HEALTH = 100;
         this.MAX_STAMINA = 120;
@@ -353,9 +353,10 @@ public class Player extends Movement {
         currentAttack =this.attackImages[0];
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = 1;
-        this.attacksKnown[2] = 1;
-        this.attacksKnown[3] = 1;
+        this.attacksKnown[1] = 0;
+        this.attacksKnown[2] = 0;
+        this.attacksKnown[3] = 0;
+
 
         this.MAX_HEALTH = 120;
         this.MAX_STAMINA = 110;
@@ -390,9 +391,9 @@ public class Player extends Movement {
         this.attackImages[3 ]= new Image( "NewEra-Beta/res/moves/immulate.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = 1;
-        this.attacksKnown[2] = 1;
-        this.attacksKnown[3] = 1;
+        this.attacksKnown[1] = 0;
+        this.attacksKnown[2] = 0;
+        this.attacksKnown[3] = 0;
 
         this.MAX_HEALTH = 90;
         this.MAX_STAMINA = 110;
@@ -406,7 +407,7 @@ public class Player extends Movement {
 
         this.attackOneDamage = 10;
         this.attackTwoDamage = 20;
-        this.attackFourDamage = 5;
+        this.attackFourDamage = 2;
 
     }
     private void setRouge() throws SlickException {
@@ -426,9 +427,9 @@ public class Player extends Movement {
         this.attackImages[3]= new Image( "NewEra-Beta/res/moves/poisonDagger.png" );
 
         this.attacksKnown[0] = 1;
-        this.attacksKnown[1] = 1;
-        this.attacksKnown[2] = 1;
-        this.attacksKnown[3] = 1;
+        this.attacksKnown[1] = 0;
+        this.attacksKnown[2] = 0;
+        this.attacksKnown[3] = 0;
 
         this.MAX_HEALTH = 100;
         this.MAX_STAMINA = 100;
@@ -482,6 +483,20 @@ public class Player extends Movement {
 
     public int getAttackFourDamage() { return this.attackFourDamage; }
     public void incrementAttackFourDamage() { this.attackFourDamage += 2; }
+
+    public void unlockMove( int move ) {
+        switch ( move ) {
+            case 1 :
+                this.attacksKnown[ 1 ] = 1;
+                break;
+            case 2 :
+                this.attacksKnown[ 2 ] = 1;
+                break;
+            case 3 :
+                this.attacksKnown[ 3 ] = 1;
+                break;
+        }
+    }
 
     public int getDamageOfCurrentAttack() {
         switch ( this.moveSelected ) {
@@ -679,6 +694,7 @@ public class Player extends Movement {
         this.level++;
         this.perkPoints += 2;
         this.movePoints += 1;
+
         calculateExpToLevelUp();
     }
 
