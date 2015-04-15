@@ -272,6 +272,11 @@ public class Game extends BasicGameState {
             */
                 if (!this.playerAttack.getIsAttacking() || this.playerAttack.isSneaking() ) {
 
+
+                    if (input.isKeyPressed(Input.KEY_COMMA)) {
+                        input.clearKeyPressedRecord();
+                        sbg.enterState(5);
+                    }
                     // Enter Inventory
                     if (input.isKeyPressed(Input.KEY_I)) {
                         input.clearKeyPressedRecord();

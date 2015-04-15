@@ -91,6 +91,7 @@ public class Inventory {
         this.staminaPotions = other.staminaPotions;
         this.classID = other.classID;
         this.itemList = new Vector<Items>();
+        this.hasBeenLooted = other.hasBeenLooted;
 
 
         for(int i= 0; i<other.itemList.size(); i++) {
@@ -286,6 +287,59 @@ public class Inventory {
         for( int x=0; x < basic.length; x++ ) {
             addItem( basic[x] );
             equipItem( basic[x].getID() );
+        }
+    }
+
+    public void addShopItems (int playerLevel, int playerClass) {
+
+        // Holds Items
+        Items[] basic = new Items[18];
+        Random rand = new Random();
+        int randLevel;
+
+        // Assigning basic Items
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 0 ] = new Items( 2, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 1 ] = new Items( 3, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 2 ] = new Items( 4, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 3 ] = new Items( 5, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 4 ] = new Items( 6, playerClass, -1, randLevel );
+
+        // Check class to give correct weapon
+        randLevel = playerLevel + rand.nextInt(2);
+        if( playerClass == 0 ) {
+            basic[ 5 ] = new Items( 10, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 1 ) {
+            basic[ 5 ] = new Items( 9, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 2 ) {
+            basic[ 5 ] = new Items( 12, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 3 ) {
+            basic[ 5 ] = new Items( 11, playerClass, -1, randLevel );
+        }
+
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 6 ] = new Items( 7, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 7 ] = new Items( 8, playerClass, -1, randLevel );
+
+        for( int x=8; x < 13; x++ ) {
+            randLevel = playerLevel + rand.nextInt(2);
+            basic[ x ] = new Items( 0, playerClass, -1, randLevel );
+        }
+        for( int x=13; x < 18; x++ ) {
+            randLevel = playerLevel + rand.nextInt(2);
+            basic[ x ] = new Items( 1, playerClass, -1, randLevel );
+        }
+        // Adding to inventory and equipping item
+        for( int x=0; x < basic.length; x++ ) {
+            addItem(basic[x]);
         }
     }
 
@@ -672,9 +726,59 @@ public class Inventory {
         }
     }
 
+    public void renderShopStock( Graphics g, int[] inventory ) {
+
+        int x = 240 , y=464;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+
     public void renderNPCInventoryInLootMenu( Graphics g, int[] inventory ) {
 
         int x = 112 , y=400;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+
+    public void renderMerchantMenu( Graphics g, int [] inventory ) {
+        int x = 112 , y=464;
         g.setColor(Color.black);
 
         int inventoryCounter = 0;

@@ -197,7 +197,7 @@ public class Player extends Movement {
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Movement starting attributes
-        setLevel( 1 );
+        this.setLevel( 1 );
         calculateExpToLevelUp();
         setHealth( MAX_HEALTH );
         setStamina( MAX_STAMINA );
