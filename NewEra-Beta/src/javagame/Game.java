@@ -155,104 +155,101 @@ public class Game extends BasicGameState {
         } else {
             this.player.drawPlayer(this.halfScreenWidth, this.halfScreenHeight);
         }
-            // Render the layer the player will walk under
-            this.maps.elementAt(this.currentMap).drawMapAbove();
+        // Render the layer the player will walk under
+        this.maps.elementAt(this.currentMap).drawMapAbove();
+        // Drawing arrows if he has them
+        this.player.renderProjectile(gc, g);
+        this.maps.elementAt(this.currentMap).renderProjectile(gc, g);
 
-            // Drawing arrows if he has them
-            this.player.renderProjectile(gc, g);
-            this.maps.elementAt(this.currentMap).renderProjectile(gc, g);
+        if(isActing){
 
-            if(isActing){
+            NPC lootingEnemy;
 
-                NPC lootingEnemy;
+            //check if enemy close enough to loot
+            if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(),
+                    this.maps.elementAt(this.currentMap).getEnemies()) != null) {
+                 //grab copy of enemy to loot
+                lootingEnemy = new NPC(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(),
+                    this.maps.elementAt(this.currentMap).getEnemies()));
 
-                //check if enemy close enough to loot
-                if(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                        this.maps.elementAt(this.currentMap).getEnemies()) != null) {
-                   
-                    //grab copy of enemy to loot
-                    lootingEnemy = new NPC(player.getAction().getLootableEnemy(player.getPlayerX(), player.getPlayerY(), player.getDirection(),
-                            this.maps.elementAt(this.currentMap).getEnemies()));
-                    //if enemy is already looted dont go further(false return), else (true return) loot and despawn
-                    if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
-                        System.out.println(lootingEnemy.getInventory().getMoney());
-
-                        //this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
-                        player.setLootingInventory(lootingEnemy.getInventory());
-                        player.setMapX(maps.elementAt(currentMap).getX());
-                        player.setMapY(maps.elementAt(currentMap).getY());
-                        player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
-                        player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
-                        sbg.enterState(4);
-                    }
-                } else {
-                    isActing = false;
-                }
-
-            }
-
-            // Drawing Health/Stamina etc.
-            this.player.drawPlayerInfo(g);
-            // Debugging information
-            if (this.showInfo) {
-                this.PAUSED = true;
-                g.setColor(Color.white);
-                g.drawString("X: " + this.player.getPlayerX() + ", Y: " + this.player.getPlayerY(), 300, 10);
-                g.drawString("X: " + this.maps.elementAt(this.currentMap).getMapCoordX() + ", Y: " + this.maps.elementAt(this.currentMap).getMapCoordY(), 300, 30);
-                g.drawString("Running: " + this.running, 300, 50);
-
-
-            }
-            if(this.PAUSED) {
-                g.setColor(Color.darkGray);
-                g.fillRoundRect(220, 150, 200, 300, 10);
-
-                g.setColor(Color.lightGray);
-                g.drawRect(250, 220, 140, 50 );
-                g.setColor(Color.white);
-                g.drawString("RESUME", 290, 235);
-                if(resumeButton) {
-                    g.setColor(new Color(0, 0, 0, .3f));
-                    g.fillRect(250, 220, 140, 50);
-                }
-                if(resumeButtonPressed) {
-                    resumeButtonPressed = false;
-                }
-
-                g.setColor(Color.lightGray);
-                g.drawRect(250, 280, 140, 50);
-                g.setColor(Color.white);
-                g.drawString("SAVE", 300, 295);
-                if(saveButton) {
-                    g.setColor(new Color(0, 0, 0, .3f));
-                    g.fillRect(250, 280, 140, 50);
-                }
-                if(saveButtonPressed) {
+                //if enemy is already looted dont go further(false return), else (true return) loot
+                if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
+                    player.setLootingInventory(lootingEnemy.getInventory());
                     player.setMapX(maps.elementAt(currentMap).getX());
                     player.setMapY(maps.elementAt(currentMap).getY());
                     player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
                     player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
-                    this.player.setIsNewGame(false);
-                    this.save.save(this.currentMap, player.getSaveSlot());
-                    saveButtonPressed = false;
+                    sbg.enterState(4);
                 }
-
-                g.setColor(Color.lightGray);
-                g.drawRect(250, 340, 140, 50 );
-                g.setColor(Color.white);
-                g.drawString("QUIT", 300, 355);
-                if(quitButton) {
-                    g.setColor(new Color(0, 0, 0, .3f));
-                    g.fillRect(250, 340, 140, 50);
-                }
-                if(quitButtonPressed) {
-                    System.exit(0);
-                }
-
+            } else if (player.getAction().findMerchant(player.getPlayerX(), player.getPlayerY(),
+                    this.maps.elementAt(this.currentMap).getAllies()))  {
+                sbg.enterState(5);
+            }
+            else {
+                isActing = false;
             }
 
+        }
 
-            // FPS show, also for debugging
+        // Drawing Health/Stamina etc.
+        this.player.drawPlayerInfo(g);
+        // Debugging information
+        if (this.showInfo) {
+            this.PAUSED = true;
+            g.setColor(Color.white);
+            g.drawString("X: " + this.player.getPlayerX() + ", Y: " + this.player.getPlayerY(), 300, 10);
+            g.drawString("X: " + this.maps.elementAt(this.currentMap).getMapCoordX() + ", Y: " + this.maps.elementAt(this.currentMap).getMapCoordY(), 300, 30);
+            g.drawString("Running: " + this.running, 300, 50);
+
+        }
+        if(this.PAUSED) {
+            g.setColor(Color.darkGray);
+            g.fillRoundRect(220, 150, 200, 300, 10);
+            g.setColor(Color.lightGray);
+            g.drawRect(250, 220, 140, 50 );
+            g.setColor(Color.white);
+            g.drawString("RESUME", 290, 235);
+            if(resumeButton) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(250, 220, 140, 50);
+            }
+            if(resumeButtonPressed) {
+                resumeButtonPressed = false;
+            }
+
+            g.setColor(Color.lightGray);
+            g.drawRect(250, 280, 140, 50);
+            g.setColor(Color.white);
+            g.drawString("SAVE", 300, 295);
+            if(saveButton) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(250, 280, 140, 50);
+            }
+            if(saveButtonPressed) {
+                player.setMapX(maps.elementAt(currentMap).getX());
+                player.setMapY(maps.elementAt(currentMap).getY());
+                player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
+                player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
+                this.player.setIsNewGame(false);
+                this.save.save(this.currentMap, player.getSaveSlot());
+                saveButtonPressed = false;
+            }
+            g.setColor(Color.lightGray);
+            g.drawRect(250, 340, 140, 50 );
+            g.setColor(Color.white);
+            g.drawString("QUIT", 300, 355);
+            if(quitButton) {
+                g.setColor(new Color(0, 0, 0, .3f));
+                g.fillRect(250, 340, 140, 50);
+            }
+            if(quitButtonPressed) {
+                System.exit(0);
+            }
+
+        }
+
+
+        // FPS show, also for debugging
         gc.setShowFPS( this.showInfo );
     }
 
@@ -278,10 +275,7 @@ public class Game extends BasicGameState {
                 if (!this.playerAttack.getIsAttacking() || this.playerAttack.isSneaking() ) {
 
 
-                    if (input.isKeyPressed(Input.KEY_COMMA)) {
-                        input.clearKeyPressedRecord();
-                        sbg.enterState(5);
-                    }
+
                     // Enter Inventory
                     if (input.isKeyPressed(Input.KEY_I)) {
                         input.clearKeyPressedRecord();
@@ -369,6 +363,10 @@ public class Game extends BasicGameState {
                     // If the player did not move, stop playing walking animation
                     else {
                         this.player.stopAnimationWalking();
+                    }
+
+                    if( input.isKeyPressed(Input.KEY_M ) ) {
+                        this.player.increaseExp( this.player.getExpToLevelUp() );
                     }
 
                     // If player attacks and the player has stamina to attack
@@ -460,17 +458,6 @@ public class Game extends BasicGameState {
                     this.isActing = true;
                     input.clearKeyPressedRecord();
                 }
-
-                //save game
-                if (input.isKeyPressed(input.KEY_COMMA)) {
-                    player.setMapX(maps.elementAt(currentMap).getX());
-                    player.setMapY(maps.elementAt(currentMap).getY());
-                    player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
-                    player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
-                    this.player.setIsNewGame(false);
-                    this.save.save(this.currentMap, player.getSaveSlot());
-                }
-
 
                 // If he is not in combat increase health
                 if (!player.getInCombat()) {
