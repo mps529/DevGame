@@ -72,19 +72,7 @@ public class Game extends BasicGameState {
         this.player.setPlayerY(96);
         this.save = this.save.getInstance();
 
-        maps = new Vector<Map>();
-
-            // Maps **Starting tiles for map are 10 under
-            // PlayerX and PlayerY then negative
-        maps.addElement( new Map( "LargeMapGrasslands.tmx", -84, -86 )  );
-        maps.addElement( new Map( "devGrasslandsDungeon.tmx", -15, -38 )  );
-        maps.addElement( new Map( "devGrasslandsHome.tmx", 0, -8 )  );
-        maps.addElement( new Map( "house1.tmx", -3, -8 ) );
-        maps.addElement( new Map( "house2.tmx", -1, -8 ) );
-        maps.addElement( new Map( "house3.tmx", 0, -8 ) );
-        maps.addElement( new Map( "house4.tmx", 0, -8 ) );
-        maps.addElement( new Map( "house5.tmx", 8, -8 ) );
-        maps.addElement( new Map( "house6.tmx", 0, -8 ) );
+        initMaps();
 
 
         lootMap = new TiledMap( "NewEra-Beta/res/map/LootInventory.tmx" );
@@ -110,6 +98,19 @@ public class Game extends BasicGameState {
      }
 
     public void enter( GameContainer gc, StateBasedGame sbg ) {
+
+        this.player.getInstance();
+        this.player.setPlayerDead(false);
+        if(this.player.getIsNewGame()) {
+            this.player.setPlayerX(94);
+            this.player.setPlayerY(96);
+            initMaps();
+            this.maps.elementAt(this.currentMap).setMapCoordXInPixels(this.player.getPlayerXForMap());
+            this.maps.elementAt(this.currentMap).setMapCoordYInPixels(this.player.getPlayerYForMap());
+        }
+        this.maps.elementAt(this.currentMap).clearNPCList();
+        this.maps.elementAt(this.currentMap).addEnemies();
+        this.maps.elementAt(this.currentMap).addGood();
         if(!outsideTheme.playing()) {
             outsideTheme.setVolume(0.02f);
             outsideTheme.loop();
@@ -133,12 +134,13 @@ public class Game extends BasicGameState {
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
             // render current map
-        this.maps.elementAt(this.currentMap).drawMap( g );
+        this.maps.elementAt(this.currentMap).drawMap(g);
+
+
+        if(!this.PAUSED && !this.player.checkDeath()) {
 
             // Drawing traps if set
             this.player.renderTraps(gc, g);
-        if(!this.PAUSED || !this.player.checkDeath()) {
-
             if ( this.player.checkDeath() ) {
                 this.player.drawPlayerDieing(this.halfScreenWidth, this.halfScreenHeight);
             }
@@ -248,6 +250,10 @@ public class Game extends BasicGameState {
 
         }
 
+        if(player.checkDeath()) {
+            this.outsideTheme.stop();
+            sbg.enterState(0);
+        }
 
         // FPS show, also for debugging
         gc.setShowFPS( this.showInfo );
@@ -481,7 +487,7 @@ public class Game extends BasicGameState {
                     this.player.stopAnimationDeath();
                     this.startDed = true;
                 } else if (this.player.isStoppedDead()) {
-                    //sbg.enterState(0);
+                   // sbg.enterState(0);
                 }
             }
 
@@ -550,6 +556,27 @@ public class Game extends BasicGameState {
 
                 return;
             }
+        }
+    }
+
+    public void initMaps() {
+        this.maps = new Vector<Map>();
+
+        // Maps **Starting tiles for map are 10 under
+        // PlayerX and PlayerY then negative
+        try {
+            this.maps.addElement( new Map( "LargeMapGrasslands.tmx", -84, -86 )  );
+            this.maps.addElement( new Map( "devGrasslandsDungeon.tmx", -15, -38 )  );
+            this.maps.addElement( new Map( "devGrasslandsHome.tmx", 0, -8 )  );
+            this.maps.addElement( new Map( "house1.tmx", -3, -8 ) );
+            this.maps.addElement( new Map( "house2.tmx", -1, -8 ) );
+            this.maps.addElement( new Map( "house3.tmx", 0, -8 ) );
+            this.maps.addElement( new Map( "house4.tmx", 0, -8 ) );
+            this.maps.addElement( new Map( "house5.tmx", 8, -8 ) );
+            this.maps.addElement( new Map( "house6.tmx", 0, -8 ) );
+
+        } catch (SlickException e) {
+            e.printStackTrace();
         }
     }
 

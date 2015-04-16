@@ -245,6 +245,8 @@ public class Player extends Movement {
             setRouge();
         }
 
+        this.isNotRunning();
+
         // Set the color
         red = new Color( 225, 0, 0, .7f );
         green = new Color( 0,128,0, .7f );
@@ -725,6 +727,10 @@ public class Player extends Movement {
 
     public boolean getIsNewGame() {return this.isNewGame;}
     public void setIsNewGame(boolean ing) {this.isNewGame = ing;}
+
+    public void setPlayerDead(boolean playerDead) {
+        this.playerDead = playerDead;
+    }
 
     public boolean isWeaponEqiupped () {
         return this.inventory.isWeaponEquipped();
