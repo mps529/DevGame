@@ -86,7 +86,6 @@ public class MainMenu extends BasicGameState {
 
         //theme.loop();
 
-        System.out.println("hi");
         if(!firstTimeRunning) {
             newGameStarted = false;
             classSelected = false;

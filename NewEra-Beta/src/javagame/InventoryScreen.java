@@ -116,6 +116,9 @@ public class InventoryScreen extends BasicGameState{
 
         this.playerInventory.renderInventory( g, this.equippedItems, this.inventoryItems );
 
+        g.setColor( Color.black );
+        g.drawString( "Gold: " + this.playerInventory.getMoney(), 355, 40 );
+
             // If item is selected
         if( this.displayItem != null ) {
                 // Name
@@ -217,7 +220,7 @@ public class InventoryScreen extends BasicGameState{
         if( !this.settingName ) {
 
             // 'I' will return to game
-            if (input.isKeyPressed(Input.KEY_I)) {
+            if (input.isKeyPressed(Input.KEY_I) || input.isKeyPressed(Input.KEY_ESCAPE) ) {
                 this.player.setOverallAttack( playerInventory.getPlayerOverallAttack() );
                 this.player.setOverallDefence( playerInventory.getPlayerOverallDefence() );
                 input.clearKeyPressedRecord();

@@ -35,6 +35,8 @@ public class Map implements TileBasedMap{
 
         // Layer for enemies to spawn
     private int enemySpawn;
+        // Layer for Boss to spawn on
+    private int bossSpawn;
         // Layer for good to spawn
     private int villagerSpawn;
         // Layer for guards to spawn
@@ -84,6 +86,7 @@ public class Map implements TileBasedMap{
         this.aboveLayer = map.getLayerIndex( "above" );
             // Enemies
         this.enemySpawn = map.getLayerIndex("spawn");
+        this.bossSpawn = map.getLayerIndex("bossSpawn");
             // Goods
         this.villagerSpawn = map.getLayerIndex( "villagerSpawn" );
         this.guardSpawn = map.getLayerIndex( "guardSpawn" );
@@ -121,12 +124,11 @@ public class Map implements TileBasedMap{
 
     public void addEnemies() {
 
-        if( this.enemySpawn != -1 ) {
-            Random rand = new Random();
+        Random rand = new Random();
 
-            for (int x = 0; x < getMapHeight(); x++) {
-                for (int y = 0; y < getMapWidth(); y++) {
-
+        for (int x = 0; x < getMapHeight(); x++) {
+            for (int y = 0; y < getMapWidth(); y++) {
+                if( this.enemySpawn != -1 ) {
                     if (this.map.getTileId(x, y, this.enemySpawn) != 0) {
                         NPC temp = new NPC(rand.nextInt(2), false);
                         this.enemies.add(temp);
@@ -135,11 +137,23 @@ public class Map implements TileBasedMap{
                         this.enemies.lastElement().setSpawnY(y * 32);
                         this.enemies.lastElement().setMapPath(this);
                     }
+                }
+                if( this.bossSpawn != -1 ) {
+                    if (this.map.getTileId(x, y, this.bossSpawn) != 0) {
+                        // Change to boss NPC constructor
+                        NPC temp = new NPC(rand.nextInt(2), false, true);
 
+                        this.enemies.add(temp);
+                        this.enemies.lastElement().setImage(false);
+                        this.enemies.lastElement().setSpawnX(x * 32);
+                        this.enemies.lastElement().setSpawnY(y * 32);
+                        this.enemies.lastElement().setMapPath(this);
+                    }
                 }
             }
         }
     }
+
     public void addGood() {
 
             Random rand = new Random();
@@ -158,7 +172,7 @@ public class Map implements TileBasedMap{
                     }
                     if( this.guardSpawn != -1 ) {
                         if (this.map.getTileId(x, y, this.guardSpawn) != 0) {
-                            NPC temp = new NPC(rand.nextInt(2), true);
+                            NPC temp = new NPC(rand.nextInt(2), 20, -1, true);
                             this.allies.add(temp);
                             this.allies.lastElement().setImage(false);
                             this.allies.lastElement().setSpawnX(x * 32);

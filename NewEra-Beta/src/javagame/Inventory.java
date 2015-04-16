@@ -94,9 +94,6 @@ public class Inventory {
         for(int i= 0; i<other.itemList.size(); i++) {
 
             this.itemList.add(new Items( other.itemList.elementAt(i), isSaving ));
-            if(this.itemList.elementAt(i).isEquipped()) {
-                System.out.println(this.equipItem(this.itemList.elementAt(i).getID()));
-            }
 
         }
     }
@@ -160,9 +157,11 @@ public class Inventory {
 
     public void setClassID( int classID ) {
         this.classID = classID;
+        /*
         if( this.itemList.isEmpty() ) {
             this.addStartingItems();
         }
+        */
     }
     public int getClassID() {
         return this.classID;
@@ -286,7 +285,7 @@ public class Inventory {
 
     public void addEnemyNPCArmor( int level ) {
 
-        if( this.playerHelmet == -1 ) {
+        if( this.itemList.isEmpty() ) {
             Items[] basic = new Items[6];
             Random rand = new Random();
 
@@ -314,32 +313,87 @@ public class Inventory {
             }
 
             // Necklaces
-            int willHaveItem = rand.nextInt(100);
+            int willHaveItem = rand.nextInt(80);
             if (willHaveItem > 40 && willHaveItem < 60) {
                 Items necklace = new Items(8, this.classID, -1, level);
                 addItem(necklace);
+                equipItem( necklace.getID() );
             }
             // Ring
             willHaveItem = rand.nextInt(100);
             if (willHaveItem > 20 && willHaveItem < 40) {
                 Items ring = new Items(7, this.classID, -1, level);
                 addItem(ring);
+                equipItem(ring.getID());
             }
             // Adds monies
            this.money = ( (rand.nextInt(level + 3) +1) * (rand.nextInt(3) + 1));
 
                 // Extra inventory items
-           /* Items[] extra = new Items[7];
-            int itemCount = rand.nextInt(7);
+           Items[] extra = new Items[3];
+            int itemCount = rand.nextInt(4);
 
             for (int x = 0; x < itemCount; x++) {
-                extra[x] = new Items(rand.nextInt(level) + 1);
+                extra[x] = new Items( rand.nextInt(level) + 1);
                 this.addItem(extra[x]);
-            }*/
+            }
 
         }
     }
-    
+
+    public void addEnemyBossNPCArmor( int level, int playerClass ) {
+        if( this.itemList.isEmpty() ) {
+            Items[] basic = new Items[6];
+            Random rand = new Random();
+
+            // Assigning basic Items
+            basic[0] = new Items(2, this.classID, -1, level + 2);
+            basic[1] = new Items(3, this.classID, -1, level + 2 );
+            basic[2] = new Items(4, this.classID, -1, level + 2 );
+            basic[3] = new Items(5, this.classID, -1, level + 2 );
+            basic[4] = new Items(6, this.classID, -1, level + 2 );
+
+            // Check class to give correct weapon
+            if (this.classID == 0) {
+                basic[5] = new Items(10, this.classID, -1, level + 2 );
+            } else if (this.classID == 1) {
+                basic[5] = new Items(9, this.classID, -1, level + 2 );
+            } else if (this.classID == 2) {
+                basic[5] = new Items(12, this.classID, -1, level + 2 );
+            } else if (this.classID == 3) {
+                basic[5] = new Items(11, this.classID, -1, level + 2 );
+            }
+
+            for (int x = 0; x < basic.length; x++) {
+                addItem(basic[x]);
+                equipItem(basic[x].getID());
+            }
+
+            // Necklaces
+            int willHaveItem = rand.nextInt(80);
+            if (willHaveItem > 40 && willHaveItem < 60) {
+                Items necklace = new Items(8, this.classID, -1, level + 2 );
+                addItem(necklace);
+            }
+            // Ring
+            willHaveItem = rand.nextInt(100);
+            if (willHaveItem > 20 && willHaveItem < 40) {
+                Items ring = new Items(7, this.classID, -1, level + 2 );
+                addItem(ring);
+            }
+            // Adds monies
+            this.money = ( (rand.nextInt(level + 3) +1) * (rand.nextInt(3) + 1));
+
+            // Extra inventory items
+            Items[] extra = new Items[5];
+
+            for (int x = 0; x < 5; x++) {
+                extra[x] = new Items( -1, playerClass, -1 ,rand.nextInt(level) + 4);
+                this.addItem( extra[x] );
+            }
+        }
+    }
+
     // Return 1 for successful equip, 2 for unable to equip
     public int equipItem ( int ID ) {
 

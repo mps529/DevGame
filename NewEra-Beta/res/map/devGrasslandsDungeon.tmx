@@ -6,9 +6,14 @@
  <tileset firstgid="901" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32">
   <image source="tilesets/hyptosis_til-art-batch-2.png" trans="ff00ff" width="960" height="960"/>
  </tileset>
+ <layer name="bossSpawn" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3OMQ0AAAgDsInFvwZMLOGgVdAEAAAAAAAAAACgZ64DvLUJJgOMECcAAA==
+  </data>
+ </layer>
  <layer name="spawn" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3ZSw6AIAwFQBKP5/3v48KtG6R8CjPrCto+EhJLgRj3FVsbVRNh1D7kIxv7MVNayA+ncwby6j07d3sYR8b70t9vkX1pXav2eTN96QPsYaWzvNK7QCbR/9pq1/xTv4MTv5m5ZmZO3slEXmnxAIt07scQJwAA
+   H4sIAAAAAAAAC+3ZQQrAIAwEQKHP6///00OvPVTcBmJnzkEhcUVwDMg4j2xtqiahah/6cTb2Y6ascH74Oxno6+vZedsDu3CHPEv2pbrHZnrTB9iDLEN/6b+22TWBGnIJ78gKKy5w8iWgECcAAA==
   </data>
  </layer>
  <layer name="villagerSpawn" width="50" height="50" visible="0">
@@ -26,12 +31,12 @@
    H4sIAAAAAAAAC+3Zyw3DIAwG4KiRuv84naHJIHSLHqJcLMzD/IAdfLBU9aH4i22I6LFv28HEt0Nw1+oZKzgC2BEK37NejxoTvY4kz8C8jjlQ97uHQ1qPH9Aw2yGxxGpKr4Wa7dL5QNWE9hbaUDLnyP5q7auU2ZIjFdvrihG9dccZiTuP1pA6JGu1Bgdij9HgsNxXaEvMgbKg7/mqjlx+n/cVqznCLluTan4zqh6cJZVrb4d0PmheuTzp56i8Rs+5O3Q5aFhzcHu9O8Y7Us9eGhyle0Hq+VGDY6U5z9XMisProcvxlHpYcCDORDQ4Ws9SNTgQZ8KzHSXnxNr7CnU+P8uBzn+0A/kfiQWH5XW3Zg/hvqfF8YR90B3ucIc7SuIPjlV3oRAnAAA=
   </data>
  </layer>
- <layer name="floordetail" width="50" height="50" visible="0">
+ <layer name="floordetail" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3PwQkAIAwEwTzSkrau5SloDUJkBo57bwQAAPCLnhFjb96vquVpqd4BAAAAAADAWws7JeuXECcAAA==
   </data>
  </layer>
- <objectgroup  width="50" height="50" name="objectDoorway" visible="0">
+ <objectgroup width="50" height="50" name="objectDoorway">
   <object name="mansionexit" type="doorway" x="768" y="1568" width="96" height="32">
    <properties>
     <property name="destX" value="-16"/>
@@ -40,17 +45,17 @@
    </properties>
   </object>
  </objectgroup>
- <layer name="doorway" width="50" height="50" visible="0">
+ <layer name="doorway" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3DsQ0AAAgDoPr/5sWOXtANEhIAAAAAAAAAAADo2flNB/J7WYMQJwAA
   </data>
  </layer>
- <layer name="collision" width="50" height="50" visible="0">
+ <layer name="collision" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+2aS07DMBCGG9JE4lQcohykcAmEEKEseOxYoW6gLHgs2bQ7KBeANfQObLDVGEbOeDJ2bCcR/aXZDJYynz2POKVIB4OTntuktNueW1Fy9F195BhlVV8fOTBxOMbi73sBbb/BPqqz4XAUEXpNU3WJYyn29g3J/b5xNJEth1z7nvi30BxjZO+6wKHnIMYB+xOWAzE4XkSMrxa1gnFQ9dD2eZhmAFZnXI65sCkw5Z8SVhg4TM/kxjZB1t6k5vexGeBYCFsCU/4lYccROVz0nPJzBOMw7d2sZxxc+eTAnv09rPpNMXaN4yPF/T459P5E9R9fHNv52nxyUD1Hvw/qtcTluErXdVG3rgkHJTgri0BzjYrRFwfUf+Y4Sv7m812Cz23lLzrKIRkOE3pm6/M7Fsdgi/csyXAt7ID53FT0rp286nfloO6LXA5bBkptnYctw6fYs68M962ydjhczmEocikD+SRjV748j8sxL3uNSy7lZbwm+eKQ3652wRzEOBZlr/FRD7pingdHMl/qagHzURxwj+s00r4zuHLI3KFqAaqt+ggpDofNuUjV9asQMnHYxg5lw0HVghKnZtqYHzA+mONKVC1gPm59YL/V+OCgpM+KWPMDqinHyiGfu8jhorbf20PahoPmkO+Jp0n1vor59LstdteF99yYHPo3aF9m+k4diiOkuByXSO/GfFJd5nhCYsZ8UhsOd2EcZyK+c80ekZjvkXUXeXc4ZHwPmpk4sHW/HCENagvnaPo/KvK3gx/vBIDLECcAAA==
   </data>
  </layer>
- <layer name="above" width="50" height="50" visible="0">
+ <layer name="above" width="50" height="50">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3ZQQ6CMBBA0SaK59BDyGX1CogbTsIBZM+KG4hxRVoCU9tMJ/6XsOmimU47GSjOAfGulXYEWMPe5NPOuX2SXyiycgabOcaHgTgBAL8bq+8DGXolUIbLKd1cVt7VU5m0A1AiXfct4RnT8jqkn/Nzd1X/Ub1okOQ49i5RUg/noz92L7Q+QuvaO7bF8tm3HHsOsX0wVAtdYEyilP8BfWAdQ4YeAgAAlvg+B3xvFiyu9RAnAAA=
   </data>

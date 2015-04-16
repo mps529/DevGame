@@ -175,8 +175,6 @@ public class Game extends BasicGameState {
                             this.maps.elementAt(this.currentMap).getEnemies()));
                     //if enemy is already looted dont go further(false return), else (true return) loot and despawn
                     if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
-                        System.out.println(lootingEnemy.getInventory().getMoney());
-
                         //this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
                         player.setLootingInventory(lootingEnemy.getInventory());
                         player.setMapX(maps.elementAt(currentMap).getX());
