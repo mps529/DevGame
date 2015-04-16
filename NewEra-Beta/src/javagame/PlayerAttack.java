@@ -609,7 +609,6 @@ public class PlayerAttack {
 
     public void decreaseSummonedLife( int delta, Map map ) {
         this.summonedTime -= delta * .1f;
-        System.out.println( this.summonedTime );
         if( this.summonedTime <= 0 ) {
             this.summonedAlive = false;
             map.removedSummoned();
@@ -642,7 +641,6 @@ public class PlayerAttack {
         }
         else if( moveSelected == 2 ) {
             if( this.currentAttack.isStopped() && this.summonedAlive == false ) {
-                System.out.println( "Summon!" );
                 map.addGood( (int)this.player.getPlayerX(), (int)this.player.getPlayerY() );
                 this.summonedAlive = true;
                 this.summonedTime =  8000;

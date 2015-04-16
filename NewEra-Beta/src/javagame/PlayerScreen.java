@@ -42,13 +42,16 @@ public class PlayerScreen extends BasicGameState {
     }
 
     public void render( GameContainer gc, StateBasedGame sbg, Graphics g ) throws SlickException {
-        this.background.render( 0,0 );
+        this.background.render(0, 0);
 
             // Name
         g.setColor(Color.black );
-        g.drawString(this.player.getPlayerName(), 45, 75 );
+        g.drawString(this.player.getPlayerName(), 45, 75);
 
-        g.setColor(Color.black );
+        g.setColor(Color.black);
+
+        g.drawString("Player Points: " + this.player.getPerkPoints(), 455, 40);
+        g.drawString( "Move Points: " + this.player.getMovePoints(), 75, 425  );
             // Base Stats
         g.drawString( "Base Attack: " + this.player.getBaseAttack(), 360, 95 );
         g.drawString( "Base Defence: " + this.player.getBaseDefence(), 360, 115 );
@@ -121,7 +124,7 @@ public class PlayerScreen extends BasicGameState {
         Input input = gc.getInput();
 
 
-        if( input.isKeyPressed( Input.KEY_P ) ) {
+        if( input.isKeyPressed( Input.KEY_P ) || input.isKeyPressed(Input.KEY_ESCAPE) ) {
             input.clearKeyPressedRecord();
             sbg.enterState( 1 );
         }
@@ -135,21 +138,23 @@ public class PlayerScreen extends BasicGameState {
                 if( ( mouseX >= 540 && mouseX <= 556 ) && ( mouseY >= 95 && mouseY <= 111 ) ) {
                     this.player.increaseBaseAttack(5);
                     this.player.decrementPerkPoints();
+                    input.clearMousePressedRecord();
                 }
                 else if( ( mouseX >= 540 && mouseX <= 556 ) && ( mouseY >= 115 && mouseY <= 131 ) ) {
                     this.player.increaseBaseDefence(5);
                     this.player.decrementPerkPoints();
+                    input.clearMousePressedRecord();
                 }
                 else if( ( mouseX >= 540 && mouseX <= 556 ) && ( mouseY >= 175 && mouseY <= 191 ) ) {
                     this.player.incrementMaxHealth();
                     this.player.decrementPerkPoints();
+                    input.clearMousePressedRecord();
                 }
                 else if( ( mouseX >= 540 && mouseX <= 556 ) && ( mouseY >= 195 && mouseY <= 211 ) ) {
                     this.player.incrementMaxStamina();
                     this.player.decrementPerkPoints();
+                    input.clearMousePressedRecord();
                 }
-
-                input.clearMousePressedRecord();
             }
 
         }
@@ -163,36 +168,43 @@ public class PlayerScreen extends BasicGameState {
                 if( ( mouseX >= 118 && mouseX <= 134 ) && ( mouseY >= 560 && mouseY <= 576 ) ) {
                     this.player.incrementAttackOneDamage();
                     this.player.decrementMovePoints();
+                    input.clearMousePressedRecord();
                 }
                 else if( this.player.getLevel() >= 4 &&  (( mouseX >= 248 && mouseX <= 264 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
                     if( this.player.isMoveKnown( 1 ) ) {
                         this.player.incrementAttackTwoDamage();
                         this.player.decrementMovePoints();
+                        input.clearMousePressedRecord();
                     }
                     else {
                         this.player.unlockMove( 1 );
+                        input.clearMousePressedRecord();
                     }
                 }
                 else if( this.player.getLevel() >= 8 &&  ( ( mouseX >= 374 && mouseX <= 390 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
                     if( this.player.isMoveKnown( 2 ) ) {
                         this.player.incrementAttackThreeDamage();
                         this.player.decrementMovePoints();
+                        input.clearMousePressedRecord();
                     }
                     else {
                         this.player.unlockMove( 2 );
+                        input.clearMousePressedRecord();
                     }
                 }
                 else if( this.player.getLevel() >= 12 &&  ( ( mouseX >= 502 && mouseX <= 518 ) && ( mouseY >= 560 && mouseY <= 576 ) ) ) {
                     if( this.player.isMoveKnown( 3 ) ) {
                         this.player.incrementAttackFourDamage();
                         this.player.decrementMovePoints();
+                        input.clearMousePressedRecord();
                     }else {
                         this.player.unlockMove( 3 );
+                        input.clearMousePressedRecord();
                     }
 
                 }
 
-                input.clearMousePressedRecord();
+
             }
 
         }

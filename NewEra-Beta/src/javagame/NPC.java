@@ -39,6 +39,7 @@ public class NPC extends NPCMovement {
         // Player level
     private int npcLevel;
 
+    private boolean isBoss;
 
     private static int npcCount = 0;
     private int id;
@@ -126,10 +127,13 @@ public class NPC extends NPCMovement {
     public NPC( int race, boolean good ) {
         super();
 
+        this.isBoss = false;
+
         this.id = this.npcCount++;
-            // Set the race
+        // Set the race
         this.npcRace = race;
-            // Get player class
+
+        // Get player class
         this.player = this.player.getInstance();
 
         Random random = new Random();
@@ -152,7 +156,7 @@ public class NPC extends NPCMovement {
 
         this.attackDamage = 5;
 
-            // Setting the class randomly
+        // Setting the class randomly
         this.npcClass = random.nextInt( 2 );
         if( this.npcClass == 0 ) {
             this.npcClass = 1 ;
@@ -160,7 +164,7 @@ public class NPC extends NPCMovement {
         else {
             this.npcClass = 3;
         }
-            // Setting stats and image
+        // Setting stats and image
         try {
             setClassStat();
             setImages( race );
@@ -169,19 +173,88 @@ public class NPC extends NPCMovement {
             e.printStackTrace();
         }
 
-            // Setting up the NPC Inventory
+        // Setting up the NPC Inventory
         this.inventory = new Inventory();
         this.inventory.setClassID(this.npcClass);
         this.inventory.setBaseAttack(this.BASE_ATTACK);
         this.inventory.setBaseDefence(this.BASE_DEFENCE);
         this.inventory.addEnemyNPCArmor( this.npcLevel );
 
-            // Setting attack and defence
+        // Setting attack and defence
         this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack() + (int)( this.npcLevel *2) ;
         this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence()  + (int)( this.npcLevel *2);
 
         this.good = good;
 
+
+        this.isAlive = true;
+        this.willRender = false;
+
+
+    }
+
+    // NPC Enemy with race
+    public NPC( int race, boolean good, boolean boss ) {
+        super();
+        System.out.println( "Boss" );
+        this.isBoss = boss;
+
+        this.id = this.npcCount++;
+        // Set the race
+        this.npcRace = race;
+
+        // Get player class
+        this.player = this.player.getInstance();
+
+        Random random = new Random();
+        int playerLevel = this.player.getLevel();
+
+        // Sets NPC level from a range of two above and two below.
+        this.npcLevel = random.nextInt( 3 ) + 2 + playerLevel;
+
+        if( this.npcLevel <= 0 ) {
+            this.npcLevel = playerLevel + 2;
+        }
+
+        // Setting the max health and stamina based on level
+        this.MAX_HEALTH = 90 + ( this.npcLevel * 7 );
+        this.MAX_STAMINA = 90 + ( this.npcLevel * 7 );
+
+        // Setting the current npc health and stamina
+        this.health = this.MAX_HEALTH;
+        this.stamina = this.MAX_STAMINA;
+
+        this.attackDamage = 10;
+
+        // Setting the class randomly
+        this.npcClass = random.nextInt( 2 );
+        if( this.npcClass == 0 ) {
+            this.npcClass = 1 ;
+        }
+        else {
+            this.npcClass = 3;
+        }
+        // Setting stats and image
+        try {
+            setClassStat();
+            setImages( race );
+        }
+        catch ( SlickException e ) {
+            e.printStackTrace();
+        }
+
+        // Setting up the NPC Inventory
+        this.inventory = new Inventory();
+        this.inventory.setClassID(this.npcClass);
+        this.inventory.setBaseAttack(this.BASE_ATTACK);
+        this.inventory.setBaseDefence(this.BASE_DEFENCE);
+        this.inventory.addEnemyBossNPCArmor( this.npcLevel + 4, this.player.getPlayerClass() );
+
+        // Setting attack and defence
+        this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack() + (int)( this.npcLevel * 3) ;
+        this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence()  + (int)( this.npcLevel *3);
+
+        this.good = good;
 
         this.isAlive = true;
         this.willRender = false;
@@ -198,7 +271,7 @@ public class NPC extends NPCMovement {
         this.isAlive = other.isAlive;
         this.deadTime = other.deadTime;
         this.willRender = other.willRender;
-
+        this.isBoss = false;
         this.npcRace = other.npcRace;
 
         this.npcClass = other.npcClass;
@@ -310,14 +383,13 @@ public class NPC extends NPCMovement {
         setNPCClass("summon.png", 3);
     }
 
-
         // NPC with race and class
     public NPC( int race, int npcClass, boolean good  ) {
 
         super();
 
         this.id = this.npcCount++;
-
+        this.isBoss = false;
             // Set the race
         this.npcRace = race;
 
@@ -360,7 +432,7 @@ public class NPC extends NPCMovement {
         this.inventory.setClassID( npcClass );
         this.inventory.setBaseAttack( this.BASE_ATTACK );
         this.inventory.setBaseDefence(this.BASE_DEFENCE);
-        this.inventory.addEnemyNPCArmor( this.npcLevel );
+        this.inventory.addEnemyNPCArmor(this.npcLevel);
 
 
             // Setting attack and defence
@@ -382,6 +454,82 @@ public class NPC extends NPCMovement {
         this.setPlayerDirection(3);
 
     }
+
+    // NPC Enemy with race
+    public NPC( int race, int level, int npcClass, boolean good ) {
+
+        super();
+
+        this.isBoss = false;
+
+        this.id = this.npcCount++;
+        // Set the race
+        this.npcRace = race;
+        // Get player class
+        this.player = this.player.getInstance();
+
+        Random random = new Random();
+
+        // Sets NPC level from a range of two above and two below.
+        this.npcLevel = level;
+
+        if( this.npcLevel <= 0 ) {
+            this.npcLevel = 1;
+        }
+
+        // Setting the max health and stamina based on level
+        this.MAX_HEALTH = 90 + ( this.npcLevel * 5 );
+        this.MAX_STAMINA = 90 + ( this.npcLevel * 5 );
+
+        // Setting the current npc health and stamina
+        this.health = this.MAX_HEALTH;
+        this.stamina = this.MAX_STAMINA;
+
+        this.attackDamage = 5;
+
+        if( npcClass == -1 ) {
+            // Setting the class randomly
+            this.npcClass = random.nextInt(2);
+            if (this.npcClass == 0) {
+                this.npcClass = 1;
+            } else {
+                this.npcClass = 3;
+            }
+        }
+        else {
+            this.npcClass = npcClass;
+        }
+
+        // Setting stats and image
+        try {
+            setClassStat();
+            setImages( race );
+        }
+        catch ( SlickException e ) {
+            e.printStackTrace();
+        }
+
+        // Setting up the NPC Inventory
+        this.inventory = new Inventory();
+        this.inventory.setClassID(this.npcClass);
+        this.inventory.setBaseAttack(this.BASE_ATTACK);
+        this.inventory.setBaseDefence(this.BASE_DEFENCE);
+        this.inventory.addEnemyNPCArmor( level );
+
+        // Setting attack and defence
+        this.OVERALL_ATTACK = this.inventory.getPlayerOverallAttack() + (int)( this.npcLevel * 2) ;
+        this.OVERALL_DEFENCE = this.inventory.getPlayerOverallDefence()  + (int)( this.npcLevel * 2);
+
+        this.good = good;
+
+
+        this.isAlive = true;
+        this.willRender = false;
+
+
+    }
+
+
 
     public void setMapPath( Map map ) {
         pathFinder = new AStarPathFinder( map, 11, false );
@@ -463,7 +611,7 @@ public class NPC extends NPCMovement {
     public double getMaxStamina() { return this.MAX_STAMINA; }
 
         // Attack and defence
-    public int getOverallAttack() { return this.inventory.getPlayerOverallAttack(); }
+    public int getOverallAttack() { return this.OVERALL_ATTACK; }
     public int getOverallDefence() { return this.OVERALL_DEFENCE; }
 
         // Base attack and defence
@@ -541,13 +689,13 @@ public class NPC extends NPCMovement {
         int overallAttack;
         int currentAttackDamage;
 
-
-        if( opponentsArrayLocation == -1  ) {
-            overallAttack = this.player.getInventory().getPlayerOverallAttack();
+        if( enemy == null ) {
+            overallAttack = this.player.getOverallAttack();
             currentAttackDamage = this.player.getDamageOfCurrentAttack();
         }
         else {
             overallAttack = enemy.getOverallAttack();
+
             currentAttackDamage = enemy.getBaseAttack();
         }
 
@@ -857,7 +1005,6 @@ public class NPC extends NPCMovement {
             int x = this.path.getX(1);
             int y = this.path.getY(1);
 
-           // System.out.println( "NPC X: " + npcX + ", NPC Y: " + npcY + " Dest x: " + x + "Dest y: " + y + "\n" );
 
             this.startAnimationWalking();
 

@@ -51,8 +51,6 @@ public class LootMenu extends BasicGameState {
     public void enter( GameContainer gc, StateBasedGame sbg ) {
 
         this.enemyInventory = new Inventory(this.player.getLootingInventory(), false);
-        System.out.println(player.getLootingInventory().getMoney());
-        System.out.println(this.enemyInventory.getMoney());
         openLootMenu.play();
     }
 
