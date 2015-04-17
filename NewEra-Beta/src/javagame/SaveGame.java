@@ -159,6 +159,49 @@ public class SaveGame {
         }
     }
 
+    public boolean loadSlots(int slot) {
+
+        XStream xstream = new XStream();
+        boolean foundSave = false;
+
+
+        int slotNo, slotIndex;
+        File folder;
+        File[] listOfFiles;
+
+        folder = new File("NewEra-Beta/res/saves/");
+        listOfFiles = folder.listFiles();
+
+        /*parses slot numbers out of save files. Will get the index of the save slot needed to load
+          and store in slotIndex
+        */
+        for(int i=0;i<listOfFiles.length;i++) {
+            if(listOfFiles[i].getName().endsWith(".xml")) {
+                String[] parsedName = listOfFiles[i].getName().split("_");
+                slotNo = Math.abs(Character.getNumericValue(parsedName[1].charAt(0)));
+                if (slotNo == slot) {
+                    //found save
+                    slotIndex = slotNo;
+
+                    foundSave = true;
+                    //load values back into variables
+
+                    saveGameClass = saveGameClass.getInstance();
+                    saveGameClass.saveGameCopy((SaveGame) xstream.fromXML(listOfFiles[i]));
+
+                    this.saveName = saveGameClass.getSaveName();
+                    this.playerLvl = saveGameClass.getPlayerLvl();
+                    this.classID = saveGameClass.getClassID();
+                }
+            }
+        }
+        if(foundSave) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean deleteSave(int slot) {
         XStream xstream = new XStream();
         Player player;

@@ -28,6 +28,8 @@ public class Merchant extends BasicGameState {
 
     private Image healthPotion, staminaPotion;
 
+    private Sound menuSwap;
+
     private int quantity;
     private int mouseX, mouseY;
 
@@ -78,6 +80,8 @@ public class Merchant extends BasicGameState {
         //potions for sell menu
         this.healthPotion = new Image( "NewEra-Beta/res/items/health.png" );
         this.staminaPotion = new Image( "NewEra-Beta/res/items/stamina.png" );
+
+        menuSwap = new Sound("NewEra-Beta/res/sounds/switchBuySell.ogg");
 
 
         //quantity being purchased
@@ -303,6 +307,7 @@ public class Merchant extends BasicGameState {
                 } else {
                     this.isBuying = true;
                 }
+                this.menuSwap.play();
             }
         }  else {
             this.switchMenu = false;
