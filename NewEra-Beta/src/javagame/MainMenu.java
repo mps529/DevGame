@@ -72,7 +72,7 @@ public class MainMenu extends BasicGameState {
     private int spriteSelectedX, spriteSelectedY;
     private int slotSelectedX, slotSelectedY, slotWidth, slotHeight;
 
-    private boolean firstTimeRunning = true;
+    private boolean firstTimeRunning;
 
     public MainMenu( int state ) {
         this.gameState = state;
@@ -84,10 +84,12 @@ public class MainMenu extends BasicGameState {
 
     public void enter ( GameContainer gc, StateBasedGame sbg ) {
 
-        //theme.loop();
+        theme.loop();
 
-        if(!firstTimeRunning) {
+
+            this.player.getInstance();
             newGameStarted = false;
+            loadGameStarted = false;
             classSelected = false;
             loadSlotSelected = false;
             spriteSelected = false;
@@ -109,17 +111,18 @@ public class MainMenu extends BasicGameState {
             loadSlot3Selected = false;
             loadSlot4Selected = false;
 
-            //load games with helper functions to set booleans
-            this.loadGames();
-        }
+
     }
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
 
+        this.loadGames();
         theme = new Music("NewEra-Beta/res/sounds/title_loop.ogg");
         theme.setVolume(0.02f);
         theme.loop();
+
+        this.firstTimeRunning = true;
 
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
@@ -261,6 +264,8 @@ public class MainMenu extends BasicGameState {
         if(!newGameStarted && !loadGameStarted) {
             this.map.render((int) mapX, (int) mapY);
 
+            player.getInstance();
+
             this.title.draw(66, 100);
 
             if (!newPressed) {
@@ -280,6 +285,8 @@ public class MainMenu extends BasicGameState {
             this.newMenu.render(0, 0);
 
             this.goBack.draw(10,10);
+
+
 
             //save slots
             g.setColor(Color.black);
@@ -451,6 +458,7 @@ public class MainMenu extends BasicGameState {
 
             int slotNo, slotIndex;
 
+
             this.loadMenu.render(0,0);
             this.goBack.draw(10,10);
             if(!deletePressed) {
@@ -593,6 +601,9 @@ public class MainMenu extends BasicGameState {
             if(newGameStarted) {
                 playerName = characterName.getText();
 
+
+                player.getInstance();
+                this.player.setIsNewGame(true);
 
                 if (warriorSelected) {
 

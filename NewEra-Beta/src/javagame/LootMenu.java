@@ -115,7 +115,7 @@ public class LootMenu extends BasicGameState {
         g.drawString("Gold: "+ this.player.getInventory().getMoney(), 96, 40);
         g.drawString("Gold: "+ this.enemyInventory.getMoney(), 448, 585);
 
-        g.drawString("(R)Take Item", 496, 336);
+        g.drawString("(R)Move Item", 496, 336);
 
         if(!addIsPressed) {
             this.addItemButton.draw(128, 288);

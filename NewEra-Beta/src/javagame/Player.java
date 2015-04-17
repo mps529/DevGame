@@ -197,10 +197,10 @@ public class Player extends Movement {
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Movement starting attributes
-        setLevel(1);
+        this.setLevel( 1 );
         calculateExpToLevelUp();
-        setHealth(MAX_HEALTH);
-        setStamina(MAX_STAMINA);
+        setHealth( MAX_HEALTH );
+        setStamina( MAX_STAMINA );
         setExp( 0 );
 
         this.moveSelected = 0;
@@ -245,6 +245,8 @@ public class Player extends Movement {
         else if( classID == 3 ) {
             setRouge();
         }
+
+        this.isNotRunning();
 
         // Set the color
         red = new Color( 225, 0, 0, .7f );
@@ -726,6 +728,10 @@ public class Player extends Movement {
 
     public boolean getIsNewGame() {return this.isNewGame;}
     public void setIsNewGame(boolean ing) {this.isNewGame = ing;}
+
+    public void setPlayerDead(boolean playerDead) {
+        this.playerDead = playerDead;
+    }
 
     public boolean isWeaponEqiupped () {
         return this.inventory.isWeaponEquipped();

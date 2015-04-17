@@ -69,6 +69,8 @@ public class NPC extends NPCMovement {
 
     private boolean good;
 
+    private boolean isMerchant;
+
     private boolean hasAttacked = false;
 
         // This is what skin the character has
@@ -283,11 +285,11 @@ public class NPC extends NPCMovement {
 
     }
 
-    public void setImage( boolean villager ) {
+    public void setImage( boolean villager, boolean merchant ) {
 
         if( good ) {
 
-            if( villager ) {
+            if( villager && ! merchant ) {
 
                 Random rand = new Random();
                 int villagerNumber = rand.nextInt( 8 );
@@ -320,6 +322,8 @@ public class NPC extends NPCMovement {
                 }
 
 
+            } else if ( !villager && merchant ) {
+                 setNPCClass("merchant.png", 3);
             }
             else {
                 setNPCClass("guard.png", 1);
@@ -1092,6 +1096,9 @@ public class NPC extends NPCMovement {
     }
 
     public boolean isGood(  ) { return this.good; }
+
+    public boolean isMerchant() {return isMerchant;}
+    public void setIsMerchant(boolean isMerchant) {this.isMerchant = isMerchant;}
 
     public int getNpcClass() { return this.npcClass; }
     public boolean getHasAttacked() { return this.hasAttacked; }

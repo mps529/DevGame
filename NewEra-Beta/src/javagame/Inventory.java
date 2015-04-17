@@ -47,6 +47,8 @@ public class Inventory {
     private int healthPotions = 0 ;
     private int staminaPotions = 0;
 
+    private boolean hasBeenLooted = false;
+
         // Movement Class
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
@@ -89,6 +91,7 @@ public class Inventory {
         this.staminaPotions = other.staminaPotions;
         this.classID = other.classID;
         this.itemList = new Vector<Items>();
+        this.hasBeenLooted = other.hasBeenLooted;
 
 
         for(int i= 0; i<other.itemList.size(); i++) {
@@ -109,9 +112,11 @@ public class Inventory {
 
     public int getHealthPotions() { return this.healthPotions; }
     public void useHealthPotion() { this.healthPotions--; }
+    public void addHealthPotions(int numPots) {this.healthPotions += numPots;}
 
     public int getStaminaPotions() { return this.staminaPotions; }
     public void useStaminaPotion() { this.staminaPotions--; }
+    public void addStaminaPotions(int numPots) {this.staminaPotions += numPots;}
 
     private void calculateAttackAndDefence(  ) {
             // Setting to base
@@ -208,7 +213,10 @@ public class Inventory {
     public void subMoney( int money ) { this.money -= money; }
     public int getMoney() { return this.money; }
 
-        // Returns True if added, false if not
+    public boolean isHasBeenLooted() {return hasBeenLooted;}
+    public void setHasBeenLooted(boolean hasBeenLooted) {this.hasBeenLooted = hasBeenLooted;}
+
+    // Returns True if added, false if not
     public boolean addItem( Items item  ) {
 
             // Potions don't actually get added, they just increment the counter
@@ -280,6 +288,59 @@ public class Inventory {
         for( int x=0; x < basic.length; x++ ) {
             addItem( basic[x] );
             equipItem( basic[x].getID() );
+        }
+    }
+
+    public void addShopItems (int playerLevel, int playerClass) {
+
+        // Holds Items
+        Items[] basic = new Items[18];
+        Random rand = new Random();
+        int randLevel;
+
+        // Assigning basic Items
+        randLevel = playerLevel + rand.nextInt(3);
+        basic[ 0 ] = new Items( 2, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 1 ] = new Items( 3, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 2 ] = new Items( 4, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 3 ] = new Items( 5, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 4 ] = new Items( 6, playerClass, -1, randLevel );
+
+        // Check class to give correct weapon
+        randLevel = playerLevel + rand.nextInt(2);
+        if( playerClass == 0 ) {
+            basic[ 5 ] = new Items( 10, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 1 ) {
+            basic[ 5 ] = new Items( 9, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 2 ) {
+            basic[ 5 ] = new Items( 12, playerClass, -1, randLevel );
+        }
+        else if( playerClass == 3 ) {
+            basic[ 5 ] = new Items( 11, playerClass, -1, randLevel );
+        }
+
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 6 ] = new Items( 7, playerClass, -1, randLevel );
+        randLevel = playerLevel + rand.nextInt(2);
+        basic[ 7 ] = new Items( 8, playerClass, -1, randLevel );
+
+        for( int x=8; x < 13; x++ ) {
+            randLevel = playerLevel + rand.nextInt(2);
+            basic[ x ] = new Items( 0, playerClass, -1, randLevel );
+        }
+        for( int x=13; x < 18; x++ ) {
+            randLevel = playerLevel + rand.nextInt(2);
+            basic[ x ] = new Items( 1, playerClass, -1, randLevel );
+        }
+        // Adding to inventory and equipping item
+        for( int x=0; x < basic.length; x++ ) {
+            addItem(basic[x]);
         }
     }
 
@@ -394,6 +455,18 @@ public class Inventory {
         }
     }
 
+
+    public void unequipOldId(int ID) {
+
+        // Equipping items to user
+        for( int x=0; x < this.itemList.size(); x++ ) {
+            if (this.itemList.elementAt(x).getID() == ID) {
+                this.itemList.elementAt( x ).setEquipped( false );
+            }
+        }
+
+    }
+
     // Return 1 for successful equip, 2 for unable to equip
     public int equipItem ( int ID ) {
 
@@ -406,70 +479,130 @@ public class Inventory {
                 switch (this.itemList.elementAt(x).getItemID()) {
                     case 2:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerHelmet = ID;
+                            if( this.playerHelmet == -1 ) {
+                                this.playerHelmet = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerHelmet);
+                                this.playerHelmet = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 3:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerBody = ID;
+                            if( this.playerBody == -1 ) {
+                                this.playerBody = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerBody);
+                                this.playerBody = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 4:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerPants = ID;
+                            if( this.playerPants == -1 ) {
+                                this.playerPants = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerPants);
+                                this.playerPants = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 5:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4 ) {
-                            this.playerGloves = ID;
+                            if( this.playerGloves == -1 ) {
+                                this.playerGloves = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerGloves);
+                                this.playerGloves = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 6:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4 ) {
-                            this.playerBoots = ID;
+                            if( this.playerBoots == -1 ) {
+                                this.playerBoots = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerBoots);
+                                this.playerBoots = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 7:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4 ) {
-                            this.playerRing = ID;
+                            if( this.playerRing == -1 ) {
+                                this.playerRing = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerRing);
+                                this.playerRing = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 8:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4 ) {
-                            this.playerNecklaces = ID;
+                            if( this.playerNecklaces == -1 ) {
+                                this.playerNecklaces = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerNecklaces);
+                                this.playerNecklaces = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 9:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerWeapon = ID;
+                            if( this.playerWeapon == -1 ) {
+                                this.playerWeapon = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerWeapon);
+                                this.playerWeapon = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 10:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4 ) {
-                            this.playerWeapon = ID;
+                            if( this.playerWeapon == -1 ) {
+                                this.playerWeapon = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerWeapon);
+                                this.playerWeapon = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
                         break;
                     case 11:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerWeapon = ID;
+                            if( this.playerWeapon == -1 ) {
+                                this.playerWeapon = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerWeapon);
+                                this.playerWeapon = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
 
@@ -477,7 +610,13 @@ public class Inventory {
                         break;
                     case 12:
                         if (this.itemList.elementAt(x).getClassID() == this.classID || this.itemList.elementAt(x).getClassID() == 4) {
-                            this.playerWeapon = ID;
+                            if( this.playerWeapon == -1 ) {
+                                this.playerWeapon = ID;
+                            }
+                            else {
+                                unequipOldId(this.playerWeapon);
+                                this.playerWeapon = ID;
+                            }
                             calculateAttackAndDefence();
                             return 1;
                         }
@@ -721,9 +860,83 @@ public class Inventory {
         }
     }
 
+    public void renderShopStock( Graphics g, int[] inventory ) {
+
+        int x = 240 , y=464;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+    public void renderSellMenu(Graphics g, int [] inventory) {
+        int x = 112 , y=464;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+
     public void renderNPCInventoryInLootMenu( Graphics g, int[] inventory ) {
 
         int x = 112 , y=400;
+        g.setColor(Color.black);
+
+        int inventoryCounter = 0;
+
+        for( Items item : this.itemList ) {
+
+            if(!item.isEquipped()) {
+                if(inventoryCounter <=20) {
+                    g.setColor(item.getItemRarityColor());
+                    g.fillRect(x, y, 32, 32);
+                    item.drawImageItem(x, y);
+                    inventory[inventoryCounter++] = item.getID();
+                }
+                x += 64;
+                if (x > 496) {
+                    x = 112;
+                    y += 64;
+                }
+            }
+        }
+    }
+
+    public void renderMerchantMenu( Graphics g, int [] inventory ) {
+        int x = 112 , y=464;
         g.setColor(Color.black);
 
         int inventoryCounter = 0;

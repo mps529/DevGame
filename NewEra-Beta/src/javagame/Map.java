@@ -41,6 +41,8 @@ public class Map implements TileBasedMap{
     private int villagerSpawn;
         // Layer for guards to spawn
     private int guardSpawn;
+        // Layer for merchants to spawn
+    private int merchantSpawn;
 
 
         // Map size in tiles
@@ -90,6 +92,8 @@ public class Map implements TileBasedMap{
             // Goods
         this.villagerSpawn = map.getLayerIndex( "villagerSpawn" );
         this.guardSpawn = map.getLayerIndex( "guardSpawn" );
+        this.merchantSpawn = map.getLayerIndex( "merchantSpawn" );
+
 
             // Setting 2D array for collisions
         this.mapObjects = new int[ getMapWidth() ][ getMapHeight() ];
@@ -132,7 +136,7 @@ public class Map implements TileBasedMap{
                     if (this.map.getTileId(x, y, this.enemySpawn) != 0) {
                         NPC temp = new NPC(rand.nextInt(2), false);
                         this.enemies.add(temp);
-                        this.enemies.lastElement().setImage(false);
+                        this.enemies.lastElement().setImage(false, false);
                         this.enemies.lastElement().setSpawnX(x * 32);
                         this.enemies.lastElement().setSpawnY(y * 32);
                         this.enemies.lastElement().setMapPath(this);
@@ -164,7 +168,7 @@ public class Map implements TileBasedMap{
                         if (this.map.getTileId(x, y, this.villagerSpawn) != 0) {
                             NPC temp = new NPC(rand.nextInt(2), true);
                             this.allies.add(temp);
-                            this.allies.lastElement().setImage(true);
+                            this.allies.lastElement().setImage(true, false);
                             this.allies.lastElement().setSpawnX(x * 32);
                             this.allies.lastElement().setSpawnY(y * 32);
                             this.allies.lastElement().setMapPath(this);
@@ -174,7 +178,18 @@ public class Map implements TileBasedMap{
                         if (this.map.getTileId(x, y, this.guardSpawn) != 0) {
                             NPC temp = new NPC(rand.nextInt(2), 20, -1, true);
                             this.allies.add(temp);
-                            this.allies.lastElement().setImage(false);
+                            this.allies.lastElement().setImage(false, false);
+                            this.allies.lastElement().setSpawnX(x * 32);
+                            this.allies.lastElement().setSpawnY(y * 32);
+                            this.allies.lastElement().setMapPath(this);
+                        }
+                    }
+                    if (this.merchantSpawn != -1 ) {
+                        if (this.map.getTileId(x, y, this.merchantSpawn) != 0) {
+                            NPC temp = new NPC(rand.nextInt(2), true);
+                            temp.setIsMerchant(true);
+                            this.allies.add(temp);
+                            this.allies.lastElement().setImage(false, true);
                             this.allies.lastElement().setSpawnX(x * 32);
                             this.allies.lastElement().setSpawnY(y * 32);
                             this.allies.lastElement().setMapPath(this);

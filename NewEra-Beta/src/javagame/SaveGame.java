@@ -112,8 +112,8 @@ public class SaveGame {
 
 
         int slotNo, slotIndex;
-        File folder = new File("NewEra-Beta/res/saves/");
-        File[] listOfFiles = folder.listFiles();
+        File folder;
+        File[] listOfFiles;
 
         folder = new File("NewEra-Beta/res/saves/");
         listOfFiles = folder.listFiles();

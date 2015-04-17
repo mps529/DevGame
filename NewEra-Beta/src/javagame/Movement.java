@@ -183,6 +183,7 @@ public class Movement {
     public void drawPlayer( float x, float y ) { this.movingPlayer.draw( x, y );  }
     public void drawPlayerDieing( float x, float y ) { this.playingDeath.draw(x, y);  }
 
+
     public String getPlayerName() { return this.playerName; }
 
     public int getDirection() { return this.direction; }
