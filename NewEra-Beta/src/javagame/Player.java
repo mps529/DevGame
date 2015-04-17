@@ -197,14 +197,16 @@ public class Player extends Movement {
         grey = new Color( 0, 0, 0, .3f );
 
         // Set Movement starting attributes
-        this.setLevel( 1 );
+        this.setLevel(1);
         calculateExpToLevelUp();
-        setHealth( MAX_HEALTH );
-        setStamina( MAX_STAMINA );
+        setHealth(MAX_HEALTH);
+        setStamina(MAX_STAMINA);
         setExp( 0 );
 
         this.moveSelected = 0;
 
+        this.setPlayerX(94);
+        this.setPlayerY(96);
         // Set up player Inventory/ give default items
 
         this.inventory = new Inventory();
@@ -212,7 +214,6 @@ public class Player extends Movement {
         this.inventory.setBaseDefence(this.BASE_DEFENCE);
         this.inventory.setClassID(classID);
         this.inventory.addStartingItems();
-
 
         this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
 
@@ -579,7 +580,7 @@ public class Player extends Movement {
 
         this.health -= (  ( attack * ( rand.nextInt( 7 ) + 1 )   ) / defence  ) + movePower;
 
-        if( this.health < 0 ) {
+        if( this.health <= 0 ) {
             this.playerDead = true;
 
         }
@@ -653,6 +654,10 @@ public class Player extends Movement {
     public boolean checkDeath() {
         if( this.playerDead ) {
             this.health = 0;
+            this.playerDead = true;
+        }
+        else if( this.health <= 0 ) {
+            this.playerDead = true;
         }
         return this.playerDead;
     }
@@ -737,6 +742,7 @@ public class Player extends Movement {
         return this.inventory.isWeaponEquipped();
     }
 
+
     public void updateAttack( int delta, boolean attacked, Map map ) {
         // Update projectiles position
         updateProjectile(delta, attacked, map, getMoveSelected());
@@ -767,7 +773,7 @@ public class Player extends Movement {
         this.playerMoves.render( 0, 538 );
 
         g.setColor(black);
-        g.drawString( "" + this.level, 59, 592 );
+        g.drawString("" + this.level, 59, 592 );
 
         g.setColor( red );
         g.fillRoundRect(121, 558, 191 * (float)healthPercent, 10, 10 );
@@ -792,7 +798,7 @@ public class Player extends Movement {
                 g.fillRect(xPos, 586, 32, 32);
                 attackImages[x].draw(xPos, 586);
                 g.setColor(Color.white);
-                g.drawString( "" + temp, xPos + 2,  602 );
+                g.drawString("" + temp, xPos + 2,  602 );
                 if( moveSelected == x ) {
                     g.setColor( Color.white );
                     g.drawRect(xPos, 586, 32, 32);
@@ -803,7 +809,7 @@ public class Player extends Movement {
                 attackImages[x].draw(xPos, 586);
                 g.fillRect(xPos, 586, 32, 32);
                 g.setColor(Color.red);
-                g.drawString( "" + temp, xPos + 2,  602 );
+                g.drawString("" + temp, xPos + 2,  602 );
             }
             xPos+=64;
         }
@@ -815,7 +821,7 @@ public class Player extends Movement {
 
         g.drawString("" + this.inventory.getHealthPotions(), xPos + 32, 580);
         g.setColor(Color.white);
-        g.drawString( "9", xPos + 2,  602 );
+        g.drawString("9", xPos + 2,  602 );
 
 
         g.setColor( grey );

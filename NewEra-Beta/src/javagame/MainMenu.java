@@ -72,7 +72,7 @@ public class MainMenu extends BasicGameState {
     private int spriteSelectedX, spriteSelectedY;
     private int slotSelectedX, slotSelectedY, slotWidth, slotHeight;
 
-    private boolean firstTimeRunning;
+    private boolean firstTimeRunning = true;
 
     public MainMenu( int state ) {
         this.gameState = state;
@@ -111,6 +111,9 @@ public class MainMenu extends BasicGameState {
             loadSlot3Selected = false;
             loadSlot4Selected = false;
 
+        if(!firstTimeRunning) {
+            this.loadGames();
+        }
 
     }
 
@@ -122,7 +125,6 @@ public class MainMenu extends BasicGameState {
         theme.setVolume(0.02f);
         theme.loop();
 
-        this.firstTimeRunning = true;
 
         //init title image
         this.title = new Image("NewEra-Beta/res/title/NEW-ERA.png");
@@ -285,7 +287,6 @@ public class MainMenu extends BasicGameState {
             this.newMenu.render(0, 0);
 
             this.goBack.draw(10,10);
-
 
 
             //save slots
@@ -1148,30 +1149,29 @@ public class MainMenu extends BasicGameState {
         //load files from save folder
         sg = SaveGame.getInstance();
 
-        slot1DidLoad = sg.load(1);
+        slot1DidLoad = sg.loadSlots(1);
         if(slot1DidLoad) {
             slot1Name = sg.getSaveName();
             slot1ClassId = sg.getClassID();
             slot1Level = sg.getPlayerLvl();
         }
-        slot2DidLoad = sg.load(2);
+        slot2DidLoad = sg.loadSlots(2);
         if(slot2DidLoad) {
             slot2Name = sg.getSaveName();
             slot2ClassId = sg.getClassID();
             slot2Level = sg.getPlayerLvl();
         }
-        slot3DidLoad = sg.load(3);
+        slot3DidLoad = sg.loadSlots(3);
         if(slot3DidLoad) {
             slot3Name = sg.getSaveName();
             slot3ClassId = sg.getClassID();
             slot3Level = sg.getPlayerLvl();
         }
-        slot4DidLoad = sg.load(4);
+        slot4DidLoad = sg.loadSlots(4);
         if(slot4DidLoad) {
             slot4Name = sg.getSaveName();
             slot4ClassId = sg.getClassID();
             slot4Level = sg.getPlayerLvl();
         }
-        player = null;
     }
 }

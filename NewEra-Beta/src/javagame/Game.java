@@ -1,5 +1,6 @@
 package javagame;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -57,7 +58,6 @@ public class Game extends BasicGameState {
 
     public void init( GameContainer gc, StateBasedGame sbg ) throws SlickException {
 
-
         this.PAUSED = false;
         this.resumeButton = false;
         this.saveButton = false;
@@ -72,6 +72,8 @@ public class Game extends BasicGameState {
         this.player.setPlayerY(96);
         this.save = this.save.getInstance();
 
+        this.maps = new Vector<Map>();
+
         initMaps();
 
 
@@ -81,17 +83,6 @@ public class Game extends BasicGameState {
 
         potion = new Sound("NewEra-Beta/res/sounds/potion.ogg");
 
-
-
-            // Setting starting map
-        for( int x = 0; x < maps.size(); x++) {
-            if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
-                currentMap = x;
-                maps.elementAt(x).addEnemies();
-                maps.elementAt(x).addGood();
-                break;
-            }
-        }
             // Getting the screen Sizes
         this.halfScreenHeight = gc.getHeight()/2;
         this.halfScreenWidth = gc.getWidth()/2;
@@ -101,16 +92,7 @@ public class Game extends BasicGameState {
 
         this.player.getInstance();
         this.player.setPlayerDead(false);
-        if(this.player.getIsNewGame()) {
-            this.player.setPlayerX(94);
-            this.player.setPlayerY(96);
-            initMaps();
-            this.maps.elementAt(this.currentMap).setMapCoordXInPixels(this.player.getPlayerXForMap());
-            this.maps.elementAt(this.currentMap).setMapCoordYInPixels(this.player.getPlayerYForMap());
-        }
-        this.maps.elementAt(this.currentMap).clearNPCList();
-        this.maps.elementAt(this.currentMap).addEnemies();
-        this.maps.elementAt(this.currentMap).addGood();
+
         if(!outsideTheme.playing()) {
             outsideTheme.setVolume(0.02f);
             outsideTheme.loop();
@@ -122,6 +104,7 @@ public class Game extends BasicGameState {
         this.playerAttack.setPlayerSpriteSheet(this.player.getPlayerSpriteSheet());
         this.playerAttack.setAttackSprite();
         this.currentMap = this.player.getCurrentMapIndex();
+
         if( !this.player.getIsNewGame() ) {
             this.maps.elementAt(this.currentMap).setMapCoordXInPixels(this.player.getPlayerXForMap());
             this.maps.elementAt(this.currentMap).setMapCoordYInPixels(this.player.getPlayerYForMap());
@@ -136,16 +119,12 @@ public class Game extends BasicGameState {
             // render current map
         this.maps.elementAt(this.currentMap).drawMap( g );
 
-
         if(!this.PAUSED && !this.player.checkDeath()) {
 
             // Drawing traps if set
             this.player.renderTraps(gc, g);
-            if ( this.player.checkDeath() ) {
-                this.player.drawPlayerDieing(this.halfScreenWidth, this.halfScreenHeight);
-            }
             // Switches to attack animation if true
-             else if (this.playerAttack.getIsAttacking()) {
+            if (this.playerAttack.getIsAttacking()) {
                 this.playerAttack.drawPlayerAttacking(this.halfScreenWidth, this.halfScreenHeight);
                 if (this.playerAttack.renderFire()) {
                     this.playerAttack.drawFire(this.halfScreenWidth, this.halfScreenHeight);
@@ -154,7 +133,12 @@ public class Game extends BasicGameState {
             else {
                 this.player.drawPlayer(this.halfScreenWidth, this.halfScreenHeight);
             }
-        } else {
+        }
+        else if( this.player.checkDeath()  ) {
+            this.player.drawPlayerDieing(this.halfScreenWidth, this.halfScreenHeight);
+        }
+
+        else {
             this.player.drawPlayer(this.halfScreenWidth, this.halfScreenHeight);
         }
             // Render the layer the player will walk under
@@ -179,7 +163,6 @@ public class Game extends BasicGameState {
                     if(this.maps.elementAt(this.currentMap).checkIfCanLoot(lootingEnemy.getId())) {
                         System.out.println(lootingEnemy.getInventory().getMoney());
 
-                        //this.maps.elementAt(this.currentMap).despawnNpc(lootingEnemy.getId());
                         player.setLootingInventory(lootingEnemy.getInventory());
                         player.setMapX(maps.elementAt(currentMap).getX());
                         player.setMapY(maps.elementAt(currentMap).getY());
@@ -189,6 +172,10 @@ public class Game extends BasicGameState {
                     }
                 } else if (player.getAction().findMerchant(player.getPlayerX(), player.getPlayerY(),
                         this.maps.elementAt(this.currentMap).getAllies()))  {
+                    player.setMapX(maps.elementAt(currentMap).getX());
+                    player.setMapY(maps.elementAt(currentMap).getY());
+                    player.setSkewX(maps.elementAt(currentMap).getMapSkewX());
+                    player.setSkewY(maps.elementAt(currentMap).getMapSkewY());
                     sbg.enterState(5);
                 }
                 else {
@@ -257,13 +244,6 @@ public class Game extends BasicGameState {
 
             }
 
-
-        
-
-        if(player.checkDeath()) {
-            this.outsideTheme.stop();
-            sbg.enterState(0);
-        }
 
         // FPS show, also for debugging
         gc.setShowFPS( this.showInfo );
@@ -489,9 +469,16 @@ public class Game extends BasicGameState {
                 if ( this.player.checkDeath() && !this.startDed ) {
                     this.player.startAnimationDeath();
                     this.player.stopAnimationDeath();
+
                     this.startDed = true;
                 } else if (this.player.isStoppedDead()) {
-                    //sbg.enterState(0);
+                    this.maps.elementAt(this.currentMap).clearNPCList();
+                    this.maps.clear();
+                    initMaps();
+                    resetPlayerPosition();
+                    this.startDed = false;
+                    this.outsideTheme.stop();
+                    sbg.enterState(0);
                 }
             }
 
@@ -564,7 +551,6 @@ public class Game extends BasicGameState {
     }
 
     public void initMaps() {
-        this.maps = new Vector<Map>();
 
         // Maps **Starting tiles for map are 10 under
         // PlayerX and PlayerY then negative
@@ -582,6 +568,21 @@ public class Game extends BasicGameState {
         } catch (SlickException e) {
             e.printStackTrace();
         }
+
+        // Setting starting map
+        for( int x = 0; x < maps.size(); x++) {
+            if( maps.elementAt(x).getMapName() == "LargeMapGrasslands.tmx" ) {
+                currentMap = x;
+                maps.elementAt(x).addEnemies();
+                maps.elementAt(x).addGood();
+                break;
+            }
+        }
+    }
+
+    public void resetPlayerPosition() {
+        this.player.setPlayerX(94);
+        this.player.setPlayerY(96);
     }
 
 

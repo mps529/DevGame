@@ -148,7 +148,7 @@ public class Map implements TileBasedMap{
                         NPC temp = new NPC(rand.nextInt(2), false, true);
 
                         this.enemies.add(temp);
-                        this.enemies.lastElement().setImage(false);
+                        this.enemies.lastElement().setImage(false, false);
                         this.enemies.lastElement().setSpawnX(x * 32);
                         this.enemies.lastElement().setSpawnY(y * 32);
                         this.enemies.lastElement().setMapPath(this);
