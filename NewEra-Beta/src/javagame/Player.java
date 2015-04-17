@@ -207,10 +207,11 @@ public class Player extends Movement {
 
         // Set up player Inventory/ give default items
 
-            this.inventory = new Inventory();
-            this.inventory.setBaseAttack(this.BASE_ATTACK);
-            this.inventory.setBaseDefence(this.BASE_DEFENCE);
-            this.inventory.setClassID(classID);
+        this.inventory = new Inventory();
+        this.inventory.setBaseAttack(this.BASE_ATTACK);
+        this.inventory.setBaseDefence(this.BASE_DEFENCE);
+        this.inventory.setClassID(classID);
+        this.inventory.addStartingItems();
 
 
         this.playerMoves = new TiledMap( "NewEra-Beta/res/map/itemSlots.tmx" );
@@ -526,7 +527,7 @@ public class Player extends Movement {
     public void setMaxStamina( int stamina ) { this.MAX_STAMINA = stamina; }
     public void incrementMaxStamina( ) { this.MAX_STAMINA += 10; }
 
-    public int getOverallAttack() { return this.OVERALL_ATTACK; }
+    public int getOverallAttack() { return this.inventory.getPlayerOverallAttack(); }
     public void setOverallAttack( int attack ) { this.OVERALL_ATTACK = attack; }
 
     public int getOverallDefence() {
@@ -765,6 +766,9 @@ public class Player extends Movement {
 
         this.playerMoves.render( 0, 538 );
 
+        g.setColor(black);
+        g.drawString( "" + this.level, 59, 592 );
+
         g.setColor( red );
         g.fillRoundRect(121, 558, 191 * (float)healthPercent, 10, 10 );
         this.emptyHealth.draw( 114, 550 );
@@ -779,38 +783,49 @@ public class Player extends Movement {
 
         int xPos = 144;
         g.setColor( grey );
-
+        int temp;
         for( int x = 0; x < 4; x++ ) {
+            temp = x +1;
             if( this.attacksKnown[ x ] == 1 ) {
+
                 g.setColor( grey );
                 g.fillRect(xPos, 586, 32, 32);
                 attackImages[x].draw(xPos, 586);
+                g.setColor(Color.white);
+                g.drawString( "" + temp, xPos + 2,  602 );
                 if( moveSelected == x ) {
                     g.setColor( Color.white );
-                    g.drawRect( xPos, 586, 32, 32 );
+                    g.drawRect(xPos, 586, 32, 32);
                 }
             }
             else {
                 g.setColor( black );
                 attackImages[x].draw(xPos, 586);
-                g.fillRect(xPos,586, 32,32  );
+                g.fillRect(xPos, 586, 32, 32);
+                g.setColor(Color.red);
+                g.drawString( "" + temp, xPos + 2,  602 );
             }
             xPos+=64;
         }
 
         g.setColor( grey );
         g.fillRect(xPos, 586, 32, 32);
-        this.healthPotion.draw( xPos, 586 );
-        g.setColor( Color.white );
+        this.healthPotion.draw(xPos, 586);
+        g.setColor(Color.white);
 
-        g.drawString( ""+this.inventory.getHealthPotions(), xPos + 32, 580 );
+        g.drawString("" + this.inventory.getHealthPotions(), xPos + 32, 580);
+        g.setColor(Color.white);
+        g.drawString( "9", xPos + 2,  602 );
+
 
         g.setColor( grey );
         xPos += 64;
         g.fillRect(xPos, 586, 32, 32);
         this.staminaPotion.draw( xPos, 586 );
-        g.setColor( Color.white );
-        g.drawString( ""+this.inventory.getStaminaPotions(), xPos + 32, 580 );
+        g.setColor(Color.white);
+        g.drawString("" + this.inventory.getStaminaPotions(), xPos + 32, 580);
+        g.setColor(Color.white);
+        g.drawString( "0", xPos + 2,  602 );
 
     }
 
