@@ -1,9 +1,8 @@
 package javagame;
 
 import com.thoughtworks.xstream.XStream;
-import org.lwjgl.Sys;
 import org.newdawn.slick.SlickException;
-import java.util.Vector;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -141,6 +140,9 @@ public class SaveGame {
                         player.setUpLoadInstance(saveGameClass.sheetName, saveGameClass.saveName, saveGameClass.classID);
                         player.playerCopy(saveGameClass.playerObj);
                         player.setInventoryLoad( saveGameClass.getInv() );
+                        for(Items item: player.getInventory().getItemList()) {
+                            player.getInventory().equipItemsOnLoad(item.getID());
+                        }
                         player.setSaveSlot(slotIndex);
                         foundSave = true;
                     } catch (SlickException e) {
