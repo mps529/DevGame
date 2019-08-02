@@ -53,6 +53,8 @@ public class Inventory {
         // 0-Hunter, 1-Warrior, 2-Mage, 3-Rouge
     private int classID;
 
+
+
     private Vector<Items> itemList;
 
     public Inventory( ) {
@@ -79,14 +81,14 @@ public class Inventory {
         this.playerLevel = other.playerLevel;
         this.playerOverallAttack = other.playerOverallAttack;
         this.playerOverallDefence = other.playerOverallDefence;
-        /*this.playerHelmet = other.playerHelmet;
+        this.playerHelmet = other.playerHelmet;
         this.playerBody = other.playerBody;
         this.playerGloves = other.playerGloves;
         this.playerPants = other.playerPants;
         this.playerBoots = other.playerBoots;
         this.playerRing = other.playerRing;
         this.playerNecklaces = other.playerNecklaces;
-        this.playerWeapon = other.playerWeapon;*/
+        this.playerWeapon = other.playerWeapon;
         this.healthPotions = other.healthPotions;
         this.staminaPotions = other.staminaPotions;
         this.classID = other.classID;
@@ -101,7 +103,9 @@ public class Inventory {
         }
     }
 
-
+    public Vector<Items> getItemList() {
+        return itemList;
+    }
 
        
     public void setBaseAttack( int attack ) { this.baseAttack = attack;}
@@ -679,6 +683,15 @@ public class Inventory {
         }
     }
 
+    public void equipItemsOnLoad ( int ID ) {
+        //to be run on load to re-equip all inventory items that were previously equipped
+
+        if (getItemByID(ID).isEquipped()) {
+            //unEquipItem(ID);
+            equipItem(ID);
+        }
+    }
+
     public int unEquipAllItems() {
 
         for(int i = 0; i<this.itemList.size(); i++) {
@@ -859,6 +872,7 @@ public class Inventory {
             }
         }
     }
+
 
     public void renderShopStock( Graphics g, int[] inventory ) {
 

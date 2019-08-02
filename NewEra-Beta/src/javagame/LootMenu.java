@@ -12,7 +12,7 @@ public class LootMenu extends BasicGameState {
     // This game state
     private static int gameState;
 
-    // singelton for player
+    // singleton for player
     private Player player;
 
     //inventory object
